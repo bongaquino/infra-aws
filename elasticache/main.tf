@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "ap-southeast-1"
+}
+
 terraform {
   required_providers {
     aws = {
@@ -7,21 +11,17 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = "ap-southeast-1"  # Singapore region, adjust as needed
-}
-
 # ElastiCache Subnet Group
 resource "aws_elasticache_subnet_group" "koneksi" {
   name       = "koneksi-cache-subnet"
-  subnet_ids = [for subnet in data.aws_subnet.data_private : subnet.id]
+  subnet_ids = var.data_private_subnet_ids
 }
 
 # ElastiCache Security Group
 resource "aws_security_group" "elasticache" {
   name        = "koneksi-elasticache-sg"
   description = "Security group for Koneksi ElastiCache"
-  vpc_id      = data.aws_vpc.main.id
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 6379
@@ -60,19 +60,5 @@ resource "aws_elasticache_replication_group" "koneksi" {
 
   tags = {
     Name = "koneksi-redis"
-  }
-}
-
-# Data sources
-data "aws_vpc" "main" {
-  tags = {
-    Name = "koneksi-vpc"
-  }
-}
-
-data "aws_subnet" "data_private" {
-  for_each = toset(["0", "1"])
-  tags = {
-    Name = "koneksi-data-private-subnet-${tonumber(each.key) + 1}"
   }
 } 

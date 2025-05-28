@@ -14,7 +14,7 @@ terraform {
 # Provider Configuration
 # =============================================================================
 provider "aws" {
-  region = "ap-southeast-1"  # Singapore region, adjust as needed
+  region = "ap-southeast-1"
 }
 
 # =============================================================================
@@ -27,179 +27,197 @@ data "aws_availability_zones" "available" {
 # =============================================================================
 # VPC Core Resources
 # =============================================================================
-# Main VPC
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-
-  tags = {
-    Name = "koneksi-vpc"
-  }
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-vpc"
+  })
 }
 
-# Internet Gateway
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
-
-  tags = {
-    Name = "koneksi-igw"
-  }
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-igw"
+  })
 }
 
-# NAT Gateway Resources
+# =============================================================================
+# Subnet Configurations (per AZ)
+# =============================================================================
+locals {
+  azs = slice(data.aws_availability_zones.available.names, 0, var.az_count)
+  public_subnet_cidrs = [for i in range(var.az_count) : "10.0.${i + 1}.0/24"]
+  private_subnet_cidrs = [for i in range(var.az_count) : "10.0.${i + 10}.0/24"]
+  data_private_subnet_cidrs = [for i in range(var.az_count) : "10.0.${i + 20}.0/24"]
+}
+
+resource "aws_subnet" "public" {
+  for_each          = { for idx, az in local.azs : az => idx }
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.public_subnet_cidrs[each.value]
+  availability_zone = each.key
+  map_public_ip_on_launch = true
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-public-subnet-${each.value + 1}"
+    Type = "public"
+    AZ   = each.key
+  })
+}
+
+resource "aws_subnet" "private" {
+  for_each          = { for idx, az in local.azs : az => idx }
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.private_subnet_cidrs[each.value]
+  availability_zone = each.key
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-private-subnet-${each.value + 1}"
+    Type = "private"
+    AZ   = each.key
+  })
+}
+
+resource "aws_subnet" "data_private" {
+  for_each          = { for idx, az in local.azs : az => idx }
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.data_private_subnet_cidrs[each.value]
+  availability_zone = each.key
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-data-private-subnet-${each.value + 1}"
+    Type = "data-private"
+    AZ   = each.key
+  })
+}
+
+# =============================================================================
+# NAT Gateway per AZ
+# =============================================================================
 resource "aws_eip" "nat" {
-  domain = "vpc"
-  tags = {
-    Name = "koneksi-nat-eip"
-  }
+  for_each = aws_subnet.public
+  domain   = "vpc"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-nat-eip-${each.value.tags["AZ"]}"
+  })
 }
 
 resource "aws_nat_gateway" "main" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id  # Placed in first public subnet
-
-  tags = {
-    Name = "koneksi-nat"
-  }
-
+  for_each      = aws_subnet.public
+  allocation_id = aws_eip.nat[each.key].id
+  subnet_id     = each.value.id
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-nat-${each.value.tags["AZ"]}"
+  })
   depends_on = [aws_internet_gateway.main]
-}
-
-# =============================================================================
-# Subnet Configurations
-# =============================================================================
-# Public Subnets (2 AZs)
-resource "aws_subnet" "public" {
-  count             = 2
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.${count.index + 1}.0/24"
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-
-  tags = {
-    Name = "koneksi-public-subnet-${count.index + 1}"
-  }
-}
-
-# Private Subnets (2 AZs)
-resource "aws_subnet" "private" {
-  count             = 2
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.${count.index + 10}.0/24"
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-
-  tags = {
-    Name = "koneksi-private-subnet-${count.index + 1}"
-  }
-}
-
-# Data Private Subnets (2 AZs)
-resource "aws_subnet" "data_private" {
-  count             = 2
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.${count.index + 20}.0/24"
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-
-  tags = {
-    Name = "koneksi-data-private-subnet-${count.index + 1}"
-  }
 }
 
 # =============================================================================
 # Route Tables
 # =============================================================================
-# Public Route Table
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main.id
-  }
-
-  tags = {
-    Name = "koneksi-public-rt"
-  }
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-public-rt"
+  })
 }
 
-# Private Route Table
 resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main.id
-  }
-
-  tags = {
-    Name = "koneksi-private-rt"
-  }
+  for_each = aws_nat_gateway.main
+  vpc_id   = aws_vpc.main.id
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-private-rt-${each.key}"
+  })
 }
 
-# Route Table Associations
+resource "aws_route" "public_internet_access" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.main.id
+}
+
+resource "aws_route" "private_nat_access" {
+  for_each               = aws_nat_gateway.main
+  route_table_id         = aws_route_table.private[each.key].id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = each.value.id
+}
+
 resource "aws_route_table_association" "public" {
-  count          = 2
-  subnet_id      = aws_subnet.public[count.index].id
+  for_each      = aws_subnet.public
+  subnet_id     = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private" {
-  count          = 2
-  subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private.id
+  for_each      = aws_subnet.private
+  subnet_id     = each.value.id
+  route_table_id = aws_route_table.private[each.key].id
 }
 
 resource "aws_route_table_association" "data_private" {
-  count          = 2
-  subnet_id      = aws_subnet.data_private[count.index].id
-  route_table_id = aws_route_table.private.id
+  for_each      = aws_subnet.data_private
+  subnet_id     = each.value.id
+  route_table_id = aws_route_table.private[each.key].id
 }
 
 # =============================================================================
-# Security Groups
+# Security Groups (unchanged for now, will update for ALB/ASG next)
 # =============================================================================
-# Public Security Group
 resource "aws_security_group" "public" {
-  name        = "koneksi-public-sg"
+  name        = "${local.name_prefix}-public-sg"
   description = "Security group for public subnet"
   vpc_id      = aws_vpc.main.id
-
-  # Allow SSH from anywhere
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name = "koneksi-public-sg"
-  }
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-public-sg"
+  })
 }
 
-# Private Security Group
 resource "aws_security_group" "private" {
-  name        = "koneksi-private-sg"
+  name        = "${local.name_prefix}-private-sg"
   description = "Security group for private subnet"
   vpc_id      = aws_vpc.main.id
-
-  # Allow all traffic from public subnet
   ingress {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
     security_groups = [aws_security_group.public.id]
   }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-private-sg"
+  })
+}
 
-  # Allow all outbound traffic
+resource "aws_security_group" "ec2" {
+  name        = "${local.name_prefix}-ec2-sg"
+  description = "Security group for EC2 instances"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "Allow SSH from anywhere"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -207,7 +225,7 @@ resource "aws_security_group" "private" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "koneksi-private-sg"
-  }
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-ec2-sg"
+  })
 } 
