@@ -4,9 +4,27 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
 
 ## Infrastructure Components
 
-- VPC with public and private subnets across two availability zones
-- DynamoDB for data storage
-- ElastiCache (Redis) for caching
+- **VPC**: Multi-AZ VPC with public, private, and data private subnets
+  - Two availability zones
+  - NAT Gateways for private subnet internet access
+  - Internet Gateway for public subnet access
+  - Security groups for controlled access
+
+- **DynamoDB**: NoSQL database for data storage
+  - Auto-scaling enabled
+  - Point-in-time recovery
+  - Encryption at rest
+
+- **ElastiCache (Redis)**: In-memory data store for caching
+  - Redis 7.1.0
+  - Multi-AZ deployment
+  - Automatic failover
+  - Read replicas for scaling
+
+- **EC2**: Bastion host for secure access
+  - Ubuntu 24.04 LTS
+  - t3.micro instance type
+  - SSH access via key pair
 
 ## Directory Structure
 
@@ -14,14 +32,31 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
 koneksi-aws-deployment/
 ├── vpc/              # VPC and networking configuration
 ├── dynamodb/         # DynamoDB table configuration
-└── elasticache/      # ElastiCache Redis configuration
+├── elasticache/      # ElastiCache Redis configuration
+├── ec2/             # EC2 instance configuration
+├── s3/              # S3 bucket for Terraform state
+└── docs/            # Service documentation
+    └── redis-service.md  # Redis service documentation
 ```
+
+## Environment Support
+
+The infrastructure supports multiple environments:
+- Staging
+- UAT
+- Production
+
+Each environment has its own:
+- Terraform state file
+- Variable configurations
+- Resource naming conventions
 
 ## Prerequisites
 
 - Terraform >= 1.0.0
 - AWS CLI configured with appropriate credentials
 - AWS account with necessary permissions
+- Git for version control
 
 ## Usage
 
@@ -41,20 +76,47 @@ terraform apply
 cd ../dynamodb
 terraform apply
 
-# Finally, create ElastiCache
+# Create ElastiCache
 cd ../elasticache
+terraform apply
+
+# Finally, create EC2 instance
+cd ../ec2
 terraform apply
 ```
 
 ## Security
 
-- The VPC is configured with public and private subnets
+- VPC is configured with public and private subnets
 - Security groups are set up to allow necessary traffic
 - SSH access is allowed from anywhere to public subnets
 - Private subnets are accessible only from within the VPC
+- All resources are tagged with environment and project name
+- Encryption enabled for all applicable services
+
+## Documentation
+
+Detailed service documentation is available in the `docs` directory:
+- [Redis Service Documentation](docs/redis-service.md)
 
 ## Maintenance
 
 - Always review and update the security groups as needed
 - Monitor the NAT Gateway costs
-- Regularly check for Terraform and provider updates 
+- Regularly check for Terraform and provider updates
+- Monitor service metrics and logs
+- Keep documentation up to date
+
+## Contributing
+
+1. Create a new branch for your changes
+2. Make your changes
+3. Test the changes in staging
+4. Create a pull request
+5. Get approval from the team
+6. Merge to staging first
+7. After testing, merge to main
+
+## Support
+
+For any issues or questions, contact the DevOps team. 
