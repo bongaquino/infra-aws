@@ -4,6 +4,12 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
 
 ## Infrastructure Components
 
+- **IAM**: User and group management for ARData team
+  - Test users for developers and devops
+  - Group-based access control
+  - Custom policies for different roles
+  - Access key management
+
 - **VPC**: Multi-AZ VPC with public, private, and data private subnets
   - Two availability zones
   - NAT Gateways for private subnet internet access
@@ -29,10 +35,11 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
 ## Directory Structure
 
 ```
-koneksi-aws-deployment/
-├── vpc/              # VPC and networking configuration
-├── dynamodb/         # DynamoDB table configuration
-├── elasticache/      # ElastiCache Redis configuration
+koneksi-aws/
+├── iam/             # IAM users, groups, and policies
+├── vpc/             # VPC and networking configuration
+├── dynamodb/        # DynamoDB table configuration
+├── elasticache/     # ElastiCache Redis configuration
 ├── ec2/             # EC2 instance configuration
 ├── s3/              # S3 bucket for Terraform state
 └── docs/            # Service documentation
@@ -62,17 +69,21 @@ Each environment has its own:
 
 1. Initialize Terraform in each directory:
 ```bash
-cd vpc
+cd iam
 terraform init
 ```
 
 2. Apply the configurations in order:
 ```bash
-# First, create the VPC
-cd vpc
+# First, create IAM users and groups
+cd iam
 terraform apply
 
-# Then, create DynamoDB
+# Then, create the VPC
+cd ../vpc
+terraform apply
+
+# Create DynamoDB
 cd ../dynamodb
 terraform apply
 
@@ -87,6 +98,7 @@ terraform apply
 
 ## Security
 
+- IAM users and groups with least privilege access
 - VPC is configured with public and private subnets
 - Security groups are set up to allow necessary traffic
 - SSH access is allowed from anywhere to public subnets
@@ -101,6 +113,7 @@ Detailed service documentation is available in the `docs` directory:
 
 ## Maintenance
 
+- Regularly review and update IAM permissions
 - Always review and update the security groups as needed
 - Monitor the NAT Gateway costs
 - Regularly check for Terraform and provider updates
