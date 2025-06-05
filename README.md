@@ -15,36 +15,79 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
   - NAT Gateways for private subnet internet access
   - Internet Gateway for public subnet access
   - Security groups for controlled access
+  - VPC endpoints for AWS services
 
 - **DynamoDB**: NoSQL database for data storage
   - Auto-scaling enabled
   - Point-in-time recovery
   - Encryption at rest
+  - VPC endpoint for private access
 
 - **ElastiCache (Redis)**: In-memory data store for caching
   - Redis 7.1.0
   - Multi-AZ deployment
   - Automatic failover
   - Read replicas for scaling
+  - Dedicated subnet group
+  - Security group integration
 
 - **EC2**: Bastion host for secure access
   - Ubuntu 24.04 LTS
-  - t3.micro instance type
+  - t3a.medium instance type
   - SSH access via key pair
+  - Public subnet placement
+  - Public security group
+
+- **Amplify**: Web application hosting
+  - Automatic CI/CD from GitHub
+  - Built-in CloudFront distribution
+  - SSL/TLS certificate management
+  - Custom domain support
+  - Branch-based deployments
+
+- **Route53**: DNS management
+  - Domain registration and management
+  - DNS record management
+  - Health checks
+  - Traffic routing
+
+- **ACM**: SSL/TLS Certificate Management
+  - Certificate provisioning
+  - Automatic renewal
+  - Multi-region support
+  - Domain validation
 
 ## Directory Structure
 
 ```
 koneksi-aws/
-├── iam/             # IAM users, groups, and policies
-├── vpc/             # VPC and networking configuration
+├── acm/             # AWS Certificate Manager for SSL/TLS certificates
+├── amplify/         # AWS Amplify for web app hosting
+├── cloudfront/      # CloudFront CDN configuration
 ├── dynamodb/        # DynamoDB table configuration
-├── elasticache/     # ElastiCache Redis configuration
-├── ec2/             # EC2 instance configuration
-├── s3/              # S3 bucket for Terraform state
-└── docs/            # Service documentation
+├── ec2/            # EC2 instance configuration
+├── elasticache/    # ElastiCache Redis configuration
+├── iam/            # IAM users, groups, and policies
+├── route53/        # DNS and domain management
+├── s3/             # S3 bucket for Terraform state
+├── vpc/            # VPC and networking configuration
+└── docs/           # Service documentation
     └── redis-service.md  # Redis service documentation
 ```
+
+## Module Dependencies
+
+The modules should be applied in the following order:
+
+1. **S3**: Terraform state bucket
+2. **IAM**: User and group management
+3. **ACM**: SSL/TLS certificates
+4. **VPC**: Network infrastructure
+5. **DynamoDB**: Database tables
+6. **ElastiCache**: Redis cache
+7. **EC2**: Compute instances
+8. **Amplify**: Web application hosting
+9. **Route53**: DNS management
 
 ## Environment Support
 
@@ -57,6 +100,8 @@ Each environment has its own:
 - Terraform state file
 - Variable configurations
 - Resource naming conventions
+- Amplify branch and domain
+- VPC resources (subnets, security groups, etc.)
 
 ## Prerequisites
 
@@ -64,6 +109,7 @@ Each environment has its own:
 - AWS CLI configured with appropriate credentials
 - AWS account with necessary permissions
 - Git for version control
+- Domain registered in Route53 (for custom domains)
 
 ## Usage
 
@@ -75,11 +121,19 @@ terraform init
 
 2. Apply the configurations in order:
 ```bash
-# First, create IAM users and groups
-cd iam
+# First, create S3 bucket for state
+cd s3
 terraform apply
 
-# Then, create the VPC
+# Create IAM users and groups
+cd ../iam
+terraform apply
+
+# Create ACM certificates
+cd ../acm
+terraform apply
+
+# Create the VPC
 cd ../vpc
 terraform apply
 
@@ -91,10 +145,66 @@ terraform apply
 cd ../elasticache
 terraform apply
 
-# Finally, create EC2 instance
+# Create EC2 instance
 cd ../ec2
 terraform apply
+
+# Set up Amplify
+cd ../amplify
+terraform apply
+
+# Finally, configure DNS
+cd ../route53
+terraform apply
 ```
+
+3. Setting up Amplify and Custom Domain:
+```bash
+# Create Amplify app and connect to GitHub repository
+aws amplify create-app --name koneksi-web-staging --repository https://github.com/koneksi-tech/koneksi-web
+
+# Create branch for staging
+aws amplify create-branch --app-id <app-id> --branch-name staging
+
+# Associate custom domain
+aws amplify create-domain-association --app-id <app-id> --domain-name app-staging.koneksi.co.kr --sub-domain-settings "[{\"prefix\":\"www\",\"branchName\":\"staging\"},{\"prefix\":\"\",\"branchName\":\"staging\"}]"
+
+# Update DNS records in Route53
+cd ../route53
+terraform apply
+```
+
+## VPC Integration
+
+### Subnet Usage
+- **Public Subnets**: EC2 bastion hosts
+- **Private Subnets**: Application servers
+- **Database Subnets**: RDS instances
+- **ElastiCache Subnets**: Redis clusters
+- **Data Private Subnets**: DynamoDB VPC endpoints
+
+### Security Groups
+- **Public SG**: EC2 bastion hosts
+- **Private SG**: Application servers
+- **Database SG**: RDS instances
+- **ElastiCache SG**: Redis clusters
+
+### VPC Endpoints
+- S3 Gateway endpoint
+- DynamoDB Gateway endpoint
+- SSM Interface endpoint
+- Secrets Manager Interface endpoint
+
+## Instance Types
+
+### Standard Instance Types
+- **EC2**: t3a.medium
+- **ElastiCache**: cache.t3a.medium
+
+### Environment-Specific Configurations
+- **Staging**: Standard instance types
+- **UAT**: Standard instance types
+- **Production**: Standard instance types
 
 ## Security
 
@@ -105,6 +215,8 @@ terraform apply
 - Private subnets are accessible only from within the VPC
 - All resources are tagged with environment and project name
 - Encryption enabled for all applicable services
+- SSL/TLS certificates managed by AWS Certificate Manager
+- CloudFront distribution with HTTPS enforcement
 
 ## Documentation
 
@@ -119,6 +231,9 @@ Detailed service documentation is available in the `docs` directory:
 - Regularly check for Terraform and provider updates
 - Monitor service metrics and logs
 - Keep documentation up to date
+- Monitor SSL certificate expiration
+- Check Amplify build status and logs
+- Review CloudFront distribution metrics
 
 ## Contributing
 
@@ -132,4 +247,4 @@ Detailed service documentation is available in the `docs` directory:
 
 ## Support
 
-For any issues or questions, contact the DevOps team. 
+For any issues or questions, contact the DevOps team.
