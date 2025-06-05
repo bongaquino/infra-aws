@@ -1,0 +1,29 @@
+# AWS Region
+aws_region = "ap-southeast-1"
+
+# Environment
+environment = "staging"
+
+# Project
+project = "koneksi"
+
+# Instance Configuration
+instance_type = "t3a.micro"
+ami_id        = "ami-07945fd9edc6f05f4"  # Ubuntu 22.04 LTS in ap-southeast-1
+
+# Network Configuration
+vpc_id    = "vpc-0c20317be26528962"  # koneksi-staging-vpc
+subnet_id = "subnet-07fd670efb8a816db"  # koneksi-staging-public-subnet-1
+
+# SSH Configuration
+key_name = "koneksi-staging-key"
+
+# Security Configuration
+allowed_cidr_blocks = ["0.0.0.0/0"]  # Consider restricting this to your IP range
+
+# Tags
+tags = {
+  Environment = "staging"
+  Project     = "koneksi"
+  ManagedBy   = "terraform"
+} 

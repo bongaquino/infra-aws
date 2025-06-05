@@ -1,37 +1,55 @@
-variable "subnet_id" {
-  description = "The subnet ID for the EC2 instance."
+variable "aws_region" {
+  description = "AWS region"
   type        = string
-}
-
-variable "security_group_ids" {
-  description = "List of security group IDs to associate with the EC2 instance."
-  type        = list(string)
-}
-
-variable "instance_type" {
-  description = "EC2 instance type."
-  type        = string
-  default     = "t3.micro"
-}
-
-variable "key_name" {
-  description = "Name of the SSH key pair to use for the instance."
-  type        = string
+  default     = "ap-southeast-1"
 }
 
 variable "project" {
-  description = "Project name for naming convention and tagging"
+  description = "Project name"
   type        = string
   default     = "koneksi"
 }
 
 variable "environment" {
-  description = "Deployment environment (e.g., staging, uat, prod)"
+  description = "Environment name"
   type        = string
   default     = "staging"
 }
 
 variable "vpc_id" {
-  description = "The VPC ID to launch the EC2 instance into."
+  description = "VPC ID where the instances will be created"
   type        = string
+}
+
+variable "subnet_id" {
+  description = "Subnet ID where the instances will be created"
+  type        = string
+}
+
+variable "ami_id" {
+  description = "AMI ID for the EC2 instances"
+  type        = string
+  default     = "ami-0df7a207adb9748c7"  # Ubuntu 22.04 LTS in ap-southeast-1
+}
+
+variable "instance_type" {
+  description = "Instance type for the EC2 instances"
+  type        = string
+  default     = "t3a.micro"
+}
+
+variable "allowed_cidr_blocks" {
+  description = "List of CIDR blocks allowed to access the bastion host"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "tags" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Project     = "koneksi"
+    Environment = "staging"
+    ManagedBy   = "terraform"
+  }
 } 
