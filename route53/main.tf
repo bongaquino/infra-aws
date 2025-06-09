@@ -29,100 +29,110 @@ resource "aws_route53_zone" "main" {
 }
 
 # =============================================================================
-# Route53 Records
+# Route53 A Records
 # =============================================================================
-resource "aws_route53_record" "a" {
-  for_each = var.a_records
-  
+resource "aws_route53_record" "staging" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = each.value.name
+  name    = "staging.koneksi.co.kr"
   type    = "A"
-  ttl     = each.value.ttl
-  
-  records = each.value.records
+  ttl     = 300
+  records = ["52.77.36.120"]
 }
 
-resource "aws_route53_record" "cname" {
-  for_each = var.cname_records
-  
+resource "aws_route53_record" "ipfs" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = each.value.name
+  name    = "ipfs.koneksi.co.kr"
+  type    = "A"
+  ttl     = 300
+  records = ["211.239.117.217"]
+}
+
+resource "aws_route53_record" "gateway" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "gateway.koneksi.co.kr"
+  type    = "A"
+  ttl     = 300
+  records = ["211.239.117.217"]
+}
+
+# =============================================================================
+# Route53 CNAME Records
+# =============================================================================
+resource "aws_route53_record" "autodiscover" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "autodiscover.koneksi.co.kr"
   type    = "CNAME"
-  ttl     = each.value.ttl
-  
-  records = [each.value.record]
+  ttl     = 300
+  records = ["autodiscover.outlook.com."]
 }
 
-resource "aws_route53_record" "mx" {
-  for_each = var.mx_records
-  
+resource "aws_route53_record" "pm_bounces" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = each.value.name
-  type    = "MX"
-  ttl     = each.value.ttl
-  
-  records = each.value.records
+  name    = "pm-bounces.koneksi.co.kr"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["pm.mtasv.net."]
 }
 
-resource "aws_route53_record" "txt" {
-  for_each = var.txt_records
-  
+resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = each.value.name
-  type    = "TXT"
-  ttl     = each.value.ttl
-  
-  records = each.value.records
-}
-
-resource "aws_route53_record" "ns" {
-  for_each = var.ns_records
-  
-  zone_id = aws_route53_zone.main.zone_id
-  name    = each.value.name
-  type    = "NS"
-  ttl     = each.value.ttl
-  
-  records = each.value.records
-}
-
-resource "aws_route53_record" "alias" {
-  for_each = var.alias_records
-  
-  zone_id = aws_route53_zone.main.zone_id
-  name    = each.value.name
-  type    = "A"
-  
-  alias {
-    name                   = each.value.alias_name
-    zone_id                = each.value.alias_zone_id
-    evaluate_target_health = each.value.evaluate_target_health
-  }
+  name    = "www.koneksi.co.kr"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["balancer.wixdns.net."]
 }
 
 # =============================================================================
-# Amplify Domain Records
+# Route53 MX Records
+# =============================================================================
+resource "aws_route53_record" "mx" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "koneksi.co.kr"
+  type    = "MX"
+  ttl     = 300
+  records = ["0 koneksi-co-kr.mail.protection.outlook.com."]
+}
+
+# =============================================================================
+# Route53 TXT Records
+# =============================================================================
+resource "aws_route53_record" "txt_ms" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "koneksi.co.kr"
+  type    = "TXT"
+  ttl     = 300
+  records = ["MS=ms62474739"]
+}
+
+resource "aws_route53_record" "txt_dkim" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "20250604040914pm._domainkey.koneksi.co.kr"
+  type    = "TXT"
+  ttl     = 300
+  records = ["k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCsDAsE41iUNu31DwH9xTX6kcFuKvaUllZ3mp5A1dEiSnJs23HoT0TLzFY9bs/P9iMnY6jtRzhSTOFFBAX+PydIOWIm0AS7Bf3uA74NWUs8ZoXiHhLYgEKMxtxmJJONa5gfMHLzWrmR+tpyy/qNElwnCV1SRnG+cp1x+3+4NiE0QIDAQAB"]
+}
+
+# =============================================================================
+# Route53 Alias Records (Amplify)
 # =============================================================================
 resource "aws_route53_record" "amplify_main" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = var.amplify_domain_name
+  name    = "app-staging.koneksi.co.kr"
   type    = "A"
-  
   alias {
-    name                   = var.amplify_domain_target
-    zone_id                = var.amplify_hosted_zone_id
+    name                   = "d1234abcd.cloudfront.net."
+    zone_id                = "Z2FDTNDATAQYW2"
     evaluate_target_health = true
   }
 }
 
 resource "aws_route53_record" "amplify_www" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "www.${var.amplify_domain_name}"
+  name    = "www.app-staging.koneksi.co.kr"
   type    = "A"
-  
   alias {
-    name                   = var.amplify_domain_target
-    zone_id                = var.amplify_hosted_zone_id
+    name                   = "d1234abcd.cloudfront.net."
+    zone_id                = "Z2FDTNDATAQYW2"
     evaluate_target_health = true
   }
 }
@@ -178,9 +188,14 @@ resource "aws_route53_record" "weighted" {
   ttl     = each.value.ttl
   
   set_identifier = each.value.set_identifier
-  weight         = each.value.weight
+  
+  weighted_routing_policy {
+    weight = each.value.weight
+  }
   
   records = each.value.records
+  
+  allow_overwrite = true
 }
 
 # =============================================================================
@@ -195,9 +210,14 @@ resource "aws_route53_record" "latency" {
   ttl     = each.value.ttl
   
   set_identifier = each.value.set_identifier
-  region         = each.value.region
+  
+  latency_routing_policy {
+    region = each.value.region
+  }
   
   records = each.value.records
+  
+  allow_overwrite = true
 }
 
 # =============================================================================

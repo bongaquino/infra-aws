@@ -9,6 +9,12 @@ variable "domain_name" {
   type        = string
 }
 
+variable "name_prefix" {
+  description = "Prefix to be used for resource names"
+  type        = string
+  default     = "koneksi-staging"
+}
+
 variable "a_records" {
   description = "Map of A records to create"
   type = map(object({
