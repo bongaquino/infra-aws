@@ -36,7 +36,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ${{ github.ref_name }}
+        working-directory: .
 
     steps:
     - name: Checkout
@@ -54,16 +54,22 @@ jobs:
 
     - name: Terraform Init
       id: init
-      run: terraform init
+      run: |
+        cd vpc/envs/${{ github.ref_name }}
+        terraform init
 
     - name: Terraform Validate
       id: validate
-      run: terraform validate -no-color
+      run: |
+        cd vpc/envs/${{ github.ref_name }}
+        terraform validate -no-color
 
     - name: Terraform Plan
       id: plan
       if: github.event_name == 'pull_request'
-      run: terraform plan -no-color
+      run: |
+        cd vpc/envs/${{ github.ref_name }}
+        terraform plan -no-color
       continue-on-error: true
 
     - name: Update Pull Request
@@ -96,4 +102,6 @@ jobs:
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
-      run: terraform apply -auto-approve 
+      run: |
+        cd vpc/envs/${{ github.ref_name }}
+        terraform apply -auto-approve 
