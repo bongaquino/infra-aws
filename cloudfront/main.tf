@@ -98,6 +98,10 @@ resource "aws_cloudfront_distribution" "main" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-distribution"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================

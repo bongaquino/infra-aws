@@ -39,6 +39,10 @@ resource "aws_iam_role" "main" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-role"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -52,6 +56,10 @@ resource "aws_iam_policy" "main" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-policy"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -102,10 +110,6 @@ resource "aws_iam_user_policy_attachment" "main" {
 resource "aws_iam_access_key" "main" {
   count = var.create_user && var.create_access_key ? 1 : 0
   user  = aws_iam_user.main[0].name
-  
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-access-key"
-  })
 }
 
 # =============================================================================
@@ -114,10 +118,6 @@ resource "aws_iam_access_key" "main" {
 resource "aws_iam_group" "main" {
   count = var.create_group ? 1 : 0
   name  = "${var.name_prefix}-group"
-  
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-group"
-  })
 }
 
 # =============================================================================

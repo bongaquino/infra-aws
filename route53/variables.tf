@@ -10,9 +10,8 @@ variable "domain_name" {
 }
 
 variable "name_prefix" {
-  description = "Prefix to be used for resource names"
+  description = "Prefix for resource names."
   type        = string
-  default     = "koneksi-staging"
 }
 
 variable "a_records" {

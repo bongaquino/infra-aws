@@ -32,17 +32,31 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
   enable_dns_support   = true
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-vpc"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-vpc"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-igw"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-igw"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -72,12 +86,16 @@ resource "aws_subnet" "public" {
   
   map_public_ip_on_launch = true
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-public-subnet-${index(local.azs, each.key) + 1}"
-    Tier = "Public"
-    AZ   = each.key
-    Type = "public"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-public-subnet-${index(local.azs, each.key) + 1}"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_subnet" "private" {
@@ -86,12 +104,16 @@ resource "aws_subnet" "private" {
   cidr_block        = each.value
   availability_zone = each.key
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-private-subnet-${index(local.azs, each.key) + 1}"
-    Tier = "Private"
-    AZ   = each.key
-    Type = "private"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-private-subnet-${index(local.azs, each.key) + 1}"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_subnet" "data_private" {
@@ -100,12 +122,16 @@ resource "aws_subnet" "data_private" {
   cidr_block        = each.value
   availability_zone = each.key
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-data-private-subnet-${index(local.azs, each.key) + 1}"
-    Tier = "Data"
-    AZ   = each.key
-    Type = "data-private"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-data-private-subnet-${index(local.azs, each.key) + 1}"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -115,9 +141,16 @@ resource "aws_eip" "nat" {
   for_each = { for i, az in local.azs : az => i }
   domain   = "vpc"
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-nat-eip-${each.value + 1}"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-eip-${each.value + 1}"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_nat_gateway" "main" {
@@ -125,11 +158,18 @@ resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.nat[each.key].id
   subnet_id     = aws_subnet.public[each.key].id
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-nat-${each.value + 1}"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-nat-${each.value + 1}"
+    }
+  )
   
   depends_on = [aws_internet_gateway.main]
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -143,9 +183,16 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.main.id
   }
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-public-rt"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-public-rt"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route_table" "private" {
@@ -157,9 +204,16 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.main[each.key].id
   }
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-private-rt-${each.value + 1}"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-private-rt-${each.value + 1}"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route_table" "data_private" {
@@ -171,9 +225,16 @@ resource "aws_route_table" "data_private" {
     nat_gateway_id = aws_nat_gateway.main[each.key].id
   }
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-data-private-rt-${each.value + 1}"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-data-private-rt-${each.value + 1}"
+    }
+  )
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -183,25 +244,37 @@ resource "aws_route_table_association" "public" {
   for_each       = aws_subnet.public
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "private" {
   for_each       = aws_subnet.private
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private[each.key].id
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "data_private" {
   for_each       = aws_subnet.data_private
   subnet_id      = each.value.id
   route_table_id = aws_route_table.data_private[each.key].id
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
 # Security Groups
 # =============================================================================
 resource "aws_security_group" "bastion" {
-  name        = "${local.name_prefix}-bastion-sg"
+  name        = "${var.project}-${var.environment}-bastion-sg"
   description = "Security group for bastion host"
   vpc_id      = aws_vpc.main.id
   
@@ -219,13 +292,16 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-bastion-sg"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-bastion-sg"
+    }
+  )
 }
 
 resource "aws_security_group" "private" {
-  name        = "${local.name_prefix}-private-sg"
+  name        = "${var.project}-${var.environment}-private-sg"
   description = "Security group for private instances"
   vpc_id      = aws_vpc.main.id
   
@@ -243,7 +319,10 @@ resource "aws_security_group" "private" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   
-  tags = merge(local.standard_tags, {
-    Name = "${local.name_prefix}-private-sg"
-  })
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project}-${var.environment}-private-sg"
+    }
+  )
 } 

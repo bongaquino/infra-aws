@@ -1,12 +1,4 @@
-# =============================================================================
-# Backend Configuration
-# =============================================================================
-terraform {
-  backend "s3" {
-    bucket         = "koneksi-terraform-state"
-    key            = "vpc/uat/terraform.tfstate"
-    region         = "ap-southeast-1"
-    encrypt        = true
-    dynamodb_table = "koneksi-terraform-locks"
-  }
-} 
+bucket         = "koneksi-terraform-state"
+region         = "ap-southeast-1"
+encrypt        = true
+dynamodb_table = "koneksi-terraform-locks"
