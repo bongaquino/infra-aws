@@ -17,6 +17,10 @@ resource "aws_instance" "bastion" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-bastion"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -29,4 +33,8 @@ resource "aws_eip" "bastion" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-bastion-eip"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 } 

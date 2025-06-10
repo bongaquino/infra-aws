@@ -87,6 +87,28 @@ variable "tags" {
   default     = {}
 }
 
+variable "name_prefix" {
+  description = "Prefix for resource names."
+  type        = string
+}
+
+variable "port" {
+  description = "The port number on which each of the nodes accepts connections."
+  type        = number
+  default     = 6379
+}
+
+variable "parameter_group_name" {
+  description = "The name of the parameter group to associate with this replication group."
+  type        = string
+  default     = "default.redis7"
+}
+
+variable "vpc_security_group_id" {
+  description = "The ID of the security group from the VPC module to use for ElastiCache"
+  type        = string
+}
+
 locals {
   name_prefix = "${var.project}-${var.environment}"
 } 

@@ -70,6 +70,10 @@ resource "aws_amplify_app" "main" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-amplify-app"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================

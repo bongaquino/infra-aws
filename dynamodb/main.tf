@@ -72,6 +72,10 @@ resource "aws_dynamodb_table" "main" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-table"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================

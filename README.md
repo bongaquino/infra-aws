@@ -72,7 +72,8 @@ koneksi-aws/
 ├── s3/             # S3 bucket for Terraform state
 ├── vpc/            # VPC and networking configuration
 └── docs/           # Service documentation
-    └── redis-service.md  # Redis service documentation
+    ├── redis-service.md  # Redis service documentation
+    └── workspace-management.md  # Workspace management documentation
 ```
 
 ## Module Dependencies
@@ -91,10 +92,10 @@ The modules should be applied in the following order:
 
 ## Environment Support
 
-The infrastructure supports multiple environments:
-- Staging
-- UAT
-- Production
+The infrastructure supports multiple environments through Terraform workspaces:
+- `staging`: Development and testing environment
+- `uat`: User acceptance testing environment
+- `prod`: Production environment
 
 Each environment has its own:
 - Terraform state file
@@ -102,6 +103,8 @@ Each environment has its own:
 - Resource naming conventions
 - Amplify branch and domain
 - VPC resources (subnets, security groups, etc.)
+
+For detailed information about managing environments using Terraform workspaces, see [Workspace Management Documentation](docs/workspace-management.md).
 
 ## Prerequisites
 
@@ -146,13 +149,15 @@ Each environment has its own:
 ```
 s3://koneksi-terraform-state/
 ├── vpc/
-│   ├── staging/
-│   ├── uat/
-│   └── prod/
+│   └── terraform.tfstate.d/
+│       ├── staging/
+│       ├── uat/
+│       └── prod/
 ├── ec2/
-│   ├── staging/
-│   ├── uat/
-│   └── prod/
+│   └── terraform.tfstate.d/
+│       ├── staging/
+│       ├── uat/
+│       └── prod/
 └── ...
 ```
 
@@ -190,13 +195,17 @@ output = json
 
 ## Usage
 
-1. Initialize Terraform in each directory:
+1. Select the appropriate workspace:
 ```bash
-cd iam
-terraform init
+terraform workspace select staging|uat|prod
 ```
 
-2. Apply the configurations in order:
+2. Initialize Terraform with environment-specific backend:
+```bash
+terraform init -backend-config=envs/<environment>/backend.tf
+```
+
+3. Apply the configurations in order:
 ```bash
 # First, create S3 bucket for state
 cd s3
@@ -253,23 +262,6 @@ terraform apply
 - SSM Interface endpoint
 - Secrets Manager Interface endpoint
 
-### Important Notes
-- Each environment (staging, UAT, prod) requires separate NAT Gateways
-- Each NAT Gateway requires an Elastic IP (EIP)
-- AWS account needs sufficient EIP quota (5 EIPs per environment)
-- Request EIP quota increase if needed through AWS Service Quotas console
-
-## Instance Types
-
-### Standard Instance Types
-- **EC2**: t3a.medium
-- **ElastiCache**: cache.t3a.medium
-
-### Environment-Specific Configurations
-- **Staging**: Standard instance types
-- **UAT**: Standard instance types
-- **Production**: Standard instance types
-
 ## Security
 
 - IAM users and groups with least privilege access
@@ -285,6 +277,7 @@ terraform apply
 
 Detailed service documentation is available in the `docs` directory:
 - [Redis Service Documentation](docs/redis-service.md)
+- [Workspace Management Documentation](docs/workspace-management.md)
 
 ## Maintenance
 

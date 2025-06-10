@@ -66,6 +66,11 @@ variable "basic_auth_password" {
   sensitive   = true
 }
 
+variable "name_prefix" {
+  description = "Prefix for resource names."
+  type        = string
+}
+
 locals {
   name_prefix = "${var.project}-${var.environment}"
 } 

@@ -17,6 +17,11 @@ provider "aws" {
   region = var.aws_region
 }
 
+provider "aws" {
+  region = "us-east-1"  # Required for ACM certificates used with CloudFront
+  alias  = "virginia"
+}
+
 # =============================================================================
 # ACM Certificate
 # =============================================================================
@@ -27,6 +32,7 @@ resource "aws_acm_certificate" "main" {
   
   lifecycle {
     create_before_destroy = true
+    prevent_destroy = true
   }
   
   tags = merge(var.tags, {

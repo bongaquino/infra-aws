@@ -1,19 +1,19 @@
 output "table_name" {
-  description = "Name of the DynamoDB table"
-  value       = aws_dynamodb_table.koneksi_table.name
+  description = "The name of the DynamoDB table."
+  value       = aws_dynamodb_table.main.name
 }
 
 output "table_arn" {
-  description = "ARN of the DynamoDB table"
-  value       = aws_dynamodb_table.koneksi_table.arn
+  description = "The ARN of the DynamoDB table."
+  value       = aws_dynamodb_table.main.arn
 }
 
 output "table_id" {
-  description = "ID of the DynamoDB table"
-  value       = aws_dynamodb_table.koneksi_table.id
+  description = "The ID of the DynamoDB table."
+  value       = aws_dynamodb_table.main.id
 }
 
 output "table_stream_arn" {
-  description = "ARN of the DynamoDB table stream"
-  value       = aws_dynamodb_table.koneksi_table.stream_arn
+  description = "The ARN of the DynamoDB table stream."
+  value       = aws_dynamodb_table.main.stream_arn
 } 

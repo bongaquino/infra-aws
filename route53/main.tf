@@ -26,6 +26,10 @@ resource "aws_route53_zone" "main" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-zone"
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================

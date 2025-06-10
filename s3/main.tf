@@ -21,11 +21,17 @@ provider "aws" {
 # S3 Bucket
 # =============================================================================
 resource "aws_s3_bucket" "main" {
-  bucket = "${var.name_prefix}-bucket"
+  bucket = var.bucket_name
   
   tags = merge(var.tags, {
-    Name = "${var.name_prefix}-bucket"
+    Name        = var.bucket_name
+    Project     = var.project
+    Environment = var.environment
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # =============================================================================
@@ -127,7 +133,7 @@ resource "aws_s3_bucket_policy" "main" {
 # CloudWatch Alarms
 # =============================================================================
 resource "aws_cloudwatch_metric_alarm" "bucket_size" {
-  alarm_name          = "${var.name_prefix}-bucket-size"
+  alarm_name          = "${var.project}-${var.environment}-bucket-size"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "BucketSizeBytes"
@@ -146,7 +152,7 @@ resource "aws_cloudwatch_metric_alarm" "bucket_size" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "number_of_objects" {
-  alarm_name          = "${var.name_prefix}-number-of-objects"
+  alarm_name          = "${var.project}-${var.environment}-number-of-objects"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "NumberOfObjects"
