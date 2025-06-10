@@ -14,7 +14,7 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
   - Two availability zones
   - NAT Gateways for private subnet internet access
   - Internet Gateway for public subnet access
-  - Security groups for controlled access
+  - Simplified security groups for controlled access
   - VPC endpoints for AWS services
 
 - **DynamoDB**: NoSQL database for data storage
@@ -31,12 +31,12 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
   - Dedicated subnet group
   - Security group integration
 
-- **EC2**: Bastion host for secure access
+- **EC2**: Application servers
   - Ubuntu 24.04 LTS
   - t3a.medium instance type
   - SSH access via key pair
-  - Public subnet placement
-  - Public security group
+  - Private subnet placement
+  - Private security group
 
 - **Amplify**: Web application hosting
   - Automatic CI/CD from GitHub
@@ -111,6 +111,83 @@ Each environment has its own:
 - Git for version control
 - Domain registered in Route53 (for custom domains)
 
+## AWS Quotas and Limits
+
+### Required Quotas
+- **Elastic IPs (EIPs)**: 5 per environment (15 total for all environments)
+  - 2 EIPs for NAT Gateways per environment
+  - Additional EIPs for other resources as needed
+- **VPCs**: 5 per region
+- **NAT Gateways**: 2 per environment
+- **Internet Gateways**: 1 per VPC
+
+### Requesting Quota Increases
+1. Go to AWS Service Quotas console: https://console.aws.amazon.com/servicequotas/
+2. Select the region (ap-southeast-1)
+3. Search for the service quota you need to increase
+4. Click "Request quota increase"
+5. Provide justification for the increase
+6. Submit the request
+
+### Common Quota Requirements
+- EIPs: Request at least 5 per environment
+- VPCs: Default limit is usually sufficient
+- NAT Gateways: Default limit is usually sufficient
+
+## State Management
+
+### State File Structure
+- Each module has its own state file
+- State files are stored in S3
+- State locking is enabled using DynamoDB
+- Environment-specific states are separated
+
+### State File Location
+```
+s3://koneksi-terraform-state/
+├── vpc/
+│   ├── staging/
+│   ├── uat/
+│   └── prod/
+├── ec2/
+│   ├── staging/
+│   ├── uat/
+│   └── prod/
+└── ...
+```
+
+### State File Migration
+1. Initialize the new backend:
+```bash
+terraform init -migrate-state
+```
+
+2. Verify the state:
+```bash
+terraform state list
+```
+
+3. Remove the old state file:
+```bash
+rm terraform.tfstate
+```
+
+## Environment Variables
+
+### Required Environment Variables
+```bash
+export AWS_PROFILE=koneksi
+export TF_VAR_environment=staging|uat|prod
+export TF_VAR_region=ap-southeast-1
+```
+
+### AWS Profile Configuration
+```ini
+[profile koneksi]
+region = ap-southeast-1
+output = json
+```
+
 ## Usage
 
 1. Initialize Terraform in each directory:
@@ -158,42 +235,29 @@ cd ../route53
 terraform apply
 ```
 
-3. Setting up Amplify and Custom Domain:
-```bash
-# Create Amplify app and connect to GitHub repository
-aws amplify create-app --name koneksi-web-staging --repository https://github.com/koneksi-tech/koneksi-web
-
-# Create branch for staging
-aws amplify create-branch --app-id <app-id> --branch-name staging
-
-# Associate custom domain
-aws amplify create-domain-association --app-id <app-id> --domain-name app-staging.koneksi.co.kr --sub-domain-settings "[{\"prefix\":\"www\",\"branchName\":\"staging\"},{\"prefix\":\"\",\"branchName\":\"staging\"}]"
-
-# Update DNS records in Route53
-cd ../route53
-terraform apply
-```
-
 ## VPC Integration
 
 ### Subnet Usage
-- **Public Subnets**: EC2 bastion hosts
-- **Private Subnets**: Application servers
-- **Database Subnets**: RDS instances
-- **ElastiCache Subnets**: Redis clusters
-- **Data Private Subnets**: DynamoDB VPC endpoints
+- **Public Subnets**: Resources requiring direct internet access
+- **Private Subnets**: Application servers and internal resources
+- **Data Private Subnets**: Database and cache resources
 
 ### Security Groups
-- **Public SG**: EC2 bastion hosts
-- **Private SG**: Application servers
-- **Database SG**: RDS instances
-- **ElastiCache SG**: Redis clusters
+- **Public SG**: For resources in public subnets
+- **Private SG**: For resources in private subnets
+- **Data Private SG**: For resources in data private subnets
 
 ### VPC Endpoints
 - S3 Gateway endpoint
 - DynamoDB Gateway endpoint
 - SSM Interface endpoint
 - Secrets Manager Interface endpoint
+
+### Important Notes
+- Each environment (staging, UAT, prod) requires separate NAT Gateways
+- Each NAT Gateway requires an Elastic IP (EIP)
+- AWS account needs sufficient EIP quota (5 EIPs per environment)
+- Request EIP quota increase if needed through AWS Service Quotas console
 
 ## Instance Types
 
@@ -211,7 +275,6 @@ terraform apply
 - IAM users and groups with least privilege access
 - VPC is configured with public and private subnets
 - Security groups are set up to allow necessary traffic
-- SSH access is allowed from anywhere to public subnets
 - Private subnets are accessible only from within the VPC
 - All resources are tagged with environment and project name
 - Encryption enabled for all applicable services
@@ -234,6 +297,8 @@ Detailed service documentation is available in the `docs` directory:
 - Monitor SSL certificate expiration
 - Check Amplify build status and logs
 - Review CloudFront distribution metrics
+- Monitor AWS quota usage
+- Regularly check state file integrity
 
 ## Contributing
 
@@ -247,4 +312,4 @@ Detailed service documentation is available in the `docs` directory:
 
 ## Support
 
-For any issues or questions, contact the DevOps team.
+For any issues or questions, contact the DevOps team. 

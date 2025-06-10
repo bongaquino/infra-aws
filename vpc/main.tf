@@ -32,16 +32,16 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
   enable_dns_support   = true
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-vpc"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-vpc"
   })
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-igw"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-igw"
   })
 }
 
@@ -51,57 +51,60 @@ resource "aws_internet_gateway" "main" {
 locals {
   azs = slice(data.aws_availability_zones.available.names, 0, var.az_count)
   
-  public_subnet_cidrs = [
-    for i in range(var.az_count) : 
-    cidrsubnet(var.vpc_cidr, 8, i + 1)
-  ]
+  public_subnet_cidrs = {
+    for i, az in local.azs : az => cidrsubnet(var.vpc_cidr, 8, index(local.azs, az) + 1)
+  }
   
-  private_subnet_cidrs = [
-    for i in range(var.az_count) : 
-    cidrsubnet(var.vpc_cidr, 8, i + 10)
-  ]
+  private_subnet_cidrs = {
+    for i, az in local.azs : az => cidrsubnet(var.vpc_cidr, 8, index(local.azs, az) + 10)
+  }
   
-  data_private_subnet_cidrs = [
-    for i in range(var.az_count) : 
-    cidrsubnet(var.vpc_cidr, 8, i + 20)
-  ]
+  data_private_subnet_cidrs = {
+    for i, az in local.azs : az => cidrsubnet(var.vpc_cidr, 8, index(local.azs, az) + 20)
+  }
 }
 
 resource "aws_subnet" "public" {
-  count             = var.az_count
+  for_each          = local.public_subnet_cidrs
   vpc_id            = aws_vpc.main.id
-  cidr_block        = local.public_subnet_cidrs[count.index]
-  availability_zone = local.azs[count.index]
+  cidr_block        = each.value
+  availability_zone = each.key
   
   map_public_ip_on_launch = true
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-public-${count.index + 1}"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-public-subnet-${index(local.azs, each.key) + 1}"
     Tier = "Public"
+    AZ   = each.key
+    Type = "public"
   })
 }
 
 resource "aws_subnet" "private" {
-  count             = var.az_count
+  for_each          = local.private_subnet_cidrs
   vpc_id            = aws_vpc.main.id
-  cidr_block        = local.private_subnet_cidrs[count.index]
-  availability_zone = local.azs[count.index]
+  cidr_block        = each.value
+  availability_zone = each.key
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-private-${count.index + 1}"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-private-subnet-${index(local.azs, each.key) + 1}"
     Tier = "Private"
+    AZ   = each.key
+    Type = "private"
   })
 }
 
 resource "aws_subnet" "data_private" {
-  count             = var.az_count
+  for_each          = local.data_private_subnet_cidrs
   vpc_id            = aws_vpc.main.id
-  cidr_block        = local.data_private_subnet_cidrs[count.index]
-  availability_zone = local.azs[count.index]
+  cidr_block        = each.value
+  availability_zone = each.key
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-data-private-${count.index + 1}"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-data-private-subnet-${index(local.azs, each.key) + 1}"
     Tier = "Data"
+    AZ   = each.key
+    Type = "data-private"
   })
 }
 
@@ -109,21 +112,21 @@ resource "aws_subnet" "data_private" {
 # NAT Gateway Configuration
 # =============================================================================
 resource "aws_eip" "nat" {
-  count  = var.az_count
-  domain = "vpc"
+  for_each = { for i, az in local.azs : az => i }
+  domain   = "vpc"
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-nat-eip-${count.index + 1}"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-nat-eip-${each.value + 1}"
   })
 }
 
 resource "aws_nat_gateway" "main" {
-  count         = var.az_count
-  allocation_id = aws_eip.nat[count.index].id
-  subnet_id     = aws_subnet.public[count.index].id
+  for_each      = { for i, az in local.azs : az => i }
+  allocation_id = aws_eip.nat[each.key].id
+  subnet_id     = aws_subnet.public[each.key].id
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-nat-${count.index + 1}"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-nat-${each.value + 1}"
   })
   
   depends_on = [aws_internet_gateway.main]
@@ -140,36 +143,36 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.main.id
   }
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-public-rt"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-public-rt"
   })
 }
 
 resource "aws_route_table" "private" {
-  count  = var.az_count
-  vpc_id = aws_vpc.main.id
+  for_each = { for i, az in local.azs : az => i }
+  vpc_id   = aws_vpc.main.id
   
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main[count.index].id
+    nat_gateway_id = aws_nat_gateway.main[each.key].id
   }
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-private-rt-${count.index + 1}"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-private-rt-${each.value + 1}"
   })
 }
 
 resource "aws_route_table" "data_private" {
-  count  = var.az_count
-  vpc_id = aws_vpc.main.id
+  for_each = { for i, az in local.azs : az => i }
+  vpc_id   = aws_vpc.main.id
   
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main[count.index].id
+    nat_gateway_id = aws_nat_gateway.main[each.key].id
   }
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-data-private-rt-${count.index + 1}"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-data-private-rt-${each.value + 1}"
   })
 }
 
@@ -177,28 +180,28 @@ resource "aws_route_table" "data_private" {
 # Route Table Associations
 # =============================================================================
 resource "aws_route_table_association" "public" {
-  count          = var.az_count
-  subnet_id      = aws_subnet.public[count.index].id
+  for_each       = aws_subnet.public
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private" {
-  count          = var.az_count
-  subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private[count.index].id
+  for_each       = aws_subnet.private
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.private[each.key].id
 }
 
 resource "aws_route_table_association" "data_private" {
-  count          = var.az_count
-  subnet_id      = aws_subnet.data_private[count.index].id
-  route_table_id = aws_route_table.data_private[count.index].id
+  for_each       = aws_subnet.data_private
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.data_private[each.key].id
 }
 
 # =============================================================================
 # Security Groups
 # =============================================================================
 resource "aws_security_group" "bastion" {
-  name        = "${var.name_prefix}-bastion-sg"
+  name        = "${local.name_prefix}-bastion-sg"
   description = "Security group for bastion host"
   vpc_id      = aws_vpc.main.id
   
@@ -216,13 +219,13 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-bastion-sg"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-bastion-sg"
   })
 }
 
 resource "aws_security_group" "private" {
-  name        = "${var.name_prefix}-private-sg"
+  name        = "${local.name_prefix}-private-sg"
   description = "Security group for private instances"
   vpc_id      = aws_vpc.main.id
   
@@ -240,7 +243,7 @@ resource "aws_security_group" "private" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-private-sg"
+  tags = merge(local.standard_tags, {
+    Name = "${local.name_prefix}-private-sg"
   })
 } 
