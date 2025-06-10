@@ -27,17 +27,33 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "environment" {
-  description = "Environment name for tagging"
-  type        = string
-  default     = "staging"
+variable "public_subnets" {
+  description = "List of public subnet CIDR blocks"
+  type        = list(string)
 }
 
-locals {
-  name_prefix = "${var.project}-${var.environment}"
-  standard_tags = {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "Terraform"
-  }
+variable "private_subnets" {
+  description = "List of private subnet CIDR blocks"
+  type        = list(string)
+}
+
+variable "database_subnets" {
+  description = "List of database subnet CIDR blocks"
+  type        = list(string)
+}
+
+variable "elasticache_subnets" {
+  description = "List of ElastiCache subnet CIDR blocks"
+  type        = list(string)
+}
+
+variable "availability_zones" {
+  description = "List of availability zones to use"
+  type        = list(string)
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
 } 
