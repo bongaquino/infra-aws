@@ -82,7 +82,8 @@ jobs:
       id: init-core
       run: |
         # Initialize core infrastructure modules in dependency order
-        for module in s3 vpc; do
+        # Note: VPC is excluded from CI - deploy manually when needed
+        for module in s3; do
           if [ -d "$module/envs/${{ github.ref_name }}" ]; then
             echo "Initializing $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
@@ -165,7 +166,8 @@ jobs:
         validation_errors=""
         
         # Validate environment-specific modules
-        for module in s3 vpc dynamodb elasticache parameter_store ec2 ecs alb amplify; do
+        # Note: VPC is excluded from CI - validate manually when needed
+        for module in s3 dynamodb elasticache parameter_store ec2 ecs alb amplify; do
           if [ -d "$module/envs/${{ github.ref_name }}" ]; then
             echo "Validating $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
@@ -220,7 +222,8 @@ jobs:
       run: |
         echo "Planning core infrastructure modules..."
         # Environment-specific core modules
-        for module in s3 vpc; do
+        # Note: VPC is excluded from CI - plan manually when needed
+        for module in s3; do
           if [ -d "$module/envs/${{ github.ref_name }}" ]; then
             echo "Planning $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
@@ -370,7 +373,8 @@ jobs:
         changes_detected=false
         
         # Environment-specific core modules
-        for module in s3 vpc; do
+        # Note: VPC is excluded from CI - deploy manually when needed
+        for module in s3; do
           if [ -d "$module/envs/${{ github.ref_name }}" ]; then
             echo "Checking $module for changes..."
             cd $module/envs/${{ github.ref_name }}
