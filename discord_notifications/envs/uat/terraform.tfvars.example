@@ -1,0 +1,58 @@
+# =============================================================================
+# Discord Notifications Configuration - UAT Environment
+# =============================================================================
+
+# REQUIRED: Discord webhook URL from your CTO
+# To get this:
+# 1. Go to your Discord server
+# 2. Server Settings → Integrations → Webhooks
+# 3. Create new webhook or use existing one
+# 4. Copy the webhook URL
+discord_webhook_url = "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
+
+# =============================================================================
+# Environment Configuration
+# =============================================================================
+environment = "uat"
+project     = "koneksi"
+
+# =============================================================================
+# Discord Bot Customization
+# =============================================================================
+discord_username   = "Koneksi UAT Bot"
+discord_avatar_url = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg"
+
+# =============================================================================
+# Monitoring and Storage
+# =============================================================================
+log_retention_days                  = 7
+store_webhook_in_parameter_store    = true
+enable_lambda_monitoring            = true
+enable_mentions                     = false  # Set to true for critical alerts
+
+# =============================================================================
+# Message Colors (Decimal color codes)
+# These control the color of Discord embed messages
+message_color          = "3447003"   # Blue (standardized)
+critical_message_color = "15158332"  # Red
+warning_message_color  = "16776960"  # Orange
+success_message_color  = "65280"     # Green
+
+# =============================================================================
+# Alarm Actions (Optional)
+# Add SNS topic ARNs to notify if Discord Lambda fails
+# =============================================================================
+alarm_actions = [
+  # "arn:aws:sns:ap-southeast-1:YOUR_ACCOUNT_ID:critical-alerts"
+]
+
+# =============================================================================
+# Resource Tags
+# =============================================================================
+tags = {
+  Environment = "uat"
+  Project     = "koneksi"
+  Owner       = "devops"
+  Purpose     = "discord-notifications"
+  ManagedBy   = "terraform"
+} 

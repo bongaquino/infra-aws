@@ -12,6 +12,7 @@ variable "app_name" {
 variable "repository" {
   description = "GitHub repository URL"
   type        = string
+  default     = "https://github.com/koneksi-tech/koneksi-web"
 }
 
 variable "github_token" {
@@ -26,13 +27,20 @@ variable "branch_name" {
   default     = "main"
 }
 
-variable "domain_name" {
-  description = "Domain name for the Amplify app"
+variable "branch_stage" {
+  description = "Stage of the branch (PRODUCTION, DEVELOPMENT, etc.)"
   type        = string
+  default     = "PRODUCTION"
 }
 
-variable "api_url" {
-  description = "API URL for the frontend application"
+variable "domain_name" {
+  description = "Domain name for the Amplify app (optional)"
+  type        = string
+  default     = ""
+}
+
+variable "vite_environment" {
+  description = "Vite environment variable value"
   type        = string
 }
 
@@ -52,18 +60,6 @@ variable "tags" {
   description = "Additional tags for all resources"
   type        = map(string)
   default     = {}
-}
-
-variable "basic_auth_username" {
-  description = "Username for basic authentication"
-  type        = string
-  default     = "admin"
-}
-
-variable "basic_auth_password" {
-  description = "Password for basic authentication"
-  type        = string
-  sensitive   = true
 }
 
 variable "name_prefix" {

@@ -138,11 +138,13 @@ variable "aws_region" {
 variable "vpc_id" {
   description = "ID of the VPC"
   type        = string
+  default     = null
 }
 
 variable "data_private_route_table_ids" {
   description = "List of data private route table IDs"
   type        = list(string)
+  default     = []
 }
 
 variable "tags" {
@@ -151,11 +153,10 @@ variable "tags" {
   default     = {}
 }
 
-variable "name_prefix" {
-  description = "Prefix for resource names."
-  type        = string
+variable "stream_enabled" {
+  description = "Enable DynamoDB streams"
+  type        = bool
+  default     = false
 }
 
-locals {
-  name_prefix = "${var.project}-${var.environment}"
-} 
+ 

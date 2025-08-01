@@ -1,0 +1,37 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::114774131450:root"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs/main-alb/AWSLogs/985869370256/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::114774131450:root"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs/main-alb-connections/AWSLogs/985869370256/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "delivery.logs.amazonaws.com"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "delivery.logs.amazonaws.com"
+      },
+      "Action": "s3:GetBucketAcl",
+      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs"
+    }
+  ]
+}

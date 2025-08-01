@@ -1,24 +1,23 @@
-output "user_access_keys" {
-  description = "Map of usernames to their access keys"
-  value = {
-    for username, user in aws_iam_access_key.main : username => {
-      access_key_id     = user.id
-      secret_access_key = user.secret
-    }
-  }
+output "iam_user_names" {
+  description = "List of IAM user names created."
+  value       = [for u in aws_iam_user.users : u.name]
+}
+
+output "iam_user_access_keys" {
+  description = "Access keys for IAM users. Sensitive!"
+  value       = { for k, v in aws_iam_access_key.user_keys : k => {
+    id     = v.id
+    secret = v.secret
+  } }
   sensitive = true
 }
 
-output "user_arns" {
-  description = "Map of usernames to their ARNs"
-  value = {
-    for username, user in aws_iam_user.main : username => user.arn
-  }
+output "iam_user_console_passwords" {
+  description = "Console passwords for IAM users - managed externally"
+  value       = "Passwords managed outside Terraform"
 }
 
-output "group_arns" {
-  description = "Map of group names to their ARNs"
-  value = {
-    main = aws_iam_group.main[0].arn
-  }
+output "iam_group_names" {
+  description = "List of IAM group names created."
+  value       = [aws_iam_group.developers.name, aws_iam_group.operations.name, aws_iam_group.management.name]
 } 

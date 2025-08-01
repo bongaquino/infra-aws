@@ -1,74 +1,82 @@
 # =============================================================================
-# VPC Outputs
+# Outputs
 # =============================================================================
 output "vpc_id" {
   description = "The ID of the VPC"
-  value       = aws_vpc.main.id
+  value       = local.vpc_id
 }
 
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
-  value       = aws_vpc.main.cidr_block
+  value       = local.vpc_cidr_actual
 }
 
-# =============================================================================
-# Subnet Outputs
-# =============================================================================
 output "public_subnet_ids" {
-  description = "List of public subnet IDs"
-  value       = [for s in values(aws_subnet.public) : s.id]
+  description = "List of IDs of public subnets"
+  value       = [for k, v in var.public_subnets : v.id]
 }
 
 output "private_subnet_ids" {
-  description = "List of private subnet IDs"
-  value       = [for s in values(aws_subnet.private) : s.id]
+  description = "List of IDs of private subnets"
+  value       = [for k, v in var.private_subnets : v.id]
 }
 
 output "data_private_subnet_ids" {
-  description = "IDs of the data private subnets."
-  value       = [for s in values(aws_subnet.data_private) : s.id]
+  description = "List of IDs of data private subnets"
+  value       = [for k, v in var.database_subnets : v.id]
 }
 
-# =============================================================================
-# Route Table Outputs
-# =============================================================================
+output "nat_gateway_ids" {
+  description = "List of NAT Gateway IDs"
+  value       = { for k, v in var.nat_gateways : k => v.id }
+}
+
+output "nat_gateway_public_ips" {
+  description = "List of Elastic IPs created for NAT Gateway"
+  value       = { for k, v in var.nat_gateways : k => v.id }
+}
+
 output "public_route_table_id" {
-  description = "ID of the public route table"
-  value       = aws_route_table.public.id
+  description = "ID of public route table"
+  value       = var.route_tables.public.id
 }
 
 output "private_route_table_ids" {
-  description = "List of private route table IDs"
-  value       = [for rt in values(aws_route_table.private) : rt.id]
+  description = "List of IDs of private route tables"
+  value       = [for rt in values(var.route_tables.private) : rt.id]
 }
 
 output "data_private_route_table_ids" {
-  description = "List of data private route table IDs"
-  value       = [for rt in values(aws_route_table.data_private) : rt.id]
+  description = "List of IDs of data private route tables"
+  value       = [for rt in values(var.route_tables.data_private) : rt.id]
 }
 
-# =============================================================================
-# NAT Gateway Outputs
-# =============================================================================
-output "nat_gateway_ids" {
-  description = "List of NAT Gateway IDs"
-  value       = [for nat in values(aws_nat_gateway.main) : nat.id]
+output "vpc_endpoint_ssm_id" {
+  description = "The ID of VPC endpoint for SSM"
+  value       = var.create_vpc_endpoints ? aws_vpc_endpoint.ssm[0].id : null
 }
 
-output "nat_public_ips" {
-  description = "List of NAT Gateway public IPs"
-  value       = [for eip in values(aws_eip.nat) : eip.public_ip]
+output "vpc_endpoint_ssmmessages_id" {
+  description = "The ID of VPC endpoint for SSM Messages"
+  value       = var.create_vpc_endpoints ? aws_vpc_endpoint.ssmmessages[0].id : null
 }
 
-# =============================================================================
-# Security Group Outputs
-# =============================================================================
-output "bastion_sg_id" {
-  description = "ID of the bastion security group."
-  value       = aws_security_group.bastion.id
+output "vpc_endpoint_ecr_api_id" {
+  description = "The ID of VPC endpoint for ECR API"
+  value       = var.create_vpc_endpoints ? aws_vpc_endpoint.ecr_api[0].id : null
 }
 
-output "private_sg_id" {
-  description = "ID of the private security group."
-  value       = aws_security_group.private.id
+output "vpc_endpoint_ecr_dkr_id" {
+  description = "The ID of VPC endpoint for ECR DKR"
+  value       = var.create_vpc_endpoints ? aws_vpc_endpoint.ecr_dkr[0].id : null
 }
+
+output "vpc_endpoint_security_group_id" {
+  description = "The ID of security group created for VPC endpoints"
+  value       = var.create_vpc_endpoints ? aws_security_group.vpc_endpoints[0].id : null
+}
+
+output "private_security_group_id" {
+  description = "The ID of the private security group"
+  value       = var.create_security_groups ? aws_security_group.private[0].id : null
+} 

@@ -73,10 +73,6 @@ resource "aws_elasticache_replication_group" "main" {
       Name = "${var.name_prefix}-redis"
     }
   )
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 # =============================================================================
