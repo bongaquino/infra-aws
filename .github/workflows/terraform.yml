@@ -80,11 +80,16 @@ jobs:
     - name: Create Terraform Workspace
       id: workspace
       run: |
-        echo "Creating workspace ${{ github.ref_name }} if it doesn't exist..."
+        echo "Ensuring workspace ${{ github.ref_name }} exists..."
         # Try to create workspace in s3 module first
         cd s3/envs/${{ github.ref_name }}
         terraform init
-        terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+        if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+          echo "Workspace ${{ github.ref_name }} already exists and selected"
+        else
+          echo "Creating new workspace ${{ github.ref_name }}"
+          terraform workspace new ${{ github.ref_name }}
+        fi
         cd $GITHUB_WORKSPACE
 
     - name: Terraform Init - Core Infrastructure
@@ -96,7 +101,11 @@ jobs:
             echo "Initializing $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
             terraform init
-            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+            if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+              echo "Using existing workspace ${{ github.ref_name }}"
+            else
+              terraform workspace new ${{ github.ref_name }}
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -106,7 +115,11 @@ jobs:
             echo "Initializing $module (root-level)..."
             cd $module
             terraform init
-            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+            if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+              echo "Using existing workspace ${{ github.ref_name }}"
+            else
+              terraform workspace new ${{ github.ref_name }}
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -120,7 +133,11 @@ jobs:
             echo "Initializing $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
             terraform init
-            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+            if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+              echo "Using existing workspace ${{ github.ref_name }}"
+            else
+              terraform workspace new ${{ github.ref_name }}
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -130,7 +147,11 @@ jobs:
             echo "Initializing $module (root-level)..."
             cd $module
             terraform init
-            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+            if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+              echo "Using existing workspace ${{ github.ref_name }}"
+            else
+              terraform workspace new ${{ github.ref_name }}
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -144,7 +165,11 @@ jobs:
             echo "Initializing $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
             terraform init
-            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+            if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+              echo "Using existing workspace ${{ github.ref_name }}"
+            else
+              terraform workspace new ${{ github.ref_name }}
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -154,7 +179,11 @@ jobs:
             echo "Initializing $module (root-level)..."
             cd $module
             terraform init
-            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+            if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+              echo "Using existing workspace ${{ github.ref_name }}"
+            else
+              terraform workspace new ${{ github.ref_name }}
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -163,7 +192,11 @@ jobs:
           echo "Initializing codepipeline..."
           cd codepipeline/${{ github.ref_name }}
           terraform init
-          terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+          if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+            echo "Using existing workspace ${{ github.ref_name }}"
+          else
+            terraform workspace new ${{ github.ref_name }}
+          fi
           cd $GITHUB_WORKSPACE
         fi
         # Discord notifications (staging and uat only)
@@ -171,7 +204,11 @@ jobs:
           echo "Initializing discord_notifications..."
           cd discord_notifications/envs/${{ github.ref_name }}
           terraform init
-          terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+          if terraform workspace select ${{ github.ref_name }} 2>/dev/null; then
+            echo "Using existing workspace ${{ github.ref_name }}"
+          else
+            terraform workspace new ${{ github.ref_name }}
+          fi
           cd $GITHUB_WORKSPACE
         fi
 
