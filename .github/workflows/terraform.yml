@@ -77,6 +77,16 @@ jobs:
         fi
         echo "All modules have documentation ✅"
 
+    - name: Create Terraform Workspace
+      id: workspace
+      run: |
+        echo "Creating workspace ${{ github.ref_name }} if it doesn't exist..."
+        # Try to create workspace in s3 module first
+        cd s3/envs/${{ github.ref_name }}
+        terraform init
+        terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
+        cd $GITHUB_WORKSPACE
+
     - name: Terraform Init - Core Infrastructure
       id: init-core
       run: |
@@ -86,6 +96,7 @@ jobs:
             echo "Initializing $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
             terraform init
+            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -95,6 +106,7 @@ jobs:
             echo "Initializing $module (root-level)..."
             cd $module
             terraform init
+            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -108,6 +120,7 @@ jobs:
             echo "Initializing $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
             terraform init
+            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -117,6 +130,7 @@ jobs:
             echo "Initializing $module (root-level)..."
             cd $module
             terraform init
+            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -130,6 +144,7 @@ jobs:
             echo "Initializing $module (environment-specific)..."
             cd $module/envs/${{ github.ref_name }}
             terraform init
+            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -139,6 +154,7 @@ jobs:
             echo "Initializing $module (root-level)..."
             cd $module
             terraform init
+            terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -147,6 +163,7 @@ jobs:
           echo "Initializing codepipeline..."
           cd codepipeline/${{ github.ref_name }}
           terraform init
+          terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
           cd $GITHUB_WORKSPACE
         fi
         # Discord notifications (staging and uat only)
@@ -154,6 +171,7 @@ jobs:
           echo "Initializing discord_notifications..."
           cd discord_notifications/envs/${{ github.ref_name }}
           terraform init
+          terraform workspace select ${{ github.ref_name }} || terraform workspace new ${{ github.ref_name }}
           cd $GITHUB_WORKSPACE
         fi
 
