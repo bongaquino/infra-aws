@@ -366,25 +366,46 @@ jobs:
     - name: Terraform Apply - Core Infrastructure
       if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
       run: |
-        echo "Applying core infrastructure in dependency order..."
+        echo "Checking for changes in core infrastructure..."
+        changes_detected=false
+        
         # Environment-specific core modules
         for module in s3 vpc; do
           if [ -d "$module/envs/${{ github.ref_name }}" ]; then
-            echo "Applying $module (environment-specific)..."
+            echo "Checking $module for changes..."
             cd $module/envs/${{ github.ref_name }}
-            terraform apply -auto-approve
+            TF_WORKSPACE=${{ github.ref_name }} terraform plan -detailed-exitcode
+            if [ $? -eq 2 ]; then
+              echo "✅ Changes detected in $module - applying..."
+              TF_WORKSPACE=${{ github.ref_name }} terraform apply -auto-approve
+              changes_detected=true
+            else
+              echo "⏭️ No changes in $module - skipping apply"
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
+        
         # Root-level core modules
         for module in iam; do
           if [ -f "$module/main.tf" ]; then
-            echo "Applying $module (root-level)..."
+            echo "Checking $module for changes..."
             cd $module
-            terraform apply -auto-approve
+            terraform plan -detailed-exitcode
+            if [ $? -eq 2 ]; then
+              echo "✅ Changes detected in $module - applying..."
+              terraform apply -auto-approve
+              changes_detected=true
+            else
+              echo "⏭️ No changes in $module - skipping apply"
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
+        
+        if [ "$changes_detected" = false ]; then
+          echo "🎉 No changes detected in any core modules - deployment complete!"
+        fi
 
     - name: Terraform Apply - Services (Manual Approval Required)
       if: false  # Disabled for safety - requires manual approval
