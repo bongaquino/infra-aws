@@ -49,7 +49,14 @@ module "ecs" {
     { name = "MONGO_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/MONGO_PORT" },
     { name = "MONGO_USER", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/MONGO_USER" },
     { name = "PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/PORT" },
-    { name = "DB_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/db/password" }
+    { name = "DB_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/db/password" },
+    # PostgreSQL Database Configuration
+    { name = "POSTGRES_DB", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/POSTGRES_DB" },
+    { name = "POSTGRES_HOST", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/POSTGRES_HOST" },
+    { name = "POSTGRES_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/POSTGRES_PASSWORD" },
+    { name = "POSTGRES_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/POSTGRES_PORT" },
+    { name = "POSTGRES_SSL_MODE", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/POSTGRES_SSL_MODE" },
+    { name = "POSTGRES_USER", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/uat/POSTGRES_USER" }
   ]
   ecs_security_group_id   = var.ecs_security_group_id
   alb_security_group_id   = var.alb_security_group_id
