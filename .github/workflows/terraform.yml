@@ -399,22 +399,52 @@ jobs:
           if [ -f "$module/main.tf" ]; then
             echo "Checking $module for changes..."
             cd $module
+            
+            # SAFETY CHECK: Ensure terraform.tfvars exists for IAM
+            if [ "$module" = "iam" ] && [ ! -f "terraform.tfvars" ]; then
+              echo "🚨 CRITICAL ERROR: terraform.tfvars not found in IAM module!"
+              echo "This would cause user deletion. Aborting!"
+              exit 1
+            fi
+            
             if [ -f "terraform.tfvars" ]; then
-              terraform plan -detailed-exitcode -var-file=terraform.tfvars
+              echo "📄 Using terraform.tfvars for $module"
+              ls -la terraform.tfvars
+              
+              # Run plan and capture output to check for destruction
+              terraform plan -detailed-exitcode -var-file=terraform.tfvars -out=plan.tfplan
               plan_exit_code=$?
+              
+              # SAFETY CHECK: Look for destruction in plan
+              if terraform show -no-color plan.tfplan | grep -q "# .* will be destroyed"; then
+                echo "🚨 DESTRUCTION DETECTED in $module plan!"
+                echo "Plan contains resource destruction. Aborting to prevent data loss!"
+                terraform show plan.tfplan | grep "will be destroyed" || true
+                exit 1
+              fi
+              
               if [ $plan_exit_code -eq 2 ]; then
-                echo "✅ Changes detected in $module - applying..."
-                terraform apply -auto-approve -var-file=terraform.tfvars
+                echo "✅ Safe changes detected in $module - applying..."
+                terraform apply -auto-approve plan.tfplan
                 changes_detected=true
               else
                 echo "⏭️ No changes in $module - skipping apply"
               fi
             else
-              terraform plan -detailed-exitcode
+              terraform plan -detailed-exitcode -out=plan.tfplan
               plan_exit_code=$?
+              
+              # SAFETY CHECK: Look for destruction in plan
+              if terraform show -no-color plan.tfplan | grep -q "# .* will be destroyed"; then
+                echo "🚨 DESTRUCTION DETECTED in $module plan!"
+                echo "Plan contains resource destruction. Aborting to prevent data loss!"
+                terraform show plan.tfplan | grep "will be destroyed" || true
+                exit 1
+              fi
+              
               if [ $plan_exit_code -eq 2 ]; then
-                echo "✅ Changes detected in $module - applying..."
-                terraform apply -auto-approve
+                echo "✅ Safe changes detected in $module - applying..."
+                terraform apply -auto-approve plan.tfplan
                 changes_detected=true
               else
                 echo "⏭️ No changes in $module - skipping apply"
