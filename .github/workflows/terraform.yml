@@ -236,7 +236,11 @@ jobs:
           if [ -f "$module/main.tf" ]; then
             echo "Planning $module (root-level)..."
             cd $module
-            terraform plan -no-color -out=$module-plan.tfplan -var-file=terraform.tfvars
+            if [ -f "terraform.tfvars" ]; then
+              terraform plan -no-color -out=$module-plan.tfplan -var-file=terraform.tfvars
+            else
+              terraform plan -no-color -out=$module-plan.tfplan
+            fi
             cd $GITHUB_WORKSPACE
           fi
         done
@@ -395,13 +399,26 @@ jobs:
           if [ -f "$module/main.tf" ]; then
             echo "Checking $module for changes..."
             cd $module
-            terraform plan -detailed-exitcode -var-file=terraform.tfvars
-            if [ $? -eq 2 ]; then
-              echo "✅ Changes detected in $module - applying..."
-              terraform apply -auto-approve -var-file=terraform.tfvars
-              changes_detected=true
+            if [ -f "terraform.tfvars" ]; then
+              terraform plan -detailed-exitcode -var-file=terraform.tfvars
+              plan_exit_code=$?
+              if [ $plan_exit_code -eq 2 ]; then
+                echo "✅ Changes detected in $module - applying..."
+                terraform apply -auto-approve -var-file=terraform.tfvars
+                changes_detected=true
+              else
+                echo "⏭️ No changes in $module - skipping apply"
+              fi
             else
-              echo "⏭️ No changes in $module - skipping apply"
+              terraform plan -detailed-exitcode
+              plan_exit_code=$?
+              if [ $plan_exit_code -eq 2 ]; then
+                echo "✅ Changes detected in $module - applying..."
+                terraform apply -auto-approve
+                changes_detected=true
+              else
+                echo "⏭️ No changes in $module - skipping apply"
+              fi
             fi
             cd $GITHUB_WORKSPACE
           fi
