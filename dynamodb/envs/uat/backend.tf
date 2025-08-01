@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
 bucket         = "koneksi-terraform-state"
-    key            = "dynamodb/uat/terraform.tfstate"
+    key            = "dynamodb/terraform.tfstate"
 region         = "ap-southeast-1"
 encrypt        = true
 dynamodb_table = "koneksi-terraform-locks"
