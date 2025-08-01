@@ -4,15 +4,40 @@ variable "aws_region" {
   default     = "ap-southeast-1"
 }
 
+variable "project" {
+  description = "Project name for tagging"
+  type        = string
+  default     = "ardata"
+}
+
+variable "tags" {
+  description = "Additional tags for all resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "users" {
+  description = "Map of users to create with their configurations"
+  type = map(object({
+    username   = string
+    department = string
+    team       = string
+    email      = string
+    role       = string
+  }))
+  default = {}
+}
+
+variable "name_prefix" {
+  description = "Prefix for resource names."
+  type        = string
+  default     = "koneksi"
+}
+
 variable "service_principal" {
   description = "The service principal to allow assuming the role"
   type        = string
   default     = "ec2.amazonaws.com"
-}
-
-variable "policy_document" {
-  description = "The IAM policy document in JSON format"
-  type        = string
 }
 
 variable "create_instance_profile" {
@@ -39,41 +64,12 @@ variable "create_group" {
   default     = false
 }
 
-variable "project" {
-  description = "Project name for tagging"
-  type        = string
-  default     = "koneksi"
-}
-
-variable "environment" {
-  description = "Environment name for tagging"
-  type        = string
-  default     = "staging"
-}
-
-variable "tags" {
-  description = "Additional tags for all resources"
-  type        = map(string)
-  default     = {}
-}
-
-variable "users" {
-  description = "Map of users to create with their configurations"
-  type = map(object({
-    username   = string
-    department = string
-    team       = string
-    email      = string
-    role       = string
-  }))
-  default = {}
-}
-
-variable "name_prefix" {
-  description = "Prefix for resource names."
-  type        = string
-}
-
 locals {
-  name_prefix = "${var.project}-${var.environment}"
+  standard_tags = merge(
+    {
+      Project     = var.project
+      ManagedBy   = "terraform"
+    },
+    var.tags
+  )
 } 

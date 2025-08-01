@@ -1,0 +1,26 @@
+# Organization-wide CloudTrail Configuration
+organization_name = "koneksi"
+
+# CloudWatch Logs Configuration
+enable_cloudwatch_logs           = true
+cloudwatch_logs_retention_days   = 30
+
+# Security Monitoring
+enable_security_monitoring = true
+
+# S3 Lifecycle Management
+s3_lifecycle_days               = 90
+s3_noncurrent_version_days      = 30
+
+# Optional: SNS Topic for Notifications
+# alarm_sns_topic_arn = "arn:aws:sns:ap-southeast-1:123456789012:cloudtrail-alerts"
+
+# Optional: KMS Key for Encryption
+# kms_key_id = "arn:aws:kms:ap-southeast-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+
+# Additional Tags
+tags = {
+  Project     = "Koneksi"
+  Environment = "Multi-Environment"
+  Owner       = "DevOps Team"
+} 

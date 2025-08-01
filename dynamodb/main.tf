@@ -21,15 +21,18 @@ provider "aws" {
 # DynamoDB Table
 # =============================================================================
 resource "aws_dynamodb_table" "main" {
-  name           = "${var.name_prefix}-table"
-  billing_mode   = "PAY_PER_REQUEST"
+  name           = var.table_name
+  billing_mode   = var.billing_mode
   hash_key       = var.hash_key
   range_key      = var.range_key
-  stream_enabled = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  stream_enabled = var.stream_enabled
+  stream_view_type = var.stream_enabled ? "NEW_AND_OLD_IMAGES" : null
 
-  point_in_time_recovery {
+  dynamic "point_in_time_recovery" {
+    for_each = var.point_in_time_recovery_enabled ? [1] : []
+    content {
     enabled = true
+    }
   }
 
   server_side_encryption {
@@ -70,7 +73,7 @@ resource "aws_dynamodb_table" "main" {
   }
 
   tags = merge(var.tags, {
-    Name = "${var.name_prefix}-table"
+    Name = var.table_name
   })
 
   lifecycle {
@@ -79,16 +82,17 @@ resource "aws_dynamodb_table" "main" {
 }
 
 # =============================================================================
-# DynamoDB VPC Endpoint
+# DynamoDB VPC Endpoint (Optional)
 # =============================================================================
 resource "aws_vpc_endpoint" "dynamodb" {
+  count              = var.vpc_id != null ? 1 : 0
   vpc_id             = var.vpc_id
   service_name       = "com.amazonaws.${var.aws_region}.dynamodb"
   vpc_endpoint_type  = "Gateway"
   route_table_ids    = var.data_private_route_table_ids
 
   tags = merge(var.tags, {
-    Name = "${var.name_prefix}-dynamodb-endpoint"
+    Name = "${var.project}-${var.environment}-dynamodb-endpoint"
   })
 }
 
@@ -106,7 +110,7 @@ resource "aws_appautoscaling_target" "read_target" {
 
 resource "aws_appautoscaling_policy" "read_policy" {
   count              = var.billing_mode == "PROVISIONED" ? 1 : 0
-  name               = "${var.name_prefix}-read-capacity-autoscaling"
+  name               = "${var.project}-${var.environment}-read-capacity-autoscaling"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.read_target[0].resource_id
   scalable_dimension = aws_appautoscaling_target.read_target[0].scalable_dimension
@@ -131,7 +135,7 @@ resource "aws_appautoscaling_target" "write_target" {
 
 resource "aws_appautoscaling_policy" "write_policy" {
   count              = var.billing_mode == "PROVISIONED" ? 1 : 0
-  name               = "${var.name_prefix}-write-capacity-autoscaling"
+  name               = "${var.project}-${var.environment}-write-capacity-autoscaling"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.write_target[0].resource_id
   scalable_dimension = aws_appautoscaling_target.write_target[0].scalable_dimension
@@ -149,7 +153,7 @@ resource "aws_appautoscaling_policy" "write_policy" {
 # CloudWatch Alarms
 # =============================================================================
 resource "aws_cloudwatch_metric_alarm" "read_throttled_events" {
-  alarm_name          = "${var.name_prefix}-read-throttled-events"
+  alarm_name          = "${var.project}-${var.environment}-read-throttled-events"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "ReadThrottleEvents"
@@ -167,7 +171,7 @@ resource "aws_cloudwatch_metric_alarm" "read_throttled_events" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "write_throttled_events" {
-  alarm_name          = "${var.name_prefix}-write-throttled-events"
+  alarm_name          = "${var.project}-${var.environment}-write-throttled-events"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "WriteThrottleEvents"

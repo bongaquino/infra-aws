@@ -11,318 +11,252 @@ terraform {
 }
 
 # =============================================================================
-# Provider Configuration
-# =============================================================================
-provider "aws" {
-  region = var.aws_region
-}
-
-# =============================================================================
 # Data Sources
 # =============================================================================
-data "aws_availability_zones" "available" {
-  state = "available"
-}
+data "aws_availability_zones" "available" {}
 
 # =============================================================================
-# VPC Core Resources
+# VPC Creation Logic
 # =============================================================================
-resource "aws_vpc" "main" {
+
+# CREATE NEW VPC if vpc_id is null
+resource "aws_vpc" "new" {
+  count = var.vpc_id == null ? 1 : 0
+  
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
   
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.project}-${var.environment}-vpc"
-    }
-  )
+  tags = merge(var.tags, {
+    Name = "${var.name_prefix}-vpc"
+  })
+}
 
+# MANAGE EXISTING VPC if vpc_id is provided (for import)
+resource "aws_vpc" "existing" {
+  count = var.vpc_id != null ? 1 : 0
+  
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+  
+  tags = merge(var.tags, {
+    Name = "${var.name_prefix}-vpc"
+  })
+  
   lifecycle {
     prevent_destroy = true
   }
 }
 
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
-  
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.project}-${var.environment}-igw"
-    }
-  )
-
-  lifecycle {
-    prevent_destroy = true
-  }
+# USE EXISTING VPC if vpc_id is provided (data source for reference)
+data "aws_vpc" "existing" {
+  count = var.vpc_id != null ? 1 : 0
+  id    = var.vpc_id
 }
 
 # =============================================================================
-# Subnet Configurations
+# Internet Gateway - ALWAYS MANAGED
+# =============================================================================
+resource "aws_internet_gateway" "main" {
+  vpc_id = local.vpc_id
+  
+  tags = merge(var.tags, {
+    Name = "${var.name_prefix}-igw"
+  })
+}
+
+# =============================================================================
+# Locals - CONSOLIDATED
 # =============================================================================
 locals {
+  vpc_id = var.vpc_id != null ? aws_vpc.existing[0].id : aws_vpc.new[0].id
+  vpc_cidr_actual = var.vpc_id != null ? aws_vpc.existing[0].cidr_block : aws_vpc.new[0].cidr_block
   azs = slice(data.aws_availability_zones.available.names, 0, var.az_count)
-  
-  public_subnet_cidrs = {
-    for i, az in local.azs : az => cidrsubnet(var.vpc_cidr, 8, index(local.azs, az) + 1)
-  }
-  
-  private_subnet_cidrs = {
-    for i, az in local.azs : az => cidrsubnet(var.vpc_cidr, 8, index(local.azs, az) + 10)
-  }
-  
-  data_private_subnet_cidrs = {
-    for i, az in local.azs : az => cidrsubnet(var.vpc_cidr, 8, index(local.azs, az) + 20)
-  }
-}
-
-resource "aws_subnet" "public" {
-  for_each          = local.public_subnet_cidrs
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value
-  availability_zone = each.key
-  
-  map_public_ip_on_launch = true
-  
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.project}-${var.environment}-public-subnet-${index(local.azs, each.key) + 1}"
-    }
-  )
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "aws_subnet" "private" {
-  for_each          = local.private_subnet_cidrs
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value
-  availability_zone = each.key
-  
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.project}-${var.environment}-private-subnet-${index(local.azs, each.key) + 1}"
-    }
-  )
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "aws_subnet" "data_private" {
-  for_each          = local.data_private_subnet_cidrs
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value
-  availability_zone = each.key
-  
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.project}-${var.environment}-data-private-subnet-${index(local.azs, each.key) + 1}"
-    }
-  )
-
-  lifecycle {
-    prevent_destroy = true
+  tags = {
+    Environment = var.environment
+    Project     = var.project
+    ManagedBy   = "terraform"
   }
 }
 
 # =============================================================================
-# NAT Gateway Configuration
+# VPC Endpoints
 # =============================================================================
-resource "aws_eip" "nat" {
-  for_each = { for i, az in local.azs : az => i }
-  domain   = "vpc"
-  
+resource "aws_vpc_endpoint" "ssm" {
+  count = var.create_vpc_endpoints ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = "com.amazonaws.ap-southeast-1.ssm"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = [for subnet in values(var.private_subnets) : subnet.id]
+
+  security_group_ids = [
+    aws_security_group.vpc_endpoints[0].id
+  ]
+
+  private_dns_enabled = true
+
   tags = merge(
-    var.tags,
+    local.tags,
     {
-      Name = "${var.project}-${var.environment}-eip-${each.value + 1}"
+      Name = "koneksi-${var.environment}-ssm-endpoint"
     }
   )
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
-resource "aws_nat_gateway" "main" {
-  for_each      = { for i, az in local.azs : az => i }
-  allocation_id = aws_eip.nat[each.key].id
-  subnet_id     = aws_subnet.public[each.key].id
-  
+resource "aws_vpc_endpoint" "ssmmessages" {
+  count = var.create_vpc_endpoints ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = "com.amazonaws.ap-southeast-1.ssmmessages"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = [for subnet in values(var.private_subnets) : subnet.id]
+
+  security_group_ids = [
+    aws_security_group.vpc_endpoints[0].id
+  ]
+
+  private_dns_enabled = true
+
   tags = merge(
-    var.tags,
+    local.tags,
     {
-      Name = "${var.project}-${var.environment}-nat-${each.value + 1}"
+      Name = "koneksi-${var.environment}-ssmmessages-endpoint"
     }
   )
-  
-  depends_on = [aws_internet_gateway.main]
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
-# =============================================================================
-# Route Tables
-# =============================================================================
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
-  
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main.id
-  }
-  
+resource "aws_vpc_endpoint" "ecr_api" {
+  count = var.create_vpc_endpoints ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = "com.amazonaws.ap-southeast-1.ecr.api"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = [for subnet in values(var.private_subnets) : subnet.id]
+
+  security_group_ids = [
+    aws_security_group.vpc_endpoints[0].id
+  ]
+
+  private_dns_enabled = true
+
   tags = merge(
-    var.tags,
+    local.tags,
     {
-      Name = "${var.project}-${var.environment}-public-rt"
+      Name = "koneksi-${var.environment}-ecr-api-endpoint"
     }
   )
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
-resource "aws_route_table" "private" {
-  for_each = { for i, az in local.azs : az => i }
-  vpc_id   = aws_vpc.main.id
-  
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main[each.key].id
-  }
-  
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  count = var.create_vpc_endpoints ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = "com.amazonaws.ap-southeast-1.ecr.dkr"
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = [for subnet in values(var.private_subnets) : subnet.id]
+
+  security_group_ids = [
+    aws_security_group.vpc_endpoints[0].id
+  ]
+
+  private_dns_enabled = true
+
   tags = merge(
-    var.tags,
+    local.tags,
     {
-      Name = "${var.project}-${var.environment}-private-rt-${each.value + 1}"
+      Name = "koneksi-${var.environment}-ecr-dkr-endpoint"
     }
   )
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "aws_route_table" "data_private" {
-  for_each = { for i, az in local.azs : az => i }
-  vpc_id   = aws_vpc.main.id
-  
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main[each.key].id
-  }
-  
-  tags = merge(
-    var.tags,
-    {
-      Name = "${var.project}-${var.environment}-data-private-rt-${each.value + 1}"
-    }
-  )
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-# =============================================================================
-# Route Table Associations
-# =============================================================================
-resource "aws_route_table_association" "public" {
-  for_each       = aws_subnet.public
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.public.id
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "aws_route_table_association" "private" {
-  for_each       = aws_subnet.private
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.private[each.key].id
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "aws_route_table_association" "data_private" {
-  for_each       = aws_subnet.data_private
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.data_private[each.key].id
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 # =============================================================================
 # Security Groups
 # =============================================================================
-resource "aws_security_group" "bastion" {
-  name        = "${var.project}-${var.environment}-bastion-sg"
-  description = "Security group for bastion host"
-  vpc_id      = aws_vpc.main.id
-  
+resource "aws_security_group" "vpc_endpoints" {
+  count = var.create_vpc_endpoints ? 1 : 0
+
+  name        = "koneksi-${var.environment}-vpc-endpoints-sg"
+  description = "Security group for VPC endpoints"
+  vpc_id      = local.vpc_id
+
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = var.create_security_groups ? [aws_security_group.private[0].id] : []
   }
-  
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
+
   tags = merge(
-    var.tags,
+    local.tags,
     {
-      Name = "${var.project}-${var.environment}-bastion-sg"
+      Name = "koneksi-${var.environment}-vpc-endpoints-sg"
     }
   )
 }
 
 resource "aws_security_group" "private" {
-  name        = "${var.project}-${var.environment}-private-sg"
-  description = "Security group for private instances"
-  vpc_id      = aws_vpc.main.id
-  
-  ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    security_groups = [aws_security_group.bastion.id]
-  }
-  
+  count = var.create_security_groups ? 1 : 0
+
+  name        = "private-sg"
+  description = "Security group for private subnets"
+  vpc_id      = local.vpc_id
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   tags = merge(
-    var.tags,
+    local.tags,
     {
-      Name = "${var.project}-${var.environment}-private-sg"
+      Name = "koneksi-${var.environment}-private-sg"
+    }
+  )
+}
+
+resource "aws_security_group" "alb" {
+  count = var.create_security_groups ? 1 : 0
+  
+  name        = "${var.name_prefix}-alb-sg"
+  description = "Security group for ALB"
+  vpc_id      = local.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8081
+    to_port     = 8081
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+    local.tags,
+    {
+      Name = "${var.name_prefix}-alb-sg"
     }
   )
 } 

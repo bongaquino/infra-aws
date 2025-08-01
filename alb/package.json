@@ -1,0 +1,12 @@
+{
+  "name": "alb-logs-processor",
+  "version": "1.0.0",
+  "description": "Lambda function to process ALB logs from S3 to CloudWatch",
+  "main": "alb_logs_processor.js",
+  "dependencies": {
+    "aws-sdk": "^2.1000.0"
+  },
+  "scripts": {
+    "build": "zip -r alb_logs_processor.zip . -x '*.zip' '*.git*' 'node_modules/.cache/*'"
+  }
+} 

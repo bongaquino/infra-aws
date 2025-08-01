@@ -1,0 +1,112 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.22
+    commands:
+      - echo "Using Go version:"
+      - go version
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/koneksi-staging-backend-ecs
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+
+  build:
+    commands:
+      - echo "Navigating to source directory..."
+      - cd server
+      - echo "Running go mod tidy..."
+      - go mod tidy
+      - echo "Building Docker image..."
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+
+  post_build:
+    commands:
+      - echo "Build completed on $(date)"
+      - echo "Tagging image as latest..."
+      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
+      - echo "Pushing Docker image to ECR..."
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:latest
+      - echo "Creating task definition with latest image..."
+      - cd ..
+      - |
+        cat > taskdef.json << EOF
+        {
+          "family": "koneksi-staging-task",
+          "networkMode": "awsvpc",
+          "requiresCompatibilities": ["FARGATE"],
+          "cpu": "4096",
+          "memory": "8192",
+          "executionRoleArn": "arn:aws:iam::$AWS_ACCOUNT_ID:role/koneksi-staging-task-execution-role",
+          "taskRoleArn": "arn:aws:iam::$AWS_ACCOUNT_ID:role/koneksi-staging-task-role",
+          "containerDefinitions": [
+            {
+              "name": "koneksi-staging-backend",
+              "image": "$REPOSITORY_URI:$IMAGE_TAG",
+              "essential": true,
+              "portMappings": [
+                {
+                  "containerPort": 3000,
+                  "protocol": "tcp"
+                }
+              ],
+              "environment": [
+                {
+                  "name": "NODE_ENV",
+                  "value": "staging"
+                },
+                {
+                  "name": "API_URL", 
+                  "value": "https://staging.koneksi.co.kr"
+                }
+              ],
+              "secrets": [
+                {"name": "APP_NAME", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/APP_NAME"},
+                {"name": "APP_VERSION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/APP_VERSION"},
+                {"name": "IPFS_NODE_URL", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/IPFS_NODE_URL"},
+                {"name": "JWT_REFRESH_EXPIRATION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/JWT_REFRESH_EXPIRATION"},
+                {"name": "JWT_SECRET", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/JWT_SECRET"},
+                {"name": "POSTMARK_API_KEY", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/POSTMARK_API_KEY"},
+                {"name": "POSTMARK_FROM", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/POSTMARK_FROM"},
+                {"name": "REDIS_HOST", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/REDIS_HOST"},
+                {"name": "REDIS_PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/REDIS_PORT"},
+                {"name": "REDIS_PREFIX", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/REDIS_PREFIX"},
+                {"name": "APP_KEY", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/APP_KEY"},
+                {"name": "IPFS_DOWNLOAD_URL", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/IPFS_DOWNLOAD_URL"},
+                {"name": "JWT_TOKEN_EXPIRATION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/JWT_TOKEN_EXPIRATION"},
+                {"name": "MODE", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MODE"},
+                {"name": "MONGO_DATABASE", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_DATABASE"},
+                {"name": "MONGO_HOST", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_HOST"},
+                {"name": "MONGO_PASSWORD", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_PASSWORD"},
+                {"name": "MONGO_PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_PORT"},
+                {"name": "MONGO_USER", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_USER"},
+                {"name": "PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/PORT"},
+                {"name": "DB_PASSWORD", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/db/password"}
+              ],
+              "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                  "awslogs-group": "/ecs/koneksi-staging",
+                  "awslogs-region": "ap-southeast-1",
+                  "awslogs-stream-prefix": "ecs"
+                }
+              }
+            }
+          ]
+        }
+        EOF
+      - echo "Registering new task definition..."
+      - aws ecs register-task-definition --cli-input-json file://taskdef.json
+      - echo "Updating service to use latest task definition..."
+      - aws ecs update-service --cluster koneksi-staging-cluster --service koneksi-staging-service --task-definition koneksi-staging-task --force-new-deployment
+      - echo "Writing imagedefinitions.json for ECS deployment..."
+      - printf '[{"name":"koneksi-staging-backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json 
