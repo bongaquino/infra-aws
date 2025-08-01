@@ -8,6 +8,7 @@ on:
       - prod
     paths:
       - '**/*.tf'
+      - '**/*.tfvars'
       - '**/README.md'
       - '.github/workflows/terraform.yml'
   pull_request:
@@ -17,6 +18,7 @@ on:
       - prod
     paths:
       - '**/*.tf'
+      - '**/*.tfvars'
       - '**/README.md'
       - '.github/workflows/terraform.yml'
 
