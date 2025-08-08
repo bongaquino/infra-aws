@@ -1,4 +1,4 @@
-# Koneksi AWS Deployment
+# AWS Deployment
 
 This repository contains the Terraform configurations for deploying Koneksi's AWS infrastructure.
 
