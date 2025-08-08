@@ -188,6 +188,13 @@ def format_codepipeline_message(message: Dict[str, Any], timestamp: str) -> Dict
         color = COLORS['error']
         emoji = '❌'
         description = "**Failed!** Check logs for details."
+        
+        # Add detailed failure analysis for failed pipelines
+        failure_reason = get_pipeline_failure_reason(detail, pipeline_name, stage_name, action_name)
+        troubleshooting = get_pipeline_troubleshooting(pipeline_name, stage_name, action_name)
+        
+        description += f"\n\n🔍 **Failure Analysis:**\n{failure_reason}"
+        description += f"\n\n🛠️ **Next Steps:**\n{troubleshooting}"
     elif state == 'STARTED':
         color = COLORS['info']
         emoji = '🚀'
@@ -323,6 +330,13 @@ def format_codebuild_message(message: Dict[str, Any], timestamp: str) -> Dict[st
         color = COLORS['error']
         emoji = '❌'
         description = "**Build failed!** Check build logs for details."
+        
+        # Add detailed failure analysis for failed builds
+        failure_reason = get_codebuild_failure_reason(detail, project_name)
+        troubleshooting = get_codebuild_troubleshooting(project_name)
+        
+        description += f"\n\n🔍 **Failure Analysis:**\n{failure_reason}"
+        description += f"\n\n🛠️ **Next Steps:**\n{troubleshooting}"
     elif build_status == 'IN_PROGRESS':
         color = COLORS['info']
         emoji = '🔄'
@@ -410,6 +424,205 @@ def get_build_context(project_name: str) -> str:
     }
     
     return build_contexts.get(project_name, '🔧 **Build Project** - Compiles and packages application code')
+
+def get_pipeline_failure_reason(detail: Dict[str, Any], pipeline_name: str, stage_name: str, action_name: str) -> str:
+    """
+    Analyze Koneksi CodePipeline failure and provide detailed reason
+    """
+    # Try to extract failure details from the event
+    failure_details = detail.get('action-execution-result', {})
+    error_code = failure_details.get('errorCode', '')
+    error_message = failure_details.get('errorMessage', '')
+    
+    # Extract additional error details from external execution
+    external_execution = failure_details.get('externalExecutionSummary', '')
+    external_execution_id = failure_details.get('externalExecutionId', '')
+    
+    # Build the error message with actual details
+    error_details = ""
+    if error_message:
+        error_details += f"\n📋 **Error Message:** `{error_message}`"
+    if error_code:
+        error_details += f"\n🔍 **Error Code:** `{error_code}`"
+    if external_execution:
+        error_details += f"\n📄 **Summary:** {external_execution}"
+    if external_execution_id:
+        error_details += f"\n🆔 **Execution ID:** `{external_execution_id}`"
+    
+    # Determine base analysis
+    base_analysis = ""
+    if 'CodeBuild' in action_name:
+        if 'BUILD_FAILED' in error_code or 'build failed' in error_message.lower():
+            base_analysis = "❌ **Build Failed**: The CodeBuild project failed to compile or execute. Check build logs for Go compilation errors, dependency issues, or test failures."
+        elif 'TIMEOUT' in error_code:
+            base_analysis = "⏱️ **Build Timeout**: The build exceeded the maximum allowed time. Consider optimizing Go build steps or increasing timeout limits."
+        elif 'CLIENT_ERROR' in error_code:
+            base_analysis = "🔧 **Configuration Error**: Build configuration issue detected. Check buildspec.yml, environment variables, or IAM permissions."
+        elif 'DOCKER' in error_code or 'docker' in error_message.lower():
+            base_analysis = "🐳 **Docker Error**: Docker build or ECR push failed. Check Dockerfile syntax, base image availability, or ECR permissions."
+    
+    elif 'Deploy' in stage_name or 'Deploy' in action_name:
+        if 'INSUFFICIENT_PERMISSIONS' in error_code:
+            base_analysis = "🔐 **Permission Denied**: IAM role lacks required permissions for ECS deployment. Check ECS, ECR, or service-specific permissions."
+        elif 'SERVICE_NOT_FOUND' in error_code:
+            base_analysis = "🖥️ **Service Not Found**: ECS service or cluster is unavailable. Verify ECS cluster status and service configuration."
+        elif 'TASK_DEFINITION_NOT_FOUND' in error_code:
+            base_analysis = "📦 **Task Definition Missing**: ECS task definition not found or invalid. Check task definition configuration and registration."
+        elif 'DEPLOYMENT_FAILED' in error_code:
+            base_analysis = "🚀 **Deployment Failed**: ECS service deployment failed. Check service logs, health checks, and resource allocation."
+    
+    elif 'Source' in stage_name:
+        if 'GITHUB' in error_code or 'repository' in error_message.lower():
+            base_analysis = "📁 **Source Error**: Cannot access GitHub repository. Check webhook configuration, branch existence, or repository permissions."
+    
+    # Fallback if no specific pattern matched
+    if not base_analysis:
+        if error_message:
+            base_analysis = f"⚠️ **Pipeline Error**: {error_message[:200]}{'...' if len(error_message) > 200 else ''}"
+        elif error_code:
+            base_analysis = f"🔍 **Error Code**: {error_code}. Check AWS console for detailed error information."
+        else:
+            base_analysis = f"❌ **Pipeline Failed**: {stage_name} stage failed. Check the pipeline execution details for specific error information."
+    
+    # Combine base analysis with actual error details
+    return base_analysis + error_details
+
+def get_pipeline_troubleshooting(pipeline_name: str, stage_name: str, action_name: str) -> str:
+    """
+    Provide troubleshooting recommendations for Koneksi pipeline failures
+    """
+    # Project-specific troubleshooting for Koneksi
+    if 'backend' in pipeline_name:
+        if 'Deploy' in stage_name:
+            return """• Check ECS service health and task status in AWS console
+• Verify task definition has correct Go app configuration
+• Ensure environment variables are properly set for Go app
+• Check ECS service logs for Go application startup errors
+• Verify ECR image was pushed successfully and is accessible"""
+        elif 'CodeBuild' in action_name:
+            return """• Review build logs for Go compilation errors (go build, go mod)
+• Check if Go dependencies can be downloaded (go mod download)
+• Verify Dockerfile builds Go binary correctly
+• Ensure ECR repository permissions allow push
+• Check if Go version in buildspec.yml matches project requirements"""
+    
+    elif 'staging' in pipeline_name or 'uat' in pipeline_name:
+        if 'Deploy' in stage_name:
+            return """• Verify ECS cluster has sufficient capacity for deployment
+• Check if new task definition can start successfully
+• Review ALB health check configuration and endpoints
+• Ensure security groups allow traffic to ECS tasks
+• Check if database connections are properly configured"""
+        elif 'CodeBuild' in action_name:
+            return """• Check Go module dependencies and version compatibility
+• Verify Docker base image (golang:alpine) is available
+• Review ECR authentication and push permissions
+• Ensure buildspec.yml has correct Go build commands
+• Check if tests pass locally before pushing"""
+    
+    # Generic troubleshooting steps for Koneksi
+    return """• Check CloudWatch logs for detailed error messages
+• Verify IAM roles have required ECS and ECR permissions
+• Review recent code changes that might have caused the failure
+• Test Go application locally with same configuration
+• Check if ECS service can pull the latest ECR image
+• Contact the development team if issue persists"""
+
+def get_codebuild_failure_reason(detail: Dict[str, Any], project_name: str) -> str:
+    """
+    Analyze Koneksi CodeBuild failure and provide detailed reason
+    """
+    # Extract build phases to identify where failure occurred
+    build_complete_detail = detail.get('additional-information', {})
+    phases = build_complete_detail.get('phases', [])
+    
+    # Extract actual error message and log details
+    current_phase = detail.get('current-phase', '')
+    current_phase_context = detail.get('current-phase-context', '')
+    build_id = detail.get('build-id', '')
+    
+    # Look for phase-specific error messages
+    failed_phase = None
+    phase_error_message = ""
+    for phase in phases:
+        if phase.get('phase-status') == 'FAILED':
+            failed_phase = phase.get('phase-type')
+            # Try to extract context or error details from the phase
+            phase_contexts = phase.get('contexts', [])
+            if phase_contexts:
+                phase_error_message = phase_contexts[0].get('message', '')
+            break
+    
+    # Build error details section
+    error_details = ""
+    if current_phase:
+        error_details += f"\n📍 **Failed Phase:** `{current_phase}`"
+    if current_phase_context:
+        error_details += f"\n📝 **Phase Context:** {current_phase_context}"
+    if phase_error_message:
+        error_details += f"\n⚠️ **Phase Error:** `{phase_error_message}`"
+    if build_id:
+        short_build_id = build_id.split(':')[-1][:12] if ':' in build_id else build_id[:12]
+        error_details += f"\n🆔 **Build ID:** `{short_build_id}...`"
+    
+    # Determine base analysis
+    base_analysis = ""
+    if failed_phase:
+        if failed_phase == 'SUBMITTED':
+            base_analysis = "🚀 **Submission Failed**: Build could not be queued. Check service limits or IAM permissions."
+        elif failed_phase == 'PROVISIONING':
+            base_analysis = "⚙️ **Provisioning Failed**: Could not start build environment. Check compute type availability or VPC configuration."
+        elif failed_phase == 'DOWNLOAD_SOURCE':
+            base_analysis = "📥 **Source Download Failed**: Cannot access GitHub repository. Verify GitHub permissions or webhook configuration."
+        elif failed_phase == 'INSTALL':
+            base_analysis = "📦 **Install Phase Failed**: Dependency installation failed. Check go.mod, Docker base image, or system dependencies."
+        elif failed_phase == 'PRE_BUILD':
+            base_analysis = "🔧 **Pre-build Failed**: Pre-build commands failed. Review Docker login, Go module downloads, or configuration scripts."
+        elif failed_phase == 'BUILD':
+            base_analysis = "🔨 **Build Phase Failed**: Go compilation or Docker build failed. Check Go syntax errors, dependency issues, or Dockerfile problems."
+        elif failed_phase == 'POST_BUILD':
+            base_analysis = "📋 **Post-build Failed**: ECR push or cleanup failed. Review ECR authentication, image tagging, or post-build scripts."
+        elif failed_phase == 'UPLOAD_ARTIFACTS':
+            base_analysis = "📤 **Artifact Upload Failed**: Cannot upload build artifacts. Check S3 permissions or artifact paths."
+        elif failed_phase == 'FINALIZING':
+            base_analysis = "🏁 **Finalization Failed**: Build cleanup failed. Usually indicates resource cleanup issues."
+    
+    # Fallback for unknown failures
+    if not base_analysis:
+        base_analysis = "❌ **Build Failed**: Check CloudWatch logs for detailed Go compilation errors, Docker build issues, or ECR push failures."
+    
+    # Combine base analysis with actual error details
+    return base_analysis + error_details
+
+def get_codebuild_troubleshooting(project_name: str) -> str:
+    """
+    Provide troubleshooting recommendations for Koneksi CodeBuild failures
+    """
+    # Project-specific troubleshooting for Koneksi
+    if 'backend' in project_name:
+        return """• Check Go version compatibility (ensure correct version in buildspec.yml)
+• Verify go.mod and go.sum files are up to date (go mod tidy)
+• Review Go compilation errors and dependency issues
+• Ensure Docker build succeeds with Go binary compilation
+• Check ECR authentication and repository permissions
+• Verify environment variables for Go application are set correctly"""
+    
+    elif 'staging' in project_name or 'uat' in project_name:
+        return """• Review ECS task definition and service configuration
+• Check if Go application builds and runs locally
+• Verify Docker image tags and ECR repository access
+• Ensure ALB and security group configurations are correct
+• Check database connection strings and credentials
+• Verify all required environment variables are configured"""
+    
+    # Generic troubleshooting for Koneksi
+    return """• Review CloudWatch logs for specific Go compilation errors
+• Check buildspec.yml syntax and Go build commands
+• Verify IAM service role has required ECR and ECS permissions
+• Test Go build commands locally in similar environment
+• Check if recent Go dependency updates broke the build
+• Ensure build environment has sufficient resources for Go compilation
+• Verify Docker base image (golang:alpine) is accessible"""
 
 def format_ecs_task_message(message: Dict[str, Any], timestamp: str) -> Dict[str, Any]:
     """
