@@ -107,7 +107,7 @@ module "parameter_store" {
     "database-password" = "super-secret-password"
     "jwt-secret"        = "jwt-signing-secret-key"
     "api-key"          = "external-api-key-value"
-    "github-token"     = "ghp_xxxxxxxxxxxxxxxxxxxx"
+    "github-token"     = "your_github_token_here"
   }
 }
 ```
@@ -343,7 +343,7 @@ parameters = {
 secure_parameters = {
   "database-password" = "staging-db-password"
   "jwt-secret"       = "staging-jwt-secret-key"
-  "github-token"     = "ghp_staging_token_here"
+  "github-token"     = "your_staging_github_token_here"
 }
 ```
 
@@ -364,7 +364,7 @@ parameters = {
 secure_parameters = {
   "database-password" = "production-secure-password"
   "jwt-secret"       = "production-jwt-secret-key"
-  "github-token"     = "ghp_production_token_here"
+  "github-token"     = "your_production_github_token_here"
 }
 ```
 
