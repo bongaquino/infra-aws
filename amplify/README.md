@@ -185,7 +185,7 @@ terraform init
 
 3. **Set GitHub token**:
 ```bash
-export TF_VAR_github_token="ghp_your_github_token_here"
+export TF_VAR_github_token="your_github_token_here"
 ```
 
 4. **Plan the deployment**:
