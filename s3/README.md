@@ -164,8 +164,8 @@ module "web_assets" {
       allowed_headers = ["*"]
       allowed_methods = ["GET", "HEAD"]
       allowed_origins = [
-        "https://app.bongaquino.co.kr",
-        "https://app-staging.bongaquino.co.kr"
+        "https://app.example.com",
+        "https://app-staging.example.com"
       ]
       expose_headers  = ["ETag"]
       max_age_seconds = 3600
@@ -275,7 +275,7 @@ cors_rules = [
   {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "HEAD", "POST"]
-    allowed_origins = ["https://app.bongaquino.co.kr"]
+    allowed_origins = ["https://app.example.com"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3600
   }

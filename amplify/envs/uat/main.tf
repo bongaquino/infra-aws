@@ -17,10 +17,10 @@ module "amplify" {
   branch_name   = "main"
   
   # Domain Configuration
-  domain_name   = "app-uat.bongaquino.co.kr"
+  domain_name   = "app-uat.example.com"
   
   # API Configuration
-  api_url       = "https://uat.bongaquino.co.kr"
+  api_url       = "https://uat.example.com"
   
   # Authentication (GitHub token for deployments)
   github_token  = var.github_token

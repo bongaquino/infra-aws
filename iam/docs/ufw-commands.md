@@ -56,39 +56,39 @@ sudo ufw allow from 192.168.1.100 to any port 3306
 
 ## IPFS Cluster Specific Rules
 
-### Bootstrap Node (211.239.117.217)
+### Bootstrap Node (<BOOTSTRAP_NODE_IP>)
 ```bash
 # Allow Peer-01
-sudo ufw allow from 218.38.136.33 to any port 4001,5001,8080,9094,9096 proto tcp
+sudo ufw allow from <PEER_01_IP> to any port 4001,5001,8080,9094,9096 proto tcp
 
 # Allow Peer-02
-sudo ufw allow from 218.38.136.34 to any port 4001,5001,8080,9094,9096 proto tcp
+sudo ufw allow from <PEER_02_IP> to any port 4001,5001,8080,9094,9096 proto tcp
 
 # Allow HostCenter IPs
 sudo ufw allow from 110.10.81.170 to any  # Monitoring
 sudo ufw allow from 121.125.68.226 to any  # Management
 ```
 
-### Peer-01 (218.38.136.33)
+### Peer-01 (<PEER_01_IP>)
 ```bash
 # Allow Bootstrap Node
-sudo ufw allow from 211.239.117.217 to any port 4001,5001,8080,9094,9096 proto tcp
+sudo ufw allow from <BOOTSTRAP_NODE_IP> to any port 4001,5001,8080,9094,9096 proto tcp
 
 # Allow Peer-02
-sudo ufw allow from 218.38.136.34 to any port 4001,5001,8080,9094,9096 proto tcp
+sudo ufw allow from <PEER_02_IP> to any port 4001,5001,8080,9094,9096 proto tcp
 
 # Allow HostCenter IPs
 sudo ufw allow from 110.10.81.170 to any  # Monitoring
 sudo ufw allow from 121.125.68.226 to any  # Management
 ```
 
-### Peer-02 (218.38.136.34)
+### Peer-02 (<PEER_02_IP>)
 ```bash
 # Allow Bootstrap Node
-sudo ufw allow from 211.239.117.217 to any port 4001,5001,8080,9094,9096 proto tcp
+sudo ufw allow from <BOOTSTRAP_NODE_IP> to any port 4001,5001,8080,9094,9096 proto tcp
 
 # Allow Peer-01
-sudo ufw allow from 218.38.136.33 to any port 4001,5001,8080,9094,9096 proto tcp
+sudo ufw allow from <PEER_01_IP> to any port 4001,5001,8080,9094,9096 proto tcp
 
 # Allow HostCenter IPs
 sudo ufw allow from 110.10.81.170 to any  # Monitoring
@@ -128,7 +128,7 @@ sudo ufw delete allow 22/tcp
 sudo ufw delete allow from 192.168.1.100
 
 # Remove IPFS cluster rule
-sudo ufw delete allow from 218.38.136.33 to any port 4001,5001,8080,9094,9096 proto tcp
+sudo ufw delete allow from <PEER_01_IP> to any port 4001,5001,8080,9094,9096 proto tcp
 ```
 
 ## Advanced Rules

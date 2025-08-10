@@ -62,7 +62,7 @@ phases:
                 },
                 {
                   "name": "API_URL", 
-                  "value": "https://staging.bongaquino.co.kr"
+                  "value": "https://staging.example.com"
                 },
                 {
                   "name": "MODE",

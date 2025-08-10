@@ -3,7 +3,7 @@
 ## 🎯 **DEPLOYMENT COMPLETED SUCCESSFULLY**
 
 ### Server Details
-- **Server:** 218.38.136.34 (IPFS Peer-02)
+- **Server:** <PEER_02_IP> (IPFS Peer-02)
 - **OS:** Ubuntu 24.04 LTS
 - **SSH User:** ipfs
 - **Hostname:** bongaquino-ipfs-kr-peer-02
@@ -32,7 +32,7 @@
   - 52.77.36.120 (Backend Server)
   - 18.139.136.149 (bongaquino UAT Bastion)
   - 27.255.70.17 (Bootstrap Node)
-  - 218.38.136.33 (IPFS Peer-01)
+  - <PEER_01_IP> (IPFS Peer-01)
 
 #### 4. **Automated Monitoring**
 - ✅ **Health Checks**: Every 5 minutes
@@ -109,7 +109,7 @@
 
 ## ✅ **DEPLOYMENT SUMMARY**
 
-**IPFS Peer-02 (218.38.136.34) monitoring is now fully operational with:**
+**IPFS Peer-02 (<PEER_02_IP>) monitoring is now fully operational with:**
 - 5/5 health checks passing
 - Real-time Discord alerts
 - Automated incident response

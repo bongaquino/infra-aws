@@ -2,7 +2,7 @@
 
 # =============================================================================
 # IPFS Peer-01 Incident Response Automation
-# Server: 218.38.136.33 (Peer-01)
+# Server: <PEER_01_IP> (Peer-01)
 # SSH User: ipfs
 # Discord Channel: #bongaquino-alerts (same as staging/UAT)
 # =============================================================================
@@ -14,7 +14,7 @@ set -euo pipefail
 # =============================================================================
 
 # Server Configuration
-SERVER_IP="218.38.136.33"
+SERVER_IP="<PEER_01_IP>"
 SERVER_USER="ipfs"
 SERVER_NAME="IPFS Peer-01"
 

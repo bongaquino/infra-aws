@@ -68,9 +68,9 @@ check_health_endpoints() {
     local success_rate_count=0
     local success_rate="0%"
     
-    # Test staging.bongaquino.co.kr (backend API)
+    # Test staging.example.com (backend API)
     local start_time=$(date +%s)
-    local response=$(curl -s -w "%{http_code}" https://staging.bongaquino.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    local response=$(curl -s -w "%{http_code}" https://staging.example.com --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local end_time=$(date +%s)
     local response_time=$(((end_time - start_time) * 1000))
     local http_code="${response: -3}"
@@ -86,8 +86,8 @@ check_health_endpoints() {
         ((success_rate_count++))
     fi
     
-    # Test app-staging.bongaquino.co.kr (frontend)
-    local app_response=$(curl -s -w "%{http_code}" https://app-staging.bongaquino.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    # Test app-staging.example.com (frontend)
+    local app_response=$(curl -s -w "%{http_code}" https://app-staging.example.com --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local app_http_code="${app_response: -3}"
     
     if [[ "$app_http_code" == "200" ]]; then
@@ -96,7 +96,7 @@ check_health_endpoints() {
     fi
     
     # Test MongoDB admin interface
-    local mongo_response=$(curl -s -w "%{http_code}" -u "admin:pass" https://mongo-staging.bongaquino.co.kr/ --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    local mongo_response=$(curl -s -w "%{http_code}" -u "admin:pass" https://mongo-staging.example.com/ --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local mongo_http_code="${mongo_response: -3}"
     
     if [[ "$mongo_http_code" == "200" ]]; then
@@ -155,7 +155,7 @@ get_app_health() {
     local version="1.0.0"
     
     # Test backend API health
-    local api_response=$(curl -s https://staging.bongaquino.co.kr --max-time 10 2>/dev/null || echo "")
+    local api_response=$(curl -s https://staging.example.com --max-time 10 2>/dev/null || echo "")
     if [[ "$api_response" != *"healthy"* ]]; then
         backend_api="❌ Unhealthy"
     fi
@@ -187,9 +187,9 @@ send_health_summary() {
     "Server": "bongaquino-staging-backend (ALB)",
     "Test Type": "Lambda Function Update Verification",
     "Health Monitoring": "Primary endpoint monitoring with CloudWatch Synthetics",
-    "Backend API": "$backend_status (https://staging.bongaquino.co.kr)",
-    "Frontend App": "$app_status (https://app-staging.bongaquino.co.kr)",
-    "MongoDB Admin": "$mongo_status (https://mongo-staging.bongaquino.co.kr/)",
+    "Backend API": "$backend_status (https://staging.example.com)",
+    "Frontend App": "$app_status (https://app-staging.example.com)",
+    "MongoDB Admin": "$mongo_status (https://mongo-staging.example.com/)",
     "Response Time": "$backend_response_time",
     "Success Rate": "$success_rate",
     "ECS Service Cluster": "bongaquino-staging-cluster", 
@@ -219,8 +219,8 @@ test_endpoints() {
     
     # Test each endpoint
     local endpoints=(
-        "https://staging.bongaquino.co.kr"
-        "https://app-staging.bongaquino.co.kr"
+        "https://staging.example.com"
+        "https://app-staging.example.com"
     )
     
     for endpoint in "${endpoints[@]}"; do

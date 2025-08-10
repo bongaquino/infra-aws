@@ -20,7 +20,7 @@ The ACM module creates SSL/TLS certificates with automatic DNS validation and li
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Route53 Zone  │    │  ACM Certificate │    │   CloudFront    │
-│  bongaquino.co.kr  │───▶│     (SSL/TLS)    │───▶│  Distribution   │
+│  example.com  │───▶│     (SSL/TLS)    │───▶│  Distribution   │
 │                 │    │                 │    │   (us-east-1)   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 │
@@ -55,11 +55,11 @@ acm/
 module "acm" {
   source = "./acm"
   
-  domain_name = "bongaquino.co.kr"
+  domain_name = "example.com"
   subject_alternative_names = [
-    "*.bongaquino.co.kr",
-    "api.bongaquino.co.kr",
-    "app.bongaquino.co.kr"
+    "*.example.com",
+    "api.example.com",
+    "app.example.com"
   ]
 }
 ```
@@ -142,27 +142,27 @@ provider "aws" {
 ### Single Domain Certificate
 
 ```hcl
-domain_name = "api.bongaquino.co.kr"
+domain_name = "api.example.com"
 subject_alternative_names = []
 ```
 
 ### Wildcard Certificate
 
 ```hcl
-domain_name = "bongaquino.co.kr"
-subject_alternative_names = ["*.bongaquino.co.kr"]
+domain_name = "example.com"
+subject_alternative_names = ["*.example.com"]
 ```
 
 ### Multi-Domain Certificate
 
 ```hcl
-domain_name = "bongaquino.co.kr"
+domain_name = "example.com"
 subject_alternative_names = [
-  "*.bongaquino.co.kr",
-  "app-staging.bongaquino.co.kr",
-  "app-uat.bongaquino.co.kr",
-  "api-staging.bongaquino.co.kr",
-  "api-uat.bongaquino.co.kr"
+  "*.example.com",
+  "app-staging.example.com",
+  "app-uat.example.com",
+  "api-staging.example.com",
+  "api-uat.example.com"
 ]
 ```
 

@@ -9,7 +9,7 @@ locals {
 =======
       team       = "bongaquino"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-      email      = "test.dev1@bongaquino.com"
+      email      = "test.dev1@example.com"
       role       = "test-developer"
     }
   }
@@ -24,7 +24,7 @@ locals {
 =======
       team       = "bongaquino"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-      email      = "test.devops1@bongaquino.com"
+      email      = "test.devops1@example.com"
       role       = "test-devops"
     }
   }

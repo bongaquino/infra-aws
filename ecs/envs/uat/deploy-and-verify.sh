@@ -249,7 +249,7 @@ test_health_check() {
     print_status "Testing application health with new configuration..."
     
     # Get ALB endpoint
-    ALB_ENDPOINT="https://server-uat.bongaquino.co.kr"
+    ALB_ENDPOINT="https://server-uat.example.com"
     
     # Test health check
     HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$ALB_ENDPOINT/check-health" || echo "000")

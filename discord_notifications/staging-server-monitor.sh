@@ -3,7 +3,7 @@
 # Configuration
 DISCORD_WEBHOOK="https://discord.com/api/webhooks/1253567522705961032/LGU8x_LfOqQgJaFoRaVHC6q70YF9PiL0_P3L5iXCn9IrhPvS6_qKmkbshWAJOKZpGLQ6"
 CONTAINERS=("server" "redis" "mongo-express" "mongo" "redis-commander" "nginx-proxy")
-HOSTNAME="staging.bongaquino.co.kr"
+HOSTNAME="staging.example.com"
 
 # Discord Colors (Standardized)
 COLOR_GREEN=65280      # Green (FIXED - was 3066993)
@@ -111,7 +111,7 @@ check_redis() {
 # Function to check external backend API
 check_external_backend() {
     local start_time=$(date +%s%3N)
-    local response=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" "https://staging.bongaquino.co.kr" 2>/dev/null || echo "TIMEOUT")
+    local response=$(timeout 10 curl -s -o /dev/null -w "%{http_code}" "https://staging.example.com" 2>/dev/null || echo "TIMEOUT")
     local end_time=$(date +%s%3N)
     local response_time=$((end_time - start_time))
     

@@ -65,9 +65,9 @@ test_health_endpoint() {
     print_status "Testing health endpoints before setup..."
     
     ENDPOINTS=(
-        "https://server-uat.bongaquino.co.kr/check-health"
-        "https://mongo-uat.bongaquino.co.kr"
-        "https://app-uat.bongaquino.co.kr"
+        "https://server-uat.example.com/check-health"
+        "https://mongo-uat.example.com"
+        "https://app-uat.example.com"
     )
     
     for ENDPOINT in "${ENDPOINTS[@]}"; do
@@ -154,9 +154,9 @@ send_test_alert() {
   "type": "success",
   "details": {
     "Endpoints": [
-      "https://server-uat.bongaquino.co.kr/check-health",
-      "https://mongo-uat.bongaquino.co.kr",
-      "https://app-uat.bongaquino.co.kr"
+      "https://server-uat.example.com/check-health",
+      "https://mongo-uat.example.com",
+      "https://app-uat.example.com"
     ],
     "Check Frequency": "Every 5 minutes",
     "Canary Name": "bongaquino-uat-health-monitor",
@@ -188,9 +188,9 @@ show_monitoring_info() {
     echo ""
     echo "📊 Monitoring Details:"
     echo "  • Endpoints:"
-    echo "    - https://server-uat.bongaquino.co.kr/check-health"
-    echo "    - https://mongo-uat.bongaquino.co.kr"
-    echo "    - https://app-uat.bongaquino.co.kr"
+    echo "    - https://server-uat.example.com/check-health"
+    echo "    - https://mongo-uat.example.com"
+    echo "    - https://app-uat.example.com"
     echo "  • Check Frequency: Every 5 minutes"
     echo "  • Canary Name: bongaquino-uat-health-monitor"
     echo "  • Timeout: 60 seconds"

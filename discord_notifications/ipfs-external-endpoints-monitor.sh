@@ -13,8 +13,8 @@ set -euo pipefail
 # =============================================================================
 
 # IPFS Public Endpoints
-IPFS_API_URL="https://ipfs.bongaquino.co.kr/api/v0/version"
-IPFS_GATEWAY_URL="https://gateway.bongaquino.co.kr"
+IPFS_API_URL="https://ipfs.example.com/api/v0/version"
+IPFS_GATEWAY_URL="https://gateway.example.com"
 
 # Test Content (Known CID that should exist)
 TEST_CID="QmYjtig7VJQ6XsnUjqqJvj7QaMcCAwtrgNdahSiFofrE7o"
@@ -328,7 +328,7 @@ check_access_control() {
     # Test that the API root returns 403/404 (access control working)
     local response=$(curl -s -o /dev/null -w "%{http_code}" \
         --max-time 10 \
-        "https://ipfs.bongaquino.co.kr/" 2>/dev/null || echo "TIMEOUT")
+        "https://ipfs.example.com/" 2>/dev/null || echo "TIMEOUT")
     
     local current_state="healthy"
     local details=""
@@ -337,7 +337,7 @@ check_access_control() {
         current_state="healthy"
         details=$(cat <<EOF
 {
-    "Endpoint": "https://ipfs.bongaquino.co.kr/",
+    "Endpoint": "https://ipfs.example.com/",
     "HTTP Status": "$response",
     "Status": "Access Control Working",
     "Expected": "403 or 404"
@@ -354,7 +354,7 @@ EOF
         current_state="critical"
         details=$(cat <<EOF
 {
-    "Endpoint": "https://ipfs.bongaquino.co.kr/",
+    "Endpoint": "https://ipfs.example.com/",
     "HTTP Status": "$response",
     "Status": "Access Control Issue",
     "Expected": "403 or 404",

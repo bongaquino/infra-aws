@@ -13,7 +13,7 @@ const apiCanaryBlueprint = async function () {
     });
 
     let requestOptionsStep1 = {
-        hostname: 'server-uat.bongaquino.co.kr',
+        hostname: 'server-uat.example.com',
         method: 'GET',
         path: '/check-health',
         port: 443,

@@ -97,7 +97,7 @@ module "parameter_store" {
   # Standard parameters (plain text)
   parameters = {
     "database-host" = "staging-db.bongaquino.internal"
-    "api-url"       = "https://api-staging.bongaquino.co.kr"
+    "api-url"       = "https://api-staging.example.com"
     "app-version"   = "1.2.3"
     "debug-mode"    = "true"
   }
@@ -334,8 +334,8 @@ environment = "staging"
 parameters = {
   "database-host"     = "staging-postgres.bongaquino.internal"
   "redis-host"        = "staging-redis.cache.amazonaws.com"
-  "api-url"          = "https://api-staging.bongaquino.co.kr"
-  "frontend-url"     = "https://app-staging.bongaquino.co.kr"
+  "api-url"          = "https://api-staging.example.com"
+  "frontend-url"     = "https://app-staging.example.com"
   "log-level"        = "debug"
   "max-connections"  = "50"
 }
@@ -355,8 +355,8 @@ environment = "prod"
 parameters = {
   "database-host"     = "prod-postgres.bongaquino.internal"
   "redis-host"        = "prod-redis.cache.amazonaws.com"
-  "api-url"          = "https://api.bongaquino.co.kr"
-  "frontend-url"     = "https://app.bongaquino.co.kr"
+  "api-url"          = "https://api.example.com"
+  "frontend-url"     = "https://app.example.com"
   "log-level"        = "info"
   "max-connections"  = "200"
 }

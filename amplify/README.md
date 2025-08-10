@@ -129,16 +129,16 @@ Each environment can be configured with:
 #### Staging Environment
 - **App Name**: `bongaquino-web-staging`
 - **Branch**: `staging`
-- **Domain**: `app-staging.bongaquino.co.kr`
+- **Domain**: `app-staging.example.com`
 - **Environment**: `staging`
-- **API URL**: `https://api-staging.bongaquino.co.kr`
+- **API URL**: `https://api-staging.example.com`
 
 #### UAT Environment  
 - **App Name**: `bongaquino-web-uat`
 - **Branch**: `main`
-- **Domain**: `app-uat.bongaquino.co.kr`
+- **Domain**: `app-uat.example.com`
 - **Environment**: `production`
-- **API URL**: `https://api-uat.bongaquino.co.kr`
+- **API URL**: `https://api-uat.example.com`
 
 ## Usage
 
@@ -165,8 +165,8 @@ module "amplify" {
   vite_environment = "staging"
   
   # Custom domain (optional)
-  domain_name      = "app-staging.bongaquino.co.kr"
-  api_url         = "https://api-staging.bongaquino.co.kr"
+  domain_name      = "app-staging.example.com"
+  api_url         = "https://api-staging.example.com"
   
   # Tagging
   environment     = "staging"
@@ -335,7 +335,7 @@ vite_environment = "production"
 # Custom domain with subdomain support
 resource "aws_amplify_domain_association" "main" {
   app_id      = aws_amplify_app.main.id
-  domain_name = "bongaquino.co.kr"
+  domain_name = "example.com"
   
   sub_domain {
     branch_name = "staging"

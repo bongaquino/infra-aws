@@ -3,9 +3,9 @@
 ## 📍 **UAT Environment URLs**
 
 ### **Primary Services**
-- **Frontend (React App)**: `https://app-uat.bongaquino.co.kr`
-- **Backend API**: `https://uat.bongaquino.co.kr/api`
-- **MongoDB Admin**: `https://mongo-uat.bongaquino.co.kr`
+- **Frontend (React App)**: `https://app-uat.example.com`
+- **Backend API**: `https://uat.example.com/api`
+- **MongoDB Admin**: `https://mongo-uat.example.com`
 
 ### **Infrastructure Endpoints**
 - **ALB Main**: `bongaquino-uat-alb-630040688.ap-southeast-1.elb.amazonaws.com`
@@ -22,7 +22,7 @@
 
 ### **Backend API Health**
 ```bash
-curl -s https://uat.bongaquino.co.kr/api/health | jq
+curl -s https://uat.example.com/api/health | jq
 ```
 
 **Expected Response:**
@@ -40,7 +40,7 @@ curl -s https://uat.bongaquino.co.kr/api/health | jq
 
 ### **Frontend Availability**
 ```bash
-curl -I https://app-uat.bongaquino.co.kr
+curl -I https://app-uat.example.com
 ```
 
 **Expected Response:**
@@ -51,7 +51,7 @@ content-type: text/html
 
 ### **MongoDB Admin Interface**
 ```bash
-curl -I https://mongo-uat.bongaquino.co.kr
+curl -I https://mongo-uat.example.com
 ```
 
 **Expected Response:**
@@ -91,10 +91,10 @@ aws elbv2 describe-target-health --profile bongaquino --region ap-southeast-1 \
 
 ```mermaid
 graph TD
-    A[app-uat.bongaquino.co.kr] --> B[uat.bongaquino.co.kr/api]
+    A[app-uat.example.com] --> B[uat.example.com/api]
     B --> C[MongoDB]
     B --> D[Redis]
-    E[mongo-uat.bongaquino.co.kr] --> C
+    E[mongo-uat.example.com] --> C
     F[ALB] --> B
     G[Discord Bot] --> H[#bongaquino-alerts]
     B --> I[SNS Topic]
@@ -123,7 +123,7 @@ graph TD
 3. **MongoDB Connection Issues**
    ```bash
    # Check MongoDB admin interface
-   curl -v https://mongo-uat.bongaquino.co.kr
+   curl -v https://mongo-uat.example.com
    ```
 
 ## 📈 **Monitoring URLs**

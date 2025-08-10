@@ -5,7 +5,7 @@
 All staging endpoints are configured and working:
 
 ### **Frontend Application**
-- **URL**: `https://app-staging.bongaquino.co.kr`
+- **URL**: `https://app-staging.example.com`
 - **Type**: React Web Application
 - **Status**: ✅ Live
 - **Configuration**: Amplify + CloudFront
@@ -14,7 +14,7 @@ All staging endpoints are configured and working:
 
 - **Service**: bongaquino Backend API
 - **Environment**: Staging
-- **URL**: `https://staging.bongaquino.co.kr`
+- **URL**: `https://staging.example.com`
 - **Description**: Main backend API service for the bongaquino platform in staging environment
 - **Expected Response**: JSON with health status
 - **Monitoring**: HTTP status code and response time checking
@@ -34,7 +34,7 @@ All staging endpoints are configured and working:
 
 ### **Staging Server**
 - **IP**: `52.77.36.120`
-- **Domain**: `staging.bongaquino.co.kr`
+- **Domain**: `staging.example.com`
 - **Location**: AWS/Cloud Infrastructure
 
 ### **Internal Services**
@@ -59,7 +59,7 @@ localhost:6379              # Redis
 
 ### **External Health Check**
 ```bash
-curl https://staging.bongaquino.co.kr
+curl https://staging.example.com
 # Returns: {"data":{"healthy":true,"name":"bongaquino","version":"1.0.0"},"message":null,"meta":null,"status":"success"}
 ```
 
@@ -80,8 +80,8 @@ All staging domains are configured in Route53:
 
 ```hcl
 # Route53 DNS Records
-staging.bongaquino.co.kr        → 52.77.36.120
-app-staging.bongaquino.co.kr    → CloudFront distribution
+staging.example.com        → 52.77.36.120
+app-staging.example.com    → CloudFront distribution
 ```
 
 ## 📝 **Nginx Configuration**
@@ -89,10 +89,10 @@ app-staging.bongaquino.co.kr    → CloudFront distribution
 The staging server uses Nginx proxy for SSL termination and routing:
 
 ```nginx
-# staging.bongaquino.co.kr.conf
-server_name staging.bongaquino.co.kr;
-ssl_certificate /etc/nginx-proxy/ssl/live/staging.bongaquino.co.kr/fullchain.pem;
-ssl_certificate_key /etc/nginx-proxy/ssl/live/staging.bongaquino.co.kr/privkey.pem;
+# staging.example.com.conf
+server_name staging.example.com;
+ssl_certificate /etc/nginx-proxy/ssl/live/staging.example.com/fullchain.pem;
+ssl_certificate_key /etc/nginx-proxy/ssl/live/staging.example.com/privkey.pem;
 ```
 
 ## 🔄 **Docker Services**
@@ -123,8 +123,8 @@ All staging endpoints are monitored by:
 
 ```bash
 # Test all endpoints
-curl https://app-staging.bongaquino.co.kr
-curl https://staging.bongaquino.co.kr
+curl https://app-staging.example.com
+curl https://staging.example.com
 
 # Internal health checks (on staging server)
 curl localhost:3000/health

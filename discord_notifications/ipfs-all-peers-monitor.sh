@@ -91,8 +91,8 @@ EOF
 echo "Checking IPFS nodes..."
 
 BOOTSTRAP_STATUS="$(get_health_summary "Bootstrap" "27.255.70.17")"
-PEER01_STATUS="$(get_health_summary "Peer-01" "218.38.136.33")"
-PEER02_STATUS="$(get_health_summary "Peer-02" "218.38.136.34")"
+PEER01_STATUS="$(get_health_summary "Peer-01" "<PEER_01_IP>")"
+PEER02_STATUS="$(get_health_summary "Peer-02" "<PEER_02_IP>")"
 
 # Get previous states
 BOOTSTRAP_PREV="$(get_previous_state "Bootstrap")"
@@ -126,8 +126,8 @@ check_state_change() {
 
 # Check each node for state changes (excluding Peer-03)
 check_state_change "Bootstrap" "$BOOTSTRAP_PREV" "$BOOTSTRAP_STATUS" "27.255.70.17" "3 cluster peers"
-check_state_change "Peer-01" "$PEER01_PREV" "$PEER01_STATUS" "218.38.136.33" "14.6TB expandable"
-check_state_change "Peer-02" "$PEER02_PREV" "$PEER02_STATUS" "218.38.136.34" "125TB RAID-6"
+check_state_change "Peer-01" "$PEER01_PREV" "$PEER01_STATUS" "<PEER_01_IP>" "14.6TB expandable"
+check_state_change "Peer-02" "$PEER02_PREV" "$PEER02_STATUS" "<PEER_02_IP>" "125TB RAID-6"
 
 # Send notification only if there are changes OR if it's daily summary time
 if [ "$CHANGES" = "true" ]; then
@@ -155,8 +155,8 @@ elif [ "$DAILY_SUMMARY" = "true" ]; then
   # Send daily summary regardless of state changes (excluding Peer-03)
   SUMMARY_FIELDS=""
   SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Bootstrap Node\", \"value\": \"**Bootstrap** (27.255.70.17)\\n✅ $BOOTSTRAP_STATUS\\n3 cluster peers\", \"inline\": true},"
-  SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Peer-01\", \"value\": \"**Peer-01** (218.38.136.33)\\n✅ $PEER01_STATUS\\n14.6TB expandable\", \"inline\": true},"
-  SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Peer-02\", \"value\": \"**Peer-02** (218.38.136.34)\\n✅ $PEER02_STATUS\\n125TB RAID-6\", \"inline\": true}"
+  SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Peer-01\", \"value\": \"**Peer-01** (<PEER_01_IP>)\\n✅ $PEER01_STATUS\\n14.6TB expandable\", \"inline\": true},"
+  SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Peer-02\", \"value\": \"**Peer-02** (<PEER_02_IP>)\\n✅ $PEER02_STATUS\\n125TB RAID-6\", \"inline\": true}"
   
   send_discord_notification "📊 Daily IPFS Health Summary" "Daily Health Report for IPFS - $(date '+%Y-%m-%d')" "3447003" "[$SUMMARY_FIELDS]"
   echo "Daily health summary sent."

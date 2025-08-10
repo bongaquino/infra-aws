@@ -169,7 +169,7 @@ users = {
 =======
     team       = "bongaquino"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-    email      = "john.doe@bongaquino.co.kr"
+    email      = "john.doe@example.com"
     role       = "Developer"
   }
   "devops1" = {
@@ -180,7 +180,7 @@ users = {
 =======
     team       = "bongaquino" 
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-    email      = "jane.smith@bongaquino.co.kr"
+    email      = "jane.smith@example.com"
     role       = "Operations"
   }
   "manager1" = {
@@ -191,7 +191,7 @@ users = {
 =======
     team       = "bongaquino"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-    email      = "mike.johnson@bongaquino.co.kr"
+    email      = "mike.johnson@example.com"
     role       = "Management"
   }
 }
@@ -211,7 +211,7 @@ locals {
 =======
       team       = "bongaquino"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-      email      = "alex.kim@bongaquino.co.kr"
+      email      = "alex.kim@example.com"
       role       = "Developer"
     }
     "backend_dev" = {
@@ -222,7 +222,7 @@ locals {
 =======
       team       = "bongaquino"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-      email      = "sarah.lee@bongaquino.co.kr"
+      email      = "sarah.lee@example.com"
       role       = "Developer"
     }
   }
@@ -237,7 +237,7 @@ locals {
 =======
       team       = "bongaquino"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
-      email      = "david.park@bongaquino.com"
+      email      = "david.park@example.com"
       role       = "Developer"
     }
   }

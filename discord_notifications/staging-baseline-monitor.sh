@@ -380,8 +380,8 @@ send_health_summary() {
     "Memory": "$memory_info",
     "Disk Usage": "$disk_info",
     "Staging Endpoints": {
-        "Frontend": "https://app-staging.bongaquino.co.kr",
-        "Backend API": "https://staging.bongaquino.co.kr",
+        "Frontend": "https://app-staging.example.com",
+        "Backend API": "https://staging.example.com",
         "MongoDB Admin": "mongo-express container"
     },
     "Core Services": {

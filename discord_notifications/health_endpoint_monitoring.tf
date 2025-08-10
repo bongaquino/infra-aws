@@ -162,7 +162,7 @@ data "archive_file" "canary_script" {
   
   source {
     content = templatefile("${path.module}/canary_scripts/health_monitor.js", {
-      health_endpoint = "https://server-uat.bongaquino.co.kr/check-health"
+      health_endpoint = "https://server-uat.example.com/check-health"
     })
     filename = "nodejs/node_modules/apiCanaryBlueprint.js"
   }
