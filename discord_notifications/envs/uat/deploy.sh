@@ -39,7 +39,7 @@ fi
 
 DISCORD_WEBHOOK_URL="$1"
 ENVIRONMENT="uat"
-PROJECT="koneksi"
+PROJECT="bongaquino"
 
 print_status "🚀 Starting Discord Notifications deployment for $ENVIRONMENT environment..."
 

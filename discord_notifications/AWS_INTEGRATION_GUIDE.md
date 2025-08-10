@@ -14,31 +14,31 @@ This guide covers deploying comprehensive AWS monitoring that sends alerts to Di
 
 ### 1. Deploy ALB Integration
 ```bash
-cd koneksi-aws/alb/envs/uat
+cd bongaquino-aws/alb/envs/uat
 terraform apply
 ```
 
 ### 2. Deploy ECS Monitoring
 ```bash
-cd koneksi-aws/ecs/envs/uat
+cd bongaquino-aws/ecs/envs/uat
 terraform apply
 ```
 
 ### 3. Deploy CodePipeline Monitoring
 ```bash
-cd koneksi-aws/codepipeline/uat
+cd bongaquino-aws/codepipeline/uat
 terraform apply
 ```
 
 ### 4. Deploy Security Monitoring
 ```bash
-cd koneksi-aws/cloudtrail
+cd bongaquino-aws/cloudtrail
 terraform apply
 ```
 
 ### 5. Deploy Cost Monitoring
 ```bash
-cd koneksi-aws/cost_monitoring
+cd bongaquino-aws/cost_monitoring
 terraform apply
 ```
 
@@ -48,7 +48,7 @@ terraform apply
 ```
 🚨 ALB Error Rate High
 ━━━━━━━━━━━━━━━━━━━━━━
-ALB koneksi-uat-alb is experiencing high 5xx error rate
+ALB bongaquino-uat-alb is experiencing high 5xx error rate
 
 Environment: UAT
 Error Rate: 15.3%
@@ -62,9 +62,9 @@ Time: 2024-01-15 10:30:00 UTC
 ```
 ⚠️ ECS High CPU Usage
 ━━━━━━━━━━━━━━━━━━━━━━
-ECS service koneksi-uat-service CPU usage is high
+ECS service bongaquino-uat-service CPU usage is high
 
-Cluster: koneksi-uat-cluster
+Cluster: bongaquino-uat-cluster
 Current CPU: 85%
 Threshold: 80%
 Auto-scaling: Active
@@ -76,7 +76,7 @@ Auto-scaling: Active
 ```
 🚀 Deployment Started
 ━━━━━━━━━━━━━━━━━━━━━━
-Pipeline koneksi-uat-backend-pipeline has STARTED
+Pipeline bongaquino-uat-backend-pipeline has STARTED
 
 Execution ID: abc123-def456
 Stage: Source
@@ -125,7 +125,7 @@ Top Services:
 Send a test alert:
 ```bash
 aws sns publish \
-  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:koneksi-uat-uat-discord-notifications" \
+  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:bongaquino-uat-uat-discord-notifications" \
   --message '{
     "title": "Test Alert",
     "description": "Testing Discord integration",
@@ -147,7 +147,7 @@ import boto3
 import json
 
 sns = boto3.client('sns')
-topic_arn = 'arn:aws:sns:ap-southeast-1:985869370256:koneksi-uat-uat-discord-notifications'
+topic_arn = 'arn:aws:sns:ap-southeast-1:985869370256:bongaquino-uat-uat-discord-notifications'
 
 def send_discord_alert(title, description, alert_type="warning", details=None):
     message = {
@@ -181,7 +181,7 @@ send_discord_alert(
 Create custom metrics that trigger Discord alerts:
 ```bash
 aws cloudwatch put-metric-data \
-  --namespace "Koneksi/Application" \
+  --namespace "bongaquino/Application" \
   --metric-data MetricName=UploadErrors,Value=10,Unit=Count
 ```
 
@@ -253,7 +253,7 @@ Access your monitoring dashboards:
 
 1. **Check Lambda logs**:
    ```bash
-   aws logs tail /aws/lambda/koneksi-uat-uat-discord-notifier --follow
+   aws logs tail /aws/lambda/bongaquino-uat-uat-discord-notifier --follow
    ```
 
 2. **Test webhook manually**:
@@ -277,12 +277,12 @@ Access your monitoring dashboards:
 
 2. **Review metric filters**:
    ```bash
-   aws logs describe-metric-filters --log-group-name "/aws/cloudtrail/koneksi-uat"
+   aws logs describe-metric-filters --log-group-name "/aws/cloudtrail/bongaquino-uat"
    ```
 
 3. **Test EventBridge rules**:
    ```bash
-   aws events list-rules --name-prefix "koneksi-uat"
+   aws events list-rules --name-prefix "bongaquino-uat"
    ```
 
 ## 🎛️ Cost Optimization

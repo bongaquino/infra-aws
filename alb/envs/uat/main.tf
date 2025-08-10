@@ -17,7 +17,7 @@ module "main_alb" {
   healthcheck_path      = "/check-health"  # Use application health check endpoint
   create_main_alb       = true
   create_secondary_alb  = false
-  alb_name             = "koneksi-uat-alb"
+  alb_name             = "bongaquino-uat-alb"
   idle_timeout         = 1800  # Increased to 30 minutes for large file operations
   
   # Optimized Health Check Settings
@@ -29,10 +29,10 @@ module "main_alb" {
   enable_rate_limiting  = false  # Disable rate limiting
   enable_deletion_protection = true  # Enable deletion protection
   enable_access_logs    = true  # Enable access logs
-  access_logs_bucket    = "koneksi-uat-alb-logs"  # S3 bucket for access logs
+  access_logs_bucket    = "bongaquino-uat-alb-logs"  # S3 bucket for access logs
   access_logs_prefix    = "main-alb"  # Prefix for access logs
   enable_connection_logs = true  # Enable connection logs
-  connection_logs_bucket = "koneksi-uat-alb-logs"  # S3 bucket for connection logs
+  connection_logs_bucket = "bongaquino-uat-alb-logs"  # S3 bucket for connection logs
   connection_logs_prefix = "main-alb-connections"  # Prefix for connection logs
   enable_s3_notifications = false  # Disable S3 notifications (handled separately)
 }
@@ -52,15 +52,15 @@ module "services_alb" {
   healthcheck_path      = "/"  # Use root path for services ALB
   create_main_alb       = false
   create_secondary_alb  = true
-  secondary_alb_name    = "koneksi-uat-alb-services"
+  secondary_alb_name    = "bongaquino-uat-alb-services"
   idle_timeout         = 1800  # Increased to 30 minutes for large file operations
   enable_rate_limiting  = false  # Disable rate limiting
   enable_deletion_protection = true  # Enable deletion protection
   enable_access_logs    = true  # Enable access logs
-  access_logs_bucket    = "koneksi-uat-alb-logs"  # S3 bucket for access logs
+  access_logs_bucket    = "bongaquino-uat-alb-logs"  # S3 bucket for access logs
   access_logs_prefix    = "services-alb"  # Prefix for access logs
   enable_connection_logs = true  # Enable connection logs
-  connection_logs_bucket = "koneksi-uat-alb-logs"  # S3 bucket for connection logs
+  connection_logs_bucket = "bongaquino-uat-alb-logs"  # S3 bucket for connection logs
   connection_logs_prefix = "services-alb-connections"  # Prefix for connection logs
   enable_s3_notifications = false  # Disable S3 notifications (handled separately)
 }
@@ -74,8 +74,8 @@ module "cloudwatch_logs" {
   
   # ALB log groups that will be created
   log_groups = [
-    "/aws/applicationloadbalancer/koneksi-uat-alb",
-    "/aws/applicationloadbalancer/koneksi-uat-alb-services"
+    "/aws/applicationloadbalancer/bongaquino-uat-alb",
+    "/aws/applicationloadbalancer/bongaquino-uat-alb-services"
   ]
   
   retention_in_days = 30

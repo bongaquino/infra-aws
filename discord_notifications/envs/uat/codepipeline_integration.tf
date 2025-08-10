@@ -7,22 +7,22 @@
 
 # CloudWatch Event Rule for CodePipeline State Changes
 resource "aws_cloudwatch_event_rule" "codepipeline_state_change" {
-  name        = "koneksi-uat-codepipeline-discord-notifications"
+  name        = "bongaquino-uat-codepipeline-discord-notifications"
   description = "Capture CodePipeline state changes for UAT"
 
   event_pattern = jsonencode({
     source        = ["aws.codepipeline"]
     detail-type   = ["CodePipeline Pipeline Execution State Change"]
     detail = {
-      pipeline = ["koneksi-uat-backend-pipeline"]
+      pipeline = ["bongaquino-uat-backend-pipeline"]
       state    = ["STARTED", "SUCCEEDED", "FAILED", "CANCELED", "SUPERSEDED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-uat-codepipeline-discord"
+    Name        = "bongaquino-uat-codepipeline-discord"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }
@@ -30,22 +30,22 @@ resource "aws_cloudwatch_event_rule" "codepipeline_state_change" {
 
 # CloudWatch Event Rule for CodePipeline Stage Changes
 resource "aws_cloudwatch_event_rule" "codepipeline_stage_change" {
-  name        = "koneksi-uat-codepipeline-stage-discord-notifications"
+  name        = "bongaquino-uat-codepipeline-stage-discord-notifications"
   description = "Capture CodePipeline stage changes for UAT"
 
   event_pattern = jsonencode({
     source        = ["aws.codepipeline"]
     detail-type   = ["CodePipeline Stage Execution State Change"]
     detail = {
-      pipeline = ["koneksi-uat-backend-pipeline"]
+      pipeline = ["bongaquino-uat-backend-pipeline"]
       state    = ["STARTED", "SUCCEEDED", "FAILED", "CANCELED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-uat-codepipeline-stage-discord"
+    Name        = "bongaquino-uat-codepipeline-stage-discord"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }
@@ -53,22 +53,22 @@ resource "aws_cloudwatch_event_rule" "codepipeline_stage_change" {
 
 # CloudWatch Event Rule for CodePipeline Action Changes (for more detailed monitoring)
 resource "aws_cloudwatch_event_rule" "codepipeline_action_change" {
-  name        = "koneksi-uat-codepipeline-action-discord-notifications"
+  name        = "bongaquino-uat-codepipeline-action-discord-notifications"
   description = "Capture CodePipeline action changes for UAT"
 
   event_pattern = jsonencode({
     source        = ["aws.codepipeline"]
     detail-type   = ["CodePipeline Pipeline Execution State Change"]
     detail = {
-      pipeline = ["koneksi-uat-backend-pipeline"]
+      pipeline = ["bongaquino-uat-backend-pipeline"]
       state    = ["FAILED"]  # Only capture failed actions for noise reduction
     }
   })
 
   tags = {
-    Name        = "koneksi-uat-codepipeline-action-discord"
+    Name        = "bongaquino-uat-codepipeline-action-discord"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }

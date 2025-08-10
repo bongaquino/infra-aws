@@ -134,7 +134,7 @@ discord_notifications/
 2. Navigate to Server Settings → Integrations → Webhooks
 3. Click "New Webhook" or "Create Webhook"
 4. Configure the webhook:
-   - Name: `Koneksi Notifications`
+   - Name: `bongaquino Notifications`
    - Channel: Select your desired channel
 5. Copy the Webhook URL
 
@@ -147,16 +147,16 @@ module "discord_notifications" {
   # Required
   discord_webhook_url = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
   environment        = "uat"
-  project           = "koneksi"
+  project           = "bongaquino"
 
   # Optional customization
-  discord_username   = "🔵 Koneksi UAT Bot"
+  discord_username   = "🔵 bongaquino UAT Bot"
   enable_mentions    = false
   log_retention_days = 7
 
   tags = {
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
   }
 }
 ```
@@ -164,7 +164,7 @@ module "discord_notifications" {
 ### 3. Deploy Environment-Specific Configuration
 
 ```bash
-cd koneksi-aws/discord_notifications/envs/uat
+cd bongaquino-aws/discord_notifications/envs/uat
 terraform init
 terraform plan -var="discord_webhook_url=YOUR_WEBHOOK_URL"
 terraform apply
@@ -199,7 +199,7 @@ Send a test message:
 
 ```bash
 aws sns publish \
-  --topic-arn "arn:aws:sns:ap-southeast-1:123456789012:koneksi-uat-discord-notifications" \
+  --topic-arn "arn:aws:sns:ap-southeast-1:123456789012:bongaquino-uat-discord-notifications" \
   --message "Deployment completed successfully!" \
   --subject "UAT Deployment"
 ```
@@ -210,7 +210,7 @@ Send a custom formatted message:
 
 ```bash
 aws sns publish \
-  --topic-arn "arn:aws:sns:ap-southeast-1:123456789012:koneksi-uat-discord-notifications" \
+  --topic-arn "arn:aws:sns:ap-southeast-1:123456789012:bongaquino-uat-discord-notifications" \
   --message '{
     "title": "Database Migration",
     "description": "Migration completed successfully for user table",
@@ -276,7 +276,7 @@ The module automatically applies appropriate colors and emojis:
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
 | `discord_webhook_url` | string | - | Discord webhook URL for notifications (sensitive) |
-| `discord_username` | string | `"Koneksi Bot"` | Username displayed in Discord messages |
+| `discord_username` | string | `"bongaquino Bot"` | Username displayed in Discord messages |
 | `discord_avatar_url` | string | AWS logo | Avatar URL for Discord webhook messages |
 
 ### Message Formatting
@@ -340,7 +340,7 @@ The module automatically applies appropriate colors and emojis:
   "source": "aws.codepipeline",
   "detail-type": "CodePipeline Pipeline Execution State Change",
   "detail": {
-    "pipeline": "koneksi-uat-backend-pipeline",
+    "pipeline": "bongaquino-uat-backend-pipeline",
     "state": "SUCCEEDED"
   }
 }
@@ -354,7 +354,7 @@ The module automatically applies appropriate colors and emojis:
   "detail-type": "CodeBuild Build State Change",
   "detail": {
     "build-status": "SUCCEEDED",
-    "project-name": "koneksi-uat-backend-build"
+    "project-name": "bongaquino-uat-backend-build"
   }
 }
 ```
@@ -367,7 +367,7 @@ The module automatically applies appropriate colors and emojis:
   "detail-type": "ECS Task State Change",
   "detail": {
     "lastStatus": "RUNNING",
-    "clusterArn": "arn:aws:ecs:region:account:cluster/koneksi-uat"
+    "clusterArn": "arn:aws:ecs:region:account:cluster/bongaquino-uat"
   }
 }
 ```
@@ -524,7 +524,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
 ### Debugging Commands
 ```bash
 # Check Lambda function logs
-aws logs tail /aws/lambda/koneksi-staging-discord-notifier --follow
+aws logs tail /aws/lambda/bongaquino-staging-discord-notifier --follow
 
 # Test SNS message delivery
 aws sns publish \
@@ -536,7 +536,7 @@ aws sns publish \
 aws cloudwatch get-metric-statistics \
   --namespace AWS/Lambda \
   --metric-name Duration \
-  --dimensions Name=FunctionName,Value=koneksi-staging-discord-notifier \
+  --dimensions Name=FunctionName,Value=bongaquino-staging-discord-notifier \
   --start-time $(date -d '1 hour ago' --iso-8601) \
   --end-time $(date --iso-8601) \
   --period 300 \
@@ -544,7 +544,7 @@ aws cloudwatch get-metric-statistics \
 
 # Test Lambda function directly
 aws lambda invoke \
-  --function-name koneksi-staging-discord-notifier \
+  --function-name bongaquino-staging-discord-notifier \
   --payload '{"Records":[{"EventSource":"aws:sns","Sns":{"Message":"Test direct invoke"}}]}' \
   response.json
 ```

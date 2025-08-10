@@ -4,7 +4,7 @@
 
 # Get the Discord SNS topic
 data "aws_sns_topic" "discord_notifications" {
-  name = "koneksi-uat-discord-notifications"
+  name = "bongaquino-uat-discord-notifications"
 }
 
 # =============================================================================
@@ -13,12 +13,12 @@ data "aws_sns_topic" "discord_notifications" {
 
 # S3 Bucket for Canary artifacts
 resource "aws_s3_bucket" "canary_artifacts" {
-  bucket = "koneksi-uat-canary-artifacts-${random_string.bucket_suffix.result}"
+  bucket = "bongaquino-uat-canary-artifacts-${random_string.bucket_suffix.result}"
 
   tags = {
-    Name        = "koneksi-uat-canary-artifacts"
+    Name        = "bongaquino-uat-canary-artifacts"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
@@ -57,7 +57,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "canary_artifacts" {
 
 # IAM Role for Synthetics Canary
 resource "aws_iam_role" "canary_role" {
-  name = "koneksi-uat-health-canary-role"
+  name = "bongaquino-uat-health-canary-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -73,16 +73,16 @@ resource "aws_iam_role" "canary_role" {
   })
 
   tags = {
-    Name        = "koneksi-uat-health-canary-role"
+    Name        = "bongaquino-uat-health-canary-role"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
 
 # IAM Policy for Canary Role
 resource "aws_iam_role_policy" "canary_policy" {
-  name = "koneksi-uat-health-canary-policy"
+  name = "bongaquino-uat-health-canary-policy"
   role = aws_iam_role.canary_role.id
 
   policy = jsonencode({
@@ -122,7 +122,7 @@ resource "aws_iam_role_policy" "canary_policy" {
 
 # CloudWatch Synthetics Canary
 resource "aws_synthetics_canary" "health_endpoint" {
-  name                 = "koneksi-uat-health-monitor"
+  name                 = "bongaquino-uat-health-monitor"
   artifact_s3_location = "s3://${aws_s3_bucket.canary_artifacts.bucket}/canary-artifacts"
   execution_role_arn   = aws_iam_role.canary_role.arn
   handler              = "apiCanaryBlueprint.handler"
@@ -146,9 +146,9 @@ resource "aws_synthetics_canary" "health_endpoint" {
   failure_retention_period = 30
 
   tags = {
-    Name        = "koneksi-uat-health-monitor"
+    Name        = "bongaquino-uat-health-monitor"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 
@@ -158,11 +158,11 @@ resource "aws_synthetics_canary" "health_endpoint" {
 # Create the canary script as a data source
 data "archive_file" "canary_script" {
   type        = "zip"
-  output_path = "/tmp/koneksi-health-canary.zip"
+  output_path = "/tmp/bongaquino-health-canary.zip"
   
   source {
     content = templatefile("${path.module}/canary_scripts/health_monitor.js", {
-      health_endpoint = "https://server-uat.koneksi.co.kr/check-health"
+      health_endpoint = "https://server-uat.bongaquino.co.kr/check-health"
     })
     filename = "nodejs/node_modules/apiCanaryBlueprint.js"
   }
@@ -171,7 +171,7 @@ data "archive_file" "canary_script" {
 # Upload canary script to S3
 resource "aws_s3_object" "canary_script" {
   bucket = aws_s3_bucket.canary_artifacts.bucket
-  key    = "koneksi-health-canary.zip"
+  key    = "bongaquino-health-canary.zip"
   source = data.archive_file.canary_script.output_path
   etag   = data.archive_file.canary_script.output_md5
 
@@ -184,7 +184,7 @@ resource "aws_s3_object" "canary_script" {
 
 # Canary Success Rate Alarm
 resource "aws_cloudwatch_metric_alarm" "canary_success_rate" {
-  alarm_name          = "koneksi-uat-health-endpoint-success-rate"
+  alarm_name          = "bongaquino-uat-health-endpoint-success-rate"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "SuccessPercent"
@@ -201,9 +201,9 @@ resource "aws_cloudwatch_metric_alarm" "canary_success_rate" {
   }
 
   tags = {
-    Name        = "koneksi-uat-health-endpoint-success-rate"
+    Name        = "bongaquino-uat-health-endpoint-success-rate"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "CRITICAL"
     ManagedBy   = "terraform"
   }
@@ -211,7 +211,7 @@ resource "aws_cloudwatch_metric_alarm" "canary_success_rate" {
 
 # Canary Duration Alarm (Response Time)
 resource "aws_cloudwatch_metric_alarm" "canary_duration" {
-  alarm_name          = "koneksi-uat-health-endpoint-response-time"
+  alarm_name          = "bongaquino-uat-health-endpoint-response-time"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "Duration"
@@ -227,9 +227,9 @@ resource "aws_cloudwatch_metric_alarm" "canary_duration" {
   }
 
   tags = {
-    Name        = "koneksi-uat-health-endpoint-response-time"
+    Name        = "bongaquino-uat-health-endpoint-response-time"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "WARNING"
     ManagedBy   = "terraform"
   }
@@ -237,7 +237,7 @@ resource "aws_cloudwatch_metric_alarm" "canary_duration" {
 
 # Canary Failed Alarm
 resource "aws_cloudwatch_metric_alarm" "canary_failed" {
-  alarm_name          = "koneksi-uat-health-endpoint-failures"
+  alarm_name          = "bongaquino-uat-health-endpoint-failures"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "Failed"
@@ -254,9 +254,9 @@ resource "aws_cloudwatch_metric_alarm" "canary_failed" {
   }
 
   tags = {
-    Name        = "koneksi-uat-health-endpoint-failures"
+    Name        = "bongaquino-uat-health-endpoint-failures"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "CRITICAL"
     ManagedBy   = "terraform"
   }
@@ -268,37 +268,37 @@ resource "aws_cloudwatch_metric_alarm" "canary_failed" {
 
 # CloudWatch Log Group for Canary
 resource "aws_cloudwatch_log_group" "canary_logs" {
-  name              = "/aws/lambda/cwsyn-koneksi-uat-health-monitor"
+  name              = "/aws/lambda/cwsyn-bongaquino-uat-health-monitor"
   retention_in_days = 14
 
   tags = {
-    Name        = "koneksi-uat-health-canary-logs"
+    Name        = "bongaquino-uat-health-canary-logs"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
 
 # Metric filter for unhealthy responses
 resource "aws_cloudwatch_log_metric_filter" "unhealthy_response" {
-  name           = "koneksi-uat-unhealthy-health-check"
+  name           = "bongaquino-uat-unhealthy-health-check"
   log_group_name = aws_cloudwatch_log_group.canary_logs.name
   pattern        = "{ $.healthy = false }"
 
   metric_transformation {
     name      = "UnhealthyHealthCheck"
-    namespace = "Koneksi/HealthMonitoring"
+    namespace = "bongaquino/HealthMonitoring"
     value     = "1"
   }
 }
 
 # Alarm for unhealthy responses
 resource "aws_cloudwatch_metric_alarm" "unhealthy_response" {
-  alarm_name          = "koneksi-uat-health-endpoint-unhealthy"
+  alarm_name          = "bongaquino-uat-health-endpoint-unhealthy"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "UnhealthyHealthCheck"
-  namespace           = "Koneksi/HealthMonitoring"
+  namespace           = "bongaquino/HealthMonitoring"
   period              = "300"
   statistic           = "Sum"
   threshold           = "1"
@@ -307,9 +307,9 @@ resource "aws_cloudwatch_metric_alarm" "unhealthy_response" {
   ok_actions          = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-uat-health-endpoint-unhealthy"
+    Name        = "bongaquino-uat-health-endpoint-unhealthy"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "CRITICAL"
     ManagedBy   = "terraform"
   }

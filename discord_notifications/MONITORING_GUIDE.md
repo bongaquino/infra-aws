@@ -1,6 +1,6 @@
-# 🚀 Koneksi AWS Discord Monitoring System
+# 🚀 bongaquino AWS Discord Monitoring System
 
-Complete monitoring solution with Discord notifications for the Koneksi platform.
+Complete monitoring solution with Discord notifications for the bongaquino platform.
 
 ## 🎯 **Quick Start**
 
@@ -33,8 +33,8 @@ Complete monitoring solution with Discord notifications for the Koneksi platform
 - **Business**: User metrics, growth tracking
 
 ### 🌍 **Multi-Environment Support**
-- **UAT**: `#koneksi-alerts` (active ✅)
-- **Staging**: `#koneksi-alerts` (same channel, ready to deploy 🔄)
+- **UAT**: `#bongaquino-alerts` (active ✅)
+- **Staging**: `#bongaquino-alerts` (same channel, ready to deploy 🔄)
 
 ---
 
@@ -50,7 +50,7 @@ Complete monitoring solution with Discord notifications for the Koneksi platform
                                                       ▼
 ┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
 │ Discord Channel │◀───│ Lambda       │◀───│ SNS Message     │
-│ #koneksi-alerts │    │ Function     │    │                 │
+│ #bongaquino-alerts │    │ Function     │    │                 │
 │                 │    │              │    │                 │
 └─────────────────┘    └──────────────┘    └─────────────────┘
 ```
@@ -62,19 +62,19 @@ Complete monitoring solution with Discord notifications for the Koneksi platform
 ### 1. **Discord Webhook Setup**
 
 #### UAT (Already Done ✅)
-- Channel: `#koneksi-alerts`
+- Channel: `#bongaquino-alerts`
 - Webhook: Already configured
 
 #### Staging Setup (Next Step)
 - **No setup needed!** Staging uses the same webhook as UAT
-- Same Discord channel: `#koneksi-alerts`
-- Different bot name: `🟡 Koneksi Staging Bot`
+- Same Discord channel: `#bongaquino-alerts`
+- Different bot name: `🟡 bongaquino Staging Bot`
 - Ready to deploy immediately
 
 ### 2. **Deploy Monitoring**
 
 ```bash
-cd koneksi-aws/discord_notifications
+cd bongaquino-aws/discord_notifications
 ./deploy_all_environments.sh
 ```
 
@@ -95,13 +95,13 @@ cd koneksi-aws/discord_notifications
 Copy `application_monitoring/go_integration.go` to your backend:
 
 ```bash
-cp application_monitoring/go_integration.go ../koneksi-backend/monitoring/
+cp application_monitoring/go_integration.go ../bongaquino-backend/monitoring/
 ```
 
 ### 2. **Add Dependencies**
 
 ```bash
-cd ../koneksi-backend
+cd ../bongaquino-backend
 go get github.com/aws/aws-sdk-go-v2/service/cloudwatch
 go get github.com/aws/aws-sdk-go-v2/service/sns
 ```
@@ -110,7 +110,7 @@ go get github.com/aws/aws-sdk-go-v2/service/sns
 
 ```go
 // main.go or wherever you initialize your app
-monitor, err := monitoring.NewDiscordMonitoring("uat", "koneksi-backend")
+monitor, err := monitoring.NewDiscordMonitoring("uat", "bongaquino-backend")
 if err != nil {
     log.Fatal("Failed to initialize monitoring:", err)
 }
@@ -204,7 +204,7 @@ func (h *Handler) UploadFile(c *gin.Context) {
 ### 1. **Test SNS Topic**
 ```bash
 aws sns publish \
-  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:koneksi-uat-uat-discord-notifications" \
+  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:bongaquino-uat-uat-discord-notifications" \
   --message "Test message from command line" \
   --subject "Test Alert"
 ```
@@ -212,7 +212,7 @@ aws sns publish \
 ### 2. **Test CloudWatch Alarm**
 ```bash
 aws cloudwatch set-alarm-state \
-  --alarm-name "koneksi-uat-alb-5xx-error-rate" \
+  --alarm-name "bongaquino-uat-alb-5xx-error-rate" \
   --state-value ALARM \
   --state-reason "Testing alarm"
 ```
@@ -232,8 +232,8 @@ monitor.SendInfoAlert(ctx, "Test Alert", "Testing Discord integration", map[stri
 Access your metrics:
 
 1. **CloudWatch Console**
-   - Custom namespace: `Koneksi/Application`
-   - Business namespace: `Koneksi/Business`
+   - Custom namespace: `bongaquino/Application`
+   - Business namespace: `bongaquino/Business`
 
 2. **Key Metrics to Watch**
    - `ApiResponseTime`
@@ -266,7 +266,7 @@ monitor.SendMetric(ctx, monitoring.MetricData{
     MetricName: "DailyActiveUsers",
     Value:      float64(userCount),
     Unit:       types.StandardUnitCount,
-    Namespace:  "Koneksi/Business",
+    Namespace:  "bongaquino/Business",
 })
 ```
 
@@ -274,11 +274,11 @@ monitor.SendMetric(ctx, monitoring.MetricData{
 
 ```hcl
 resource "aws_cloudwatch_metric_alarm" "custom_metric" {
-  alarm_name          = "koneksi-${var.environment}-custom-metric"
+  alarm_name          = "bongaquino-${var.environment}-custom-metric"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "CustomMetric"
-  namespace           = "Koneksi/Application"
+  namespace           = "bongaquino/Application"
   period              = "300"
   statistic           = "Average"
   threshold           = "100"
@@ -294,8 +294,8 @@ resource "aws_cloudwatch_metric_alarm" "custom_metric" {
 ### **Lambda Function Issues**
 ```bash
 # Check Lambda logs
-aws logs describe-log-groups --log-group-name-prefix "/aws/lambda/koneksi"
-aws logs tail "/aws/lambda/koneksi-uat-uat-discord-notifier" --follow
+aws logs describe-log-groups --log-group-name-prefix "/aws/lambda/bongaquino"
+aws logs tail "/aws/lambda/bongaquino-uat-uat-discord-notifier" --follow
 ```
 
 ### **SNS Topic Issues**
@@ -355,10 +355,10 @@ terraform plan
 
 ## 🔗 **Quick Links**
 
-- **UAT SNS Topic**: `koneksi-uat-uat-discord-notifications`
-- **Lambda Function**: `koneksi-uat-uat-discord-notifier`
-- **CloudWatch Namespace**: `Koneksi/Application`
-- **Discord Channel**: `#koneksi-alerts`
+- **UAT SNS Topic**: `bongaquino-uat-uat-discord-notifications`
+- **Lambda Function**: `bongaquino-uat-uat-discord-notifier`
+- **CloudWatch Namespace**: `bongaquino/Application`
+- **Discord Channel**: `#bongaquino-alerts`
 
 ---
 

@@ -292,7 +292,7 @@ resource "aws_route_table_association" "data_private" {
 # =============================================================================
 # Security Groups - MANAGE EXISTING
 # =============================================================================
-# Private Security Group - staging has koneksi-staging-private-sg
+# Private Security Group - staging has bongaquino-staging-private-sg
 resource "aws_security_group" "private" {
   name        = "${local.name_prefix}-private-sg"
   description = "Security group for private instances"
@@ -319,7 +319,7 @@ resource "aws_security_group" "private" {
   }
 }
 
-# Public Security Group - staging has koneksi-staging-public-sg (acts as ALB SG)
+# Public Security Group - staging has bongaquino-staging-public-sg (acts as ALB SG)
 resource "aws_security_group" "public" {
   name        = "${local.name_prefix}-public-sg"
   description = "Security group for public subnet"

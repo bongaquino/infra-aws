@@ -118,13 +118,13 @@ dynamodb/
 
 1. **Describe Table**
 ```bash
-aws dynamodb describe-table --table-name koneksi-staging-users --region ap-southeast-1
+aws dynamodb describe-table --table-name bongaquino-staging-users --region ap-southeast-1
 ```
 
 2. **Put Item**
 ```bash
 aws dynamodb put-item \
-    --table-name koneksi-staging-users \
+    --table-name bongaquino-staging-users \
     --item '{
         "id": {"S": "user1"},
         "name": {"S": "Test User"},
@@ -136,7 +136,7 @@ aws dynamodb put-item \
 3. **Get Item**
 ```bash
 aws dynamodb get-item \
-    --table-name koneksi-staging-users \
+    --table-name bongaquino-staging-users \
     --key '{"id": {"S": "user1"}}' \
     --region ap-southeast-1
 ```
@@ -144,7 +144,7 @@ aws dynamodb get-item \
 4. **Update Item**
 ```bash
 aws dynamodb update-item \
-    --table-name koneksi-staging-users \
+    --table-name bongaquino-staging-users \
     --key '{"id": {"S": "user1"}}' \
     --update-expression "SET #n = :name" \
     --expression-attribute-names '{"#n": "name"}' \
@@ -155,7 +155,7 @@ aws dynamodb update-item \
 5. **Delete Item**
 ```bash
 aws dynamodb delete-item \
-    --table-name koneksi-staging-users \
+    --table-name bongaquino-staging-users \
     --key '{"id": {"S": "user1"}}' \
     --region ap-southeast-1
 ```
@@ -170,7 +170,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({
 // Put Item
 async function putItem() {
     const params = {
-        TableName: 'koneksi-staging-users',
+        TableName: 'bongaquino-staging-users',
         Item: {
             id: 'user1',
             name: 'Test User',
@@ -183,7 +183,7 @@ async function putItem() {
 // Get Item
 async function getItem(id) {
     const params = {
-        TableName: 'koneksi-staging-users',
+        TableName: 'bongaquino-staging-users',
         Key: { id }
     };
     return await dynamodb.get(params).promise();
@@ -192,7 +192,7 @@ async function getItem(id) {
 // Update Item
 async function updateItem(id, updates) {
     const params = {
-        TableName: 'koneksi-staging-users',
+        TableName: 'bongaquino-staging-users',
         Key: { id },
         UpdateExpression: 'SET #n = :name, email = :email',
         ExpressionAttributeNames: {
@@ -209,7 +209,7 @@ async function updateItem(id, updates) {
 // Delete Item
 async function deleteItem(id) {
     const params = {
-        TableName: 'koneksi-staging-users',
+        TableName: 'bongaquino-staging-users',
         Key: { id }
     };
     return await dynamodb.delete(params).promise();
@@ -222,7 +222,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
-table = dynamodb.Table('koneksi-staging-users')
+table = dynamodb.Table('bongaquino-staging-users')
 
 # Put Item
 def put_item():
@@ -280,7 +280,7 @@ module "dynamodb_table" {
   source = "./dynamodb"
 
   # Basic configuration
-  table_name    = "koneksi-staging-users"
+  table_name    = "bongaquino-staging-users"
   hash_key      = "id"
   range_key     = null  # Single key table
   billing_mode  = "PAY_PER_REQUEST"
@@ -290,13 +290,13 @@ module "dynamodb_table" {
   server_side_encryption_enabled = true
 
   # Environment
-  project     = "koneksi"
+  project     = "bongaquino"
   environment = "staging"
   aws_region  = "ap-southeast-1"
 
   tags = {
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
   }
 }
 ```
@@ -308,7 +308,7 @@ module "dynamodb_table" {
   source = "./dynamodb"
 
   # Table configuration
-  table_name   = "koneksi-prod-users"
+  table_name   = "bongaquino-prod-users"
   hash_key     = "id"
   range_key    = "created_at"
   billing_mode = "PROVISIONED"
@@ -326,7 +326,7 @@ module "dynamodb_table" {
   stream_enabled                = true
 
   # Environment
-  project     = "koneksi"
+  project     = "bongaquino"
   environment = "production"
   aws_region  = "ap-southeast-1"
 }
@@ -338,7 +338,7 @@ module "dynamodb_table" {
 module "dynamodb_table" {
   source = "./dynamodb"
 
-  table_name   = "koneksi-uat-orders"
+  table_name   = "bongaquino-uat-orders"
   hash_key     = "order_id"
   range_key    = "created_at"
   billing_mode = "PAY_PER_REQUEST"
@@ -363,7 +363,7 @@ module "dynamodb_table" {
     }
   ]
 
-  project     = "koneksi"
+  project     = "bongaquino"
   environment = "uat"
 }
 ```
@@ -374,14 +374,14 @@ module "dynamodb_table" {
 module "dynamodb_table" {
   source = "./dynamodb"
 
-  table_name = "koneksi-private-table"
+  table_name = "bongaquino-private-table"
   hash_key   = "id"
 
   # VPC Endpoint for private access
   vpc_id                        = module.vpc.vpc_id
   data_private_route_table_ids  = module.vpc.private_route_table_ids
 
-  project     = "koneksi"
+  project     = "bongaquino"
   environment = "production"
 }
 ```
@@ -463,26 +463,26 @@ module "dynamodb_table" {
 
 ### Staging Environment
    ```bash
-cd koneksi-aws/dynamodb/envs/staging
+cd bongaquino-aws/dynamodb/envs/staging
 terraform init
-AWS_PROFILE=koneksi terraform plan
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform plan
+AWS_PROFILE=bongaquino terraform apply
    ```
 
 ### UAT Environment
    ```bash
-cd koneksi-aws/dynamodb/envs/uat
+cd bongaquino-aws/dynamodb/envs/uat
    terraform init
-AWS_PROFILE=koneksi terraform plan
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform plan
+AWS_PROFILE=bongaquino terraform apply
    ```
 
 ### Production Environment
    ```bash
-cd koneksi-aws/dynamodb/envs/prod
+cd bongaquino-aws/dynamodb/envs/prod
 terraform init
-AWS_PROFILE=koneksi terraform plan
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform plan
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 ## Performance Optimization
@@ -582,8 +582,8 @@ response = dynamodb.batch_get_item(
         "dynamodb:Query"
       ],
       "Resource": [
-        "arn:aws:dynamodb:region:account:table/koneksi-staging-users",
-        "arn:aws:dynamodb:region:account:table/koneksi-staging-users/index/*"
+        "arn:aws:dynamodb:region:account:table/bongaquino-staging-users",
+        "arn:aws:dynamodb:region:account:table/bongaquino-staging-users/index/*"
       ],
       "Condition": {
         "ForAllValues:StringEquals": {
@@ -615,7 +615,7 @@ resource "aws_vpc_endpoint" "dynamodb" {
           "dynamodb:Query",
           "dynamodb:Scan"
         ]
-        Resource = "arn:aws:dynamodb:*:*:table/koneksi-*"
+        Resource = "arn:aws:dynamodb:*:*:table/bongaquino-*"
       }
     ]
   })
@@ -777,24 +777,24 @@ aws ce get-cost-and-usage \
 
 ```bash
 # Check table status
-aws dynamodb describe-table --table-name koneksi-staging-users
+aws dynamodb describe-table --table-name bongaquino-staging-users
 
 # Monitor table metrics
 aws cloudwatch get-metric-statistics \
   --namespace AWS/DynamoDB \
   --metric-name ConsumedReadCapacityUnits \
-  --dimensions Name=TableName,Value=koneksi-staging-users \
+  --dimensions Name=TableName,Value=bongaquino-staging-users \
   --start-time 2023-01-01T00:00:00Z \
   --end-time 2023-01-01T23:59:59Z \
   --period 3600 \
   --statistics Sum
 
 # Check for throttling
-aws dynamodb describe-table --table-name koneksi-staging-users \
+aws dynamodb describe-table --table-name bongaquino-staging-users \
   --query 'Table.BillingModeSummary'
 
 # Validate table schema
-aws dynamodb describe-table --table-name koneksi-staging-users \
+aws dynamodb describe-table --table-name bongaquino-staging-users \
   --query 'Table.{HashKey:KeySchema[0],RangeKey:KeySchema[1],GSI:GlobalSecondaryIndexes[*].{Name:IndexName,Keys:KeySchema}}'
 ```
 

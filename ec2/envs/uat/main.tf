@@ -6,7 +6,7 @@ provider "aws" {
 resource "aws_instance" "uat_bastion" {
   ami           = "ami-02c7683e4ca3ebf58"  # Real AMI from AWS
   instance_type = "t3a.small"             # Real instance type from AWS
-  key_name      = "koneksi-uat-key"       # Real key from AWS
+  key_name      = "bongaquino-uat-key"       # Real key from AWS
   subnet_id     = "subnet-0819e628f42bebead"  # Public subnet
   vpc_security_group_ids = ["sg-019d4659c99b8f22a"]  # Real security group from AWS
   
@@ -30,8 +30,8 @@ resource "aws_instance" "uat_bastion" {
   }
 
   tags = {
-    Name        = "koneksi-uat-bastion"
-    Project     = "koneksi"
+    Name        = "bongaquino-uat-bastion"
+    Project     = "bongaquino"
     Environment = "uat"
     ManagedBy   = "terraform"
   }
@@ -41,7 +41,7 @@ resource "aws_instance" "uat_bastion" {
 resource "aws_instance" "uat_redis" {
   ami           = "ami-02c7683e4ca3ebf58"  # Assuming same AMI
   instance_type = "c5.large"              # From AWS reality
-  key_name      = "koneksi-uat-key"       
+  key_name      = "bongaquino-uat-key"       
   subnet_id     = "subnet-0b641380f01a517ab"  # Real subnet from plan output
   vpc_security_group_ids = ["sg-08ff2826707f3969c"]  # Real security group from plan
   
@@ -65,8 +65,8 @@ resource "aws_instance" "uat_redis" {
   }
 
   tags = {
-    Name        = "koneksi-uat-redis"
-    Project     = "koneksi"
+    Name        = "bongaquino-uat-redis"
+    Project     = "bongaquino"
     Environment = "uat"
     ManagedBy   = "terraform"
   }
@@ -76,7 +76,7 @@ resource "aws_instance" "uat_redis" {
 resource "aws_instance" "uat_mongodb" {
   ami           = "ami-02c7683e4ca3ebf58"  # Assuming same AMI
   instance_type = "c5.large"              # From AWS reality
-  key_name      = "koneksi-uat-key"       
+  key_name      = "bongaquino-uat-key"       
   subnet_id     = "subnet-0b641380f01a517ab"  # Real subnet from plan output
   vpc_security_group_ids = ["sg-08ff2826707f3969c"]  # Real security group from plan
   
@@ -100,8 +100,8 @@ resource "aws_instance" "uat_mongodb" {
   }
 
   tags = {
-    Name        = "koneksi-uat-mongodb"
-    Project     = "koneksi"
+    Name        = "bongaquino-uat-mongodb"
+    Project     = "bongaquino"
     Environment = "uat"
     ManagedBy   = "terraform"
   }
@@ -111,7 +111,7 @@ resource "aws_instance" "uat_mongodb" {
 resource "aws_instance" "uat_tyk" {
   ami           = "ami-02c7683e4ca3ebf58"  # Assuming same AMI
   instance_type = "c5.xlarge"             # From AWS reality
-  key_name      = "koneksi-uat-key"       
+  key_name      = "bongaquino-uat-key"       
   subnet_id     = "subnet-036b8051cba048269"  # Real subnet from plan output
   vpc_security_group_ids = ["sg-05eedf18d93530de8"]  # Real security group from plan
   
@@ -135,8 +135,8 @@ resource "aws_instance" "uat_tyk" {
   }
 
   tags = {
-    Name        = "koneksi-uat-tyk"
-    Project     = "koneksi"
+    Name        = "bongaquino-uat-tyk"
+    Project     = "bongaquino"
     Environment = "uat"
     ManagedBy   = "terraform"
   }
@@ -146,7 +146,7 @@ resource "aws_instance" "uat_tyk" {
 resource "aws_instance" "uat_tsdb" {
   ami           = "ami-02c7683e4ca3ebf58"  # Assuming same AMI
   instance_type = "t3a.medium"            # From AWS reality
-  key_name      = "koneksi-uat-key"       
+  key_name      = "bongaquino-uat-key"       
   subnet_id     = "subnet-0b641380f01a517ab"  # Real subnet from plan output
   vpc_security_group_ids = ["sg-08ff2826707f3969c"]  # Real security group from plan
   
@@ -170,8 +170,8 @@ resource "aws_instance" "uat_tsdb" {
   }
 
   tags = {
-    Name        = "koneksi-uat-tsdb"
-    Project     = "koneksi"
+    Name        = "bongaquino-uat-tsdb"
+    Project     = "bongaquino"
     Environment = "uat"
     ManagedBy   = "terraform"
   }

@@ -228,7 +228,7 @@ resource "aws_lb_listener_rule" "rate_limit_secondary" {
 # Data source to reference existing target group
 data "aws_lb_target_group" "existing_services" {
   count = var.create_secondary_alb ? 1 : 0
-  arn   = "arn:aws:elasticloadbalancing:ap-southeast-1:985869370256:targetgroup/koneksi-uat-tg-services-tyk/ba7930b4898155e0"
+  arn   = "arn:aws:elasticloadbalancing:ap-southeast-1:985869370256:targetgroup/bongaquino-uat-tg-services-tyk/ba7930b4898155e0"
 }
 
 # CloudWatch Alarms

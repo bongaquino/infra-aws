@@ -4,7 +4,7 @@
 
 # Get the Discord SNS topic
 data "aws_sns_topic" "discord_notifications" {
-  name = "koneksi-uat-discord-notifications"
+  name = "bongaquino-uat-discord-notifications"
 }
 
 # =============================================================================
@@ -13,7 +13,7 @@ data "aws_sns_topic" "discord_notifications" {
 
 # Root User Activity
 resource "aws_cloudwatch_metric_alarm" "root_user_activity" {
-  alarm_name          = "koneksi-security-root-user-activity"
+  alarm_name          = "bongaquino-security-root-user-activity"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "RootUserActivity"
@@ -25,9 +25,9 @@ resource "aws_cloudwatch_metric_alarm" "root_user_activity" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-security-root-user-activity"
+    Name        = "bongaquino-security-root-user-activity"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "CRITICAL"
     ManagedBy   = "terraform"
   }
@@ -35,8 +35,8 @@ resource "aws_cloudwatch_metric_alarm" "root_user_activity" {
 
 # Failed Console Logins (Brute Force Detection)
 resource "aws_cloudwatch_log_metric_filter" "failed_console_logins" {
-  name           = "koneksi-security-failed-console-logins"
-  log_group_name = "/aws/cloudtrail/koneksi-uat"
+  name           = "bongaquino-security-failed-console-logins"
+  log_group_name = "/aws/cloudtrail/bongaquino-uat"
   pattern        = "{ ($.eventName = ConsoleLogin) && ($.responseElements.ConsoleLogin = Failure) }"
 
   metric_transformation {
@@ -47,7 +47,7 @@ resource "aws_cloudwatch_log_metric_filter" "failed_console_logins" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "failed_console_logins" {
-  alarm_name          = "koneksi-security-failed-console-logins"
+  alarm_name          = "bongaquino-security-failed-console-logins"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "FailedConsoleLogins"
@@ -59,9 +59,9 @@ resource "aws_cloudwatch_metric_alarm" "failed_console_logins" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-security-failed-console-logins"
+    Name        = "bongaquino-security-failed-console-logins"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "HIGH"
     ManagedBy   = "terraform"
   }
@@ -69,8 +69,8 @@ resource "aws_cloudwatch_metric_alarm" "failed_console_logins" {
 
 # Unauthorized API Calls
 resource "aws_cloudwatch_log_metric_filter" "unauthorized_api_calls" {
-  name           = "koneksi-security-unauthorized-api-calls"
-  log_group_name = "/aws/cloudtrail/koneksi-uat"
+  name           = "bongaquino-security-unauthorized-api-calls"
+  log_group_name = "/aws/cloudtrail/bongaquino-uat"
   pattern        = "{ ($.errorCode = \"*UnauthorizedOperation\") || ($.errorCode = \"AccessDenied*\") }"
 
   metric_transformation {
@@ -81,7 +81,7 @@ resource "aws_cloudwatch_log_metric_filter" "unauthorized_api_calls" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "unauthorized_api_calls" {
-  alarm_name          = "koneksi-security-unauthorized-api-calls"
+  alarm_name          = "bongaquino-security-unauthorized-api-calls"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "UnauthorizedAPICalls"
@@ -93,9 +93,9 @@ resource "aws_cloudwatch_metric_alarm" "unauthorized_api_calls" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-security-unauthorized-api-calls"
+    Name        = "bongaquino-security-unauthorized-api-calls"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "HIGH"
     ManagedBy   = "terraform"
   }
@@ -103,8 +103,8 @@ resource "aws_cloudwatch_metric_alarm" "unauthorized_api_calls" {
 
 # IAM Policy Changes
 resource "aws_cloudwatch_log_metric_filter" "iam_policy_changes" {
-  name           = "koneksi-security-iam-policy-changes"
-  log_group_name = "/aws/cloudtrail/koneksi-uat"
+  name           = "bongaquino-security-iam-policy-changes"
+  log_group_name = "/aws/cloudtrail/bongaquino-uat"
   pattern        = "{ ($.eventName=DeleteGroupPolicy) || ($.eventName=DeleteRolePolicy) || ($.eventName=DeleteUserPolicy) || ($.eventName=PutGroupPolicy) || ($.eventName=PutRolePolicy) || ($.eventName=PutUserPolicy) || ($.eventName=CreatePolicy) || ($.eventName=DeletePolicy) || ($.eventName=CreatePolicyVersion) || ($.eventName=DeletePolicyVersion) || ($.eventName=AttachRolePolicy) || ($.eventName=DetachRolePolicy) || ($.eventName=AttachUserPolicy) || ($.eventName=DetachUserPolicy) || ($.eventName=AttachGroupPolicy) || ($.eventName=DetachGroupPolicy) }"
 
   metric_transformation {
@@ -115,7 +115,7 @@ resource "aws_cloudwatch_log_metric_filter" "iam_policy_changes" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "iam_policy_changes" {
-  alarm_name          = "koneksi-security-iam-policy-changes"
+  alarm_name          = "bongaquino-security-iam-policy-changes"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "IAMPolicyChanges"
@@ -127,9 +127,9 @@ resource "aws_cloudwatch_metric_alarm" "iam_policy_changes" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-security-iam-policy-changes"
+    Name        = "bongaquino-security-iam-policy-changes"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "MEDIUM"
     ManagedBy   = "terraform"
   }
@@ -137,8 +137,8 @@ resource "aws_cloudwatch_metric_alarm" "iam_policy_changes" {
 
 # Security Group Changes  
 resource "aws_cloudwatch_log_metric_filter" "security_group_changes" {
-  name           = "koneksi-security-sg-changes"
-  log_group_name = "/aws/cloudtrail/koneksi-uat"
+  name           = "bongaquino-security-sg-changes"
+  log_group_name = "/aws/cloudtrail/bongaquino-uat"
   pattern        = "{ ($.eventName = AuthorizeSecurityGroupIngress) || ($.eventName = AuthorizeSecurityGroupEgress) || ($.eventName = RevokeSecurityGroupIngress) || ($.eventName = RevokeSecurityGroupEgress) || ($.eventName = CreateSecurityGroup) || ($.eventName = DeleteSecurityGroup) }"
 
   metric_transformation {
@@ -149,7 +149,7 @@ resource "aws_cloudwatch_log_metric_filter" "security_group_changes" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "security_group_changes" {
-  alarm_name          = "koneksi-security-sg-changes"
+  alarm_name          = "bongaquino-security-sg-changes"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "SecurityGroupChanges"
@@ -161,9 +161,9 @@ resource "aws_cloudwatch_metric_alarm" "security_group_changes" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-security-sg-changes"
+    Name        = "bongaquino-security-sg-changes"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "MEDIUM"
     ManagedBy   = "terraform"
   }
@@ -171,8 +171,8 @@ resource "aws_cloudwatch_metric_alarm" "security_group_changes" {
 
 # Network ACL Changes
 resource "aws_cloudwatch_log_metric_filter" "network_acl_changes" {
-  name           = "koneksi-security-nacl-changes"
-  log_group_name = "/aws/cloudtrail/koneksi-uat"
+  name           = "bongaquino-security-nacl-changes"
+  log_group_name = "/aws/cloudtrail/bongaquino-uat"
   pattern        = "{ ($.eventName = CreateNetworkAcl) || ($.eventName = CreateNetworkAclEntry) || ($.eventName = DeleteNetworkAcl) || ($.eventName = DeleteNetworkAclEntry) || ($.eventName = ReplaceNetworkAclEntry) || ($.eventName = ReplaceNetworkAclAssociation) }"
 
   metric_transformation {
@@ -183,7 +183,7 @@ resource "aws_cloudwatch_log_metric_filter" "network_acl_changes" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "network_acl_changes" {
-  alarm_name          = "koneksi-security-nacl-changes"
+  alarm_name          = "bongaquino-security-nacl-changes"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "NetworkACLChanges"
@@ -195,9 +195,9 @@ resource "aws_cloudwatch_metric_alarm" "network_acl_changes" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-security-nacl-changes"
+    Name        = "bongaquino-security-nacl-changes"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     AlertLevel  = "MEDIUM"
     ManagedBy   = "terraform"
   }
@@ -209,7 +209,7 @@ resource "aws_cloudwatch_metric_alarm" "network_acl_changes" {
 
 # AWS Config Non-Compliance Events
 resource "aws_cloudwatch_event_rule" "config_compliance_change" {
-  name        = "koneksi-security-config-compliance-change"
+  name        = "bongaquino-security-config-compliance-change"
   description = "Capture AWS Config compliance changes"
 
   event_pattern = jsonencode({
@@ -221,9 +221,9 @@ resource "aws_cloudwatch_event_rule" "config_compliance_change" {
   })
 
   tags = {
-    Name        = "koneksi-security-config-compliance-change"
+    Name        = "bongaquino-security-config-compliance-change"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
@@ -268,7 +268,7 @@ resource "aws_cloudwatch_event_target" "config_compliance_discord" {
 
 # GuardDuty Findings
 resource "aws_cloudwatch_event_rule" "guardduty_findings" {
-  name        = "koneksi-security-guardduty-findings"
+  name        = "bongaquino-security-guardduty-findings"
   description = "Capture GuardDuty findings"
 
   event_pattern = jsonencode({
@@ -280,9 +280,9 @@ resource "aws_cloudwatch_event_rule" "guardduty_findings" {
   })
 
   tags = {
-    Name        = "koneksi-security-guardduty-findings"
+    Name        = "bongaquino-security-guardduty-findings"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }

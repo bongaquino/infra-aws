@@ -51,28 +51,28 @@ fi
 
 # Generate new key pair
 echo "Generating new key pair for $ENVIRONMENT..."
-ssh-keygen -t rsa -b 4096 -f "$KEYS_DIR/koneksi-${ENVIRONMENT}-key" -N "" -C "koneksi-${ENVIRONMENT}-key-${TIMESTAMP}"
+ssh-keygen -t rsa -b 4096 -f "$KEYS_DIR/bongaquino-${ENVIRONMENT}-key" -N "" -C "bongaquino-${ENVIRONMENT}-key-${TIMESTAMP}"
 
 # Move public key to the correct location
-mv "$KEYS_DIR/koneksi-${ENVIRONMENT}-key.pub" "$KEYS_DIR/$ENVIRONMENT.pub"
+mv "$KEYS_DIR/bongaquino-${ENVIRONMENT}-key.pub" "$KEYS_DIR/$ENVIRONMENT.pub"
 
 echo "New key pair generated:"
 echo "Public key: $KEYS_DIR/$ENVIRONMENT.pub"
-echo "Private key: $KEYS_DIR/koneksi-${ENVIRONMENT}-key"
+echo "Private key: $KEYS_DIR/bongaquino-${ENVIRONMENT}-key"
 
 # Store private key in AWS Secrets Manager
 echo "Storing private key in AWS Secrets Manager..."
 aws secretsmanager create-secret \
-    --name "koneksi/${ENVIRONMENT}/ssh-key" \
+    --name "bongaquino/${ENVIRONMENT}/ssh-key" \
     --description "SSH private key for $ENVIRONMENT environment" \
-    --secret-string "file://$KEYS_DIR/koneksi-${ENVIRONMENT}-key" \
-    --tags "Key=Environment,Value=$ENVIRONMENT" "Key=Project,Value=koneksi" \
+    --secret-string "file://$KEYS_DIR/bongaquino-${ENVIRONMENT}-key" \
+    --tags "Key=Environment,Value=$ENVIRONMENT" "Key=Project,Value=bongaquino" \
     || aws secretsmanager update-secret \
-    --secret-id "koneksi/${ENVIRONMENT}/ssh-key" \
-    --secret-string "file://$KEYS_DIR/koneksi-${ENVIRONMENT}-key"
+    --secret-id "bongaquino/${ENVIRONMENT}/ssh-key" \
+    --secret-string "file://$KEYS_DIR/bongaquino-${ENVIRONMENT}-key"
 
 # Remove private key from local filesystem
-rm "$KEYS_DIR/koneksi-${ENVIRONMENT}-key"
+rm "$KEYS_DIR/bongaquino-${ENVIRONMENT}-key"
 
 echo "Key rotation completed successfully!"
 echo "Next steps:"

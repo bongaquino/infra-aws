@@ -1,5 +1,5 @@
 # ALB Configuration for Staging
-# Using existing security group: sg-066e2c5f4bfdab814 (koneksi-staging-public-sg)
+# Using existing security group: sg-066e2c5f4bfdab814 (bongaquino-staging-public-sg)
 # Using existing VPC: vpc-0c20317be26528962
 
 # Main ALB for Staging
@@ -17,7 +17,7 @@ module "main_alb" {
   healthcheck_path      = "/check-health"  # Use application health check endpoint
   create_main_alb       = true
   create_secondary_alb  = false
-  alb_name             = "koneksi-staging-alb"
+  alb_name             = "bongaquino-staging-alb"
   idle_timeout         = 1800  # Increased to 30 minutes for large file operations
   
   # Optimized Health Check Settings
@@ -29,10 +29,10 @@ module "main_alb" {
   enable_rate_limiting  = false  # Disable rate limiting
   enable_deletion_protection = true  # Enable deletion protection
   enable_access_logs    = true  # Enable access logs
-  access_logs_bucket    = "koneksi-staging-alb-logs"  # S3 bucket for access logs
+  access_logs_bucket    = "bongaquino-staging-alb-logs"  # S3 bucket for access logs
   access_logs_prefix    = "main-alb"  # Prefix for access logs
   enable_connection_logs = true  # Enable connection logs
-  connection_logs_bucket = "koneksi-staging-alb-logs"  # S3 bucket for connection logs
+  connection_logs_bucket = "bongaquino-staging-alb-logs"  # S3 bucket for connection logs
   connection_logs_prefix = "main-alb-connections"  # Prefix for connection logs
   enable_s3_notifications = false  # Disable S3 notifications (handled separately)
 } 

@@ -8,7 +8,7 @@
 #   project           = var.project
 #
 #   # Optional customization
-#   name_prefix                         = "koneksi-uat"
+#   name_prefix                         = "bongaquino-uat"
 #   discord_username                    = var.discord_username
 #   discord_avatar_url                  = var.discord_avatar_url
 #   log_retention_days                  = var.log_retention_days

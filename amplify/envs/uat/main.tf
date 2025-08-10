@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "ap-southeast-1"
-  profile = "koneksi"
+  profile = "bongaquino"
 }
 
 module "amplify" {
@@ -12,15 +12,15 @@ module "amplify" {
   name_prefix   = "${var.project}-${var.environment}"
   
   # App Configuration
-  app_name      = "koneksi-web-uat"
-  repository    = "https://github.com/koneksi-tech/koneksi-web"
+  app_name      = "bongaquino-web-uat"
+  repository    = "https://github.com/bongaquino-tech/bongaquino-web"
   branch_name   = "main"
   
   # Domain Configuration
-  domain_name   = "app-uat.koneksi.co.kr"
+  domain_name   = "app-uat.bongaquino.co.kr"
   
   # API Configuration
-  api_url       = "https://uat.koneksi.co.kr"
+  api_url       = "https://uat.bongaquino.co.kr"
   
   # Authentication (GitHub token for deployments)
   github_token  = var.github_token

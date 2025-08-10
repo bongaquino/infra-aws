@@ -8,14 +8,14 @@ data "aws_region" "current" {}
 
 # Create SNS Topic with Clean Name
 resource "aws_sns_topic" "uat_discord_notifications" {
-  name = "koneksi-uat-discord-notifications"
+  name = "bongaquino-uat-discord-notifications"
 
   tags = {
     Environment = "uat"
     ManagedBy   = "terraform"
-    Name        = "koneksi-uat-discord-notifications"
+    Name        = "bongaquino-uat-discord-notifications"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Discord webhook notifications"
   }
 }
@@ -29,7 +29,7 @@ data "archive_file" "discord_notifier_zip" {
 
 # IAM Role for Lambda
 resource "aws_iam_role" "uat_discord_lambda_role" {
-  name = "koneksi-uat-discord-lambda-role"
+  name = "bongaquino-uat-discord-lambda-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -47,16 +47,16 @@ resource "aws_iam_role" "uat_discord_lambda_role" {
   tags = {
     Environment = "uat"
     ManagedBy   = "terraform"
-    Name        = "koneksi-uat-discord-lambda-role"
+    Name        = "bongaquino-uat-discord-lambda-role"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
   }
 }
 
 # IAM Policy for Lambda
 resource "aws_iam_role_policy" "uat_discord_lambda_policy" {
-  name = "koneksi-uat-discord-lambda-policy"
+  name = "bongaquino-uat-discord-lambda-policy"
   role = aws_iam_role.uat_discord_lambda_role.id
 
   policy = jsonencode({
@@ -79,7 +79,7 @@ resource "aws_iam_role_policy" "uat_discord_lambda_policy" {
           "ssm:GetParametersByPath"
         ]
         Resource = [
-          "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/koneksi/uat/discord/*"
+          "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/bongaquino/uat/discord/*"
         ]
       }
     ]
@@ -88,15 +88,15 @@ resource "aws_iam_role_policy" "uat_discord_lambda_policy" {
 
 # CloudWatch Log Group
 resource "aws_cloudwatch_log_group" "uat_discord_lambda_logs" {
-  name              = "/aws/lambda/koneksi-uat-discord-notifier"
+  name              = "/aws/lambda/bongaquino-uat-discord-notifier"
   retention_in_days = 7
 
   tags = {
     Environment = "uat"
     ManagedBy   = "terraform"
-    Name        = "koneksi-uat-discord-lambda-logs"
+    Name        = "bongaquino-uat-discord-lambda-logs"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
   }
 }
@@ -104,7 +104,7 @@ resource "aws_cloudwatch_log_group" "uat_discord_lambda_logs" {
 # Lambda Function with Clean Naming
 resource "aws_lambda_function" "uat_discord_notifier" {
   filename         = "../../lambda/discord_notifier.zip"
-  function_name    = "koneksi-uat-discord-notifier"  # CLEAN NAME!
+  function_name    = "bongaquino-uat-discord-notifier"  # CLEAN NAME!
   role            = aws_iam_role.uat_discord_lambda_role.arn
   handler         = "discord_notifier.lambda_handler"
   runtime         = "python3.9"
@@ -115,10 +115,10 @@ resource "aws_lambda_function" "uat_discord_notifier" {
   environment {
     variables = {
       DISCORD_WEBHOOK_URL = var.discord_webhook_url
-      DEFAULT_USERNAME    = "🔵 Koneksi UAT Bot"
+      DEFAULT_USERNAME    = "🔵 bongaquino UAT Bot"
       DEFAULT_AVATAR_URL  = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg"
       ENVIRONMENT         = "uat"
-      PROJECT             = "koneksi"
+      PROJECT             = "bongaquino"
       
       # Color configuration
       SUCCESS_COLOR      = var.success_message_color
@@ -136,9 +136,9 @@ resource "aws_lambda_function" "uat_discord_notifier" {
     Environment = "uat"
     ManagedBy   = "terraform"
     Module      = "discord-notifications"
-    Name        = "koneksi-uat-discord-notifier"
+    Name        = "bongaquino-uat-discord-notifier"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Send notifications to Discord"
   }
 }
@@ -161,7 +161,7 @@ resource "aws_sns_topic_subscription" "uat_discord_lambda" {
 
 # CloudWatch Metric Alarm for Lambda errors
 resource "aws_cloudwatch_metric_alarm" "uat_discord_lambda_errors" {
-  alarm_name          = "koneksi-uat-discord-lambda-errors"
+  alarm_name          = "bongaquino-uat-discord-lambda-errors"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "Errors"
@@ -179,9 +179,9 @@ resource "aws_cloudwatch_metric_alarm" "uat_discord_lambda_errors" {
   tags = {
     Environment = "uat"
     ManagedBy   = "terraform"
-    Name        = "koneksi-uat-discord-lambda-errors"
+    Name        = "bongaquino-uat-discord-lambda-errors"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
   }
 } 

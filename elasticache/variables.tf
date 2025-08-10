@@ -72,7 +72,7 @@ variable "snapshot_window" {
 variable "project" {
   description = "Project name for tagging"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "environment" {

@@ -1,10 +1,14 @@
 provider "aws" {
   region  = var.region
-  profile = "koneksi"
+<<<<<<< HEAD
+  profile = "bongaquino"
+=======
+  profile = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 }
 
 data "aws_lb_target_group" "main" {
-  name = "koneksi-staging-tg"
+  name = "bongaquino-staging-tg"
 }
 
 module "ecs" {
@@ -29,33 +33,33 @@ module "ecs" {
   log_retention_days      = var.log_retention_days
   container_environment   = var.container_environment
   container_secrets = [
-    { name = "APP_NAME", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/APP_NAME" },
-    { name = "APP_VERSION", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/APP_VERSION" },
-    { name = "IPFS_NODE_URL", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/IPFS_NODE_URL" },
-    { name = "JWT_REFRESH_EXPIRATION", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/JWT_REFRESH_EXPIRATION" },
-    { name = "JWT_SECRET", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/JWT_SECRET" },
-    { name = "POSTMARK_API_KEY", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTMARK_API_KEY" },
-    { name = "POSTMARK_FROM", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTMARK_FROM" },
-    { name = "REDIS_HOST", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/REDIS_HOST" },
-    { name = "REDIS_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/REDIS_PORT" },
-    { name = "REDIS_PREFIX", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/REDIS_PREFIX" },
-    { name = "APP_KEY", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/APP_KEY" },
-    { name = "IPFS_DOWNLOAD_URL", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/IPFS_DOWNLOAD_URL" },
-    { name = "JWT_TOKEN_EXPIRATION", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/JWT_TOKEN_EXPIRATION" },
-    { name = "MONGO_DATABASE", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/MONGO_DATABASE" },
-    { name = "MONGO_HOST", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/MONGO_HOST" },
-    { name = "MONGO_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/MONGO_PASSWORD" },
-    { name = "MONGO_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/MONGO_PORT" },
-    { name = "MONGO_USER", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/MONGO_USER" },
-    { name = "PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/PORT" },
-    { name = "DB_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/db/password" },
+    { name = "APP_NAME", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/APP_NAME" },
+    { name = "APP_VERSION", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/APP_VERSION" },
+    { name = "IPFS_NODE_URL", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/IPFS_NODE_URL" },
+    { name = "JWT_REFRESH_EXPIRATION", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/JWT_REFRESH_EXPIRATION" },
+    { name = "JWT_SECRET", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/JWT_SECRET" },
+    { name = "POSTMARK_API_KEY", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTMARK_API_KEY" },
+    { name = "POSTMARK_FROM", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTMARK_FROM" },
+    { name = "REDIS_HOST", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/REDIS_HOST" },
+    { name = "REDIS_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/REDIS_PORT" },
+    { name = "REDIS_PREFIX", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/REDIS_PREFIX" },
+    { name = "APP_KEY", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/APP_KEY" },
+    { name = "IPFS_DOWNLOAD_URL", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/IPFS_DOWNLOAD_URL" },
+    { name = "JWT_TOKEN_EXPIRATION", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/JWT_TOKEN_EXPIRATION" },
+    { name = "MONGO_DATABASE", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/MONGO_DATABASE" },
+    { name = "MONGO_HOST", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/MONGO_HOST" },
+    { name = "MONGO_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/MONGO_PASSWORD" },
+    { name = "MONGO_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/MONGO_PORT" },
+    { name = "MONGO_USER", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/MONGO_USER" },
+    { name = "PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/PORT" },
+    { name = "DB_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/db/password" },
     # PostgreSQL Database Configuration
-    { name = "POSTGRES_DB", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTGRES_DB" },
-    { name = "POSTGRES_HOST", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTGRES_HOST" },
-    { name = "POSTGRES_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTGRES_PASSWORD" },
-    { name = "POSTGRES_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTGRES_PORT" },
-    { name = "POSTGRES_SSL_MODE", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTGRES_SSL_MODE" },
-    { name = "POSTGRES_USER", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/POSTGRES_USER" }
+    { name = "POSTGRES_DB", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTGRES_DB" },
+    { name = "POSTGRES_HOST", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTGRES_HOST" },
+    { name = "POSTGRES_PASSWORD", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTGRES_PASSWORD" },
+    { name = "POSTGRES_PORT", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTGRES_PORT" },
+    { name = "POSTGRES_SSL_MODE", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTGRES_SSL_MODE" },
+    { name = "POSTGRES_USER", valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/POSTGRES_USER" }
   ]
   ecs_security_group_id   = var.ecs_security_group_id
   alb_security_group_id   = var.alb_security_group_id

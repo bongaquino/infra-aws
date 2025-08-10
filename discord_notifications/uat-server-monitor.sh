@@ -8,11 +8,11 @@ set -e
 
 # Configuration
 ENVIRONMENT="uat"
-PROJECT="koneksi"
+PROJECT="bongaquino"
 REGION="ap-southeast-1"
-PROFILE="koneksi"
+PROFILE="bongaquino"
 SERVER_IP="$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null || echo "local")"
-SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:koneksi-uat-discord-notifications"
+SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:bongaquino-uat-discord-notifications"
 
 # Colors for output
 RED='\033[0;31m'
@@ -61,9 +61,9 @@ check_health_endpoints() {
     local app_status="❌ Down"
     local success_rate="0%"
     
-    # Test server-uat.koneksi.co.kr (backend API)
+    # Test server-uat.bongaquino.co.kr (backend API)
     local start_time=$(date +%s)
-    local response=$(curl -s -w "%{http_code}" https://server-uat.koneksi.co.kr/ --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    local response=$(curl -s -w "%{http_code}" https://server-uat.bongaquino.co.kr/ --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local end_time=$(date +%s)
     local response_time=$(((end_time - start_time) * 1000))
     local http_code="${response: -3}"
@@ -79,8 +79,8 @@ check_health_endpoints() {
         ((success_rate_count++))
     fi
     
-    # Test mongo-uat.koneksi.co.kr
-    local mongo_response=$(curl -s -w "%{http_code}" -u "admin:koneksiPassw0rd" https://mongo-uat.koneksi.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    # Test mongo-uat.bongaquino.co.kr
+    local mongo_response=$(curl -s -w "%{http_code}" -u "admin:bongaquinoPassw0rd" https://mongo-uat.bongaquino.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local mongo_http_code="${mongo_response: -3}"
     
     if [[ "$mongo_http_code" == "200" ]]; then
@@ -88,8 +88,8 @@ check_health_endpoints() {
         ((success_rate_count++))
     fi
     
-    # Test app-uat.koneksi.co.kr
-    local app_response=$(curl -s -w "%{http_code}" https://app-uat.koneksi.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    # Test app-uat.bongaquino.co.kr
+    local app_response=$(curl -s -w "%{http_code}" https://app-uat.bongaquino.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local app_http_code="${app_response: -3}"
     
     if [[ "$app_http_code" == "200" ]]; then
@@ -116,8 +116,8 @@ get_ecs_info() {
     local ecs_info=$(aws ecs describe-services \
         --region "$REGION" \
         --profile "$PROFILE" \
-        --cluster koneksi-uat-cluster \
-        --services koneksi-uat-service \
+        --cluster bongaquino-uat-cluster \
+        --services bongaquino-uat-service \
         --query 'services[0].{runningCount:runningCount,desiredCount:desiredCount,status:status}' \
         --output text 2>/dev/null || echo "")
     
@@ -146,7 +146,7 @@ get_app_health() {
     local version="1.0.0"
     
     # Test backend API health
-    local api_response=$(curl -s https://server-uat.koneksi.co.kr/ --max-time 10 2>/dev/null || echo "")
+    local api_response=$(curl -s https://server-uat.bongaquino.co.kr/ --max-time 10 2>/dev/null || echo "")
     if [[ "$api_response" != *"healthy"* ]]; then
         backend_api="❌ Unhealthy"
     fi
@@ -175,16 +175,16 @@ send_health_summary() {
     local details=$(cat <<EOF
 {
     "Environment": "uat",
-    "Server": "koneksi-uat-backend (ALB)",
+    "Server": "bongaquino-uat-backend (ALB)",
     "Test Type": "Lambda Function Update Verification",
     "Health Monitoring": "Primary endpoint monitoring with CloudWatch Synthetics",
-    "Backend API": "$server_status (https://server-uat.koneksi.co.kr/)",
-    "MongoDB Admin": "$mongo_status (https://mongo-uat.koneksi.co.kr)",
-    "Frontend App": "$app_status (https://app-uat.koneksi.co.kr)",
+    "Backend API": "$server_status (https://server-uat.bongaquino.co.kr/)",
+    "MongoDB Admin": "$mongo_status (https://mongo-uat.bongaquino.co.kr)",
+    "Frontend App": "$app_status (https://app-uat.bongaquino.co.kr)",
     "Response Time": "$server_response_time",
     "Success Rate": "$success_rate",
-    "ECS Service Cluster": "koneksi-uat-cluster", 
-    "ECS Service": "koneksi-uat-service",
+    "ECS Service Cluster": "bongaquino-uat-cluster", 
+    "ECS Service": "bongaquino-uat-service",
     "Running Tasks": "$running_tasks",
     "CPU": "$cpu_usage",
     "Memory": "$memory_usage",
@@ -210,16 +210,16 @@ test_endpoints() {
     
     # Test each endpoint
     local endpoints=(
-        "https://server-uat.koneksi.co.kr/"
-        "https://mongo-uat.koneksi.co.kr"
-        "https://app-uat.koneksi.co.kr"
+        "https://server-uat.bongaquino.co.kr/"
+        "https://mongo-uat.bongaquino.co.kr"
+        "https://app-uat.bongaquino.co.kr"
     )
     
     for endpoint in "${endpoints[@]}"; do
         print_status "Testing $endpoint..."
         
         if [[ "$endpoint" == *"mongo-uat"* ]]; then
-            local status=$(curl -s -w "%{http_code}" -u "admin:koneksiPassw0rd" "$endpoint" --max-time 10 2>/dev/null || echo "TIMEOUT000")
+            local status=$(curl -s -w "%{http_code}" -u "admin:bongaquinoPassw0rd" "$endpoint" --max-time 10 2>/dev/null || echo "TIMEOUT000")
         else
             local status=$(curl -s -w "%{http_code}" "$endpoint" --max-time 10 2>/dev/null || echo "TIMEOUT000")
         fi
@@ -247,7 +247,7 @@ main() {
             send_discord_alert "🧪 UAT Quick Test" \
                 "Testing UAT Discord notifications" \
                 "info" \
-                '{"Test": "Successful", "Environment": "uat", "Server": "koneksi-uat-backend"}'
+                '{"Test": "Successful", "Environment": "uat", "Server": "bongaquino-uat-backend"}'
             ;;
         *)
             echo "Usage: $0 {summary|test-endpoints|quick-test}"

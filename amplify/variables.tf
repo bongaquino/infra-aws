@@ -12,7 +12,11 @@ variable "app_name" {
 variable "repository" {
   description = "GitHub repository URL"
   type        = string
-  default     = "https://github.com/koneksi-tech/koneksi-web"
+<<<<<<< HEAD
+  default     = "https://github.com/bongaquino/bongaquino-web"
+=======
+  default     = "https://github.com/bongaquino-tech/bongaquino-web"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 }
 
 variable "github_token" {
@@ -53,7 +57,7 @@ variable "environment" {
 variable "project" {
   description = "Project name for tagging"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "tags" {

@@ -1,7 +1,7 @@
 variable "project" {
   description = "Project name for naming convention and tagging"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "environment" {

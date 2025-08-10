@@ -4,10 +4,10 @@ Both **UAT** and **Staging** now use the **same Discord channel and webhook**!
 
 ## 🎯 **Single Channel Setup**
 
-- **Channel**: `#koneksi-alerts`
+- **Channel**: `#bongaquino-alerts`
 - **Webhook**: Same URL for both environments  
-- **UAT Bot**: `🔵 Koneksi UAT Bot`
-- **Staging Bot**: `🟡 Koneksi Staging Bot`
+- **UAT Bot**: `🔵 bongaquino UAT Bot`
+- **Staging Bot**: `🟡 bongaquino Staging Bot`
 
 ## 🚀 **Deploy Staging**
 
@@ -21,14 +21,14 @@ Both **UAT** and **Staging** now use the **same Discord channel and webhook**!
 
 **UAT Alerts:**
 ```
-🔵 Koneksi UAT Bot  [BOT]
+🔵 bongaquino UAT Bot  [BOT]
 🔴 CRITICAL: Database Connection Lost
 Environment: UAT
 ```
 
 **Staging Alerts:**
 ```
-🟡 Koneksi Staging Bot  [BOT]  
+🟡 bongaquino Staging Bot  [BOT]  
 ⚠️ WARNING: High Memory Usage
 Environment: staging
 ```

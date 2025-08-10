@@ -256,7 +256,7 @@ resource "aws_iam_policy" "ssm_get_parameters" {
           "ssm:GetParameters",
           "ssm:GetParametersByPath"
         ],
-        Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/koneksi/${var.environment}/*"
+        Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/bongaquino/${var.environment}/*"
       },
       {
         Effect = "Allow",

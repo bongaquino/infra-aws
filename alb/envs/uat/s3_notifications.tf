@@ -2,7 +2,7 @@
 # This needs to be separate because S3 bucket notifications can only have one configuration per bucket
 
 resource "aws_s3_bucket_notification" "alb_logs_notification" {
-  bucket = "koneksi-uat-alb-logs"
+  bucket = "bongaquino-uat-alb-logs"
 
   # Main ALB Lambda function notification
   lambda_function {
@@ -32,7 +32,7 @@ resource "aws_lambda_permission" "main_alb_bucket_permission" {
   action        = "lambda:InvokeFunction"
   function_name = module.main_alb.lambda_function_name
   principal     = "s3.amazonaws.com"
-  source_arn    = "arn:aws:s3:::koneksi-uat-alb-logs"
+  source_arn    = "arn:aws:s3:::bongaquino-uat-alb-logs"
 }
 
 resource "aws_lambda_permission" "services_alb_bucket_permission" {
@@ -40,5 +40,5 @@ resource "aws_lambda_permission" "services_alb_bucket_permission" {
   action        = "lambda:InvokeFunction"
   function_name = module.services_alb.lambda_function_name
   principal     = "s3.amazonaws.com"
-  source_arn    = "arn:aws:s3:::koneksi-uat-alb-logs"
+  source_arn    = "arn:aws:s3:::bongaquino-uat-alb-logs"
 } 

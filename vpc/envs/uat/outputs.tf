@@ -55,7 +55,7 @@ output "nat_gateway_public_ips" {
 
 output "alb_security_group_id" {
   description = "ID of the ALB security group (using existing public SG)"  
-  value       = "sg-019d4659c99b8f22a"  # koneksi-uat-public-sg
+  value       = "sg-019d4659c99b8f22a"  # bongaquino-uat-public-sg
 }
 
 output "private_security_group_id" {

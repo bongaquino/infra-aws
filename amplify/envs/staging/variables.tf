@@ -7,25 +7,29 @@ variable "environment" {
 variable "project" {
   description = "Project name"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "name_prefix" {
   description = "Prefix for resource names"
   type        = string
-  default     = "koneksi-staging"
+  default     = "bongaquino-staging"
 }
 
 variable "app_name" {
   description = "Name of the Amplify app"
   type        = string
-  default     = "koneksi-web-staging"
+  default     = "bongaquino-web-staging"
 }
 
 variable "repository" {
   description = "GitHub repository URL"
   type        = string
-  default     = "https://github.com/koneksi-tech/koneksi-web"
+<<<<<<< HEAD
+  default     = "https://github.com/bongaquino/bongaquino-web"
+=======
+  default     = "https://github.com/bongaquino-tech/bongaquino-web"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 }
 
 variable "branch_name" {
@@ -63,7 +67,7 @@ variable "tags" {
   type        = map(string)
   default = {
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 } 

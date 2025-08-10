@@ -1,6 +1,6 @@
 # Elastic Container Service (ECS) Module
 
-This module provisions a fully managed ECS Fargate cluster with auto-scaling, comprehensive monitoring, and seamless integration with Application Load Balancers for the Koneksi infrastructure.
+This module provisions a fully managed ECS Fargate cluster with auto-scaling, comprehensive monitoring, and seamless integration with Application Load Balancers for the bongaquino infrastructure.
 
 ## Overview
 
@@ -94,7 +94,7 @@ module "ecs" {
   source = "./ecs"
   
   # Basic settings
-  project     = "koneksi"
+  project     = "bongaquino"
   environment = "staging"
   region      = "ap-southeast-1"
   
@@ -104,7 +104,7 @@ module "ecs" {
   ecs_security_group_id = module.vpc.ecs_security_group_id
   
   # Container configuration
-  container_image = "985869370256.dkr.ecr.ap-southeast-1.amazonaws.com/koneksi-backend:latest"
+  container_image = "985869370256.dkr.ecr.ap-southeast-1.amazonaws.com/bongaquino-backend:latest"
   container_port  = 8080
   
   # ALB integration
@@ -145,11 +145,11 @@ module "ecs" {
   container_secrets = [
     {
       name      = "DATABASE_URL"
-      valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/database-url"
+      valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/database-url"
     },
     {
       name      = "JWT_SECRET"
-      valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/koneksi/staging/jwt-secret"
+      valueFrom = "arn:aws:ssm:ap-southeast-1:985869370256:parameter/bongaquino/staging/jwt-secret"
     }
   ]
   
@@ -172,7 +172,7 @@ module "ecs" {
 
 1. **Navigate to ECS directory**:
 ```bash
-cd koneksi-aws/ecs
+cd bongaquino-aws/ecs
 ```
 
 2. **Select environment workspace**:
@@ -187,12 +187,12 @@ terraform init -backend-config=envs/staging/backend.tf
 
 4. **Plan the deployment**:
 ```bash
-AWS_PROFILE=koneksi terraform plan -var-file=envs/staging/terraform.tfvars
+AWS_PROFILE=bongaquino terraform plan -var-file=envs/staging/terraform.tfvars
 ```
 
 5. **Apply the configuration**:
 ```bash
-AWS_PROFILE=koneksi terraform apply -var-file=envs/staging/terraform.tfvars
+AWS_PROFILE=bongaquino terraform apply -var-file=envs/staging/terraform.tfvars
 ```
 
 ## Input Variables
@@ -282,11 +282,11 @@ Secrets are retrieved from AWS Parameter Store or Secrets Manager:
 container_secrets = [
   {
     name      = "DATABASE_PASSWORD"
-    valueFrom = "arn:aws:ssm:ap-southeast-1:account:parameter/koneksi/prod/database-password"
+    valueFrom = "arn:aws:ssm:ap-southeast-1:account:parameter/bongaquino/prod/database-password"
   },
   {
     name      = "API_KEY"
-    valueFrom = "arn:aws:secretsmanager:ap-southeast-1:account:secret:koneksi/prod/api-key"
+    valueFrom = "arn:aws:secretsmanager:ap-southeast-1:account:secret:bongaquino/prod/api-key"
   }
 ]
 ```

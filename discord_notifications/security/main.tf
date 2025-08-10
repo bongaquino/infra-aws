@@ -17,14 +17,14 @@ data "archive_file" "security_discord_notifier_zip" {
 # SNS Topic for Security Notifications
 # =============================================================================
 resource "aws_sns_topic" "security_discord_notifications" {
-  name = "koneksi-security-discord-notifications"
+  name = "bongaquino-security-discord-notifications"
 
   tags = {
     Environment = "account-wide"
     ManagedBy   = "terraform"
-    Name        = "koneksi-security-discord-notifications"
+    Name        = "bongaquino-security-discord-notifications"
     Owner       = "security"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Security monitoring Discord notifications"
   }
 }
@@ -33,15 +33,15 @@ resource "aws_sns_topic" "security_discord_notifications" {
 # CloudWatch Log Group for Security Lambda
 # =============================================================================
 resource "aws_cloudwatch_log_group" "security_discord_lambda_logs" {
-  name              = "/aws/lambda/koneksi-security-discord-notifier"
+  name              = "/aws/lambda/bongaquino-security-discord-notifier"
   retention_in_days = var.log_retention_days
 
   tags = {
     Environment = "account-wide"
     ManagedBy   = "terraform"
-    Name        = "koneksi-security-discord-logs"
+    Name        = "bongaquino-security-discord-logs"
     Owner       = "security"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Security bot Lambda logs"
   }
 }
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_log_group" "security_discord_lambda_logs" {
 # IAM Role for Security Lambda Function
 # =============================================================================
 resource "aws_iam_role" "security_discord_lambda_role" {
-  name = "koneksi-security-discord-lambda-role"
+  name = "bongaquino-security-discord-lambda-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -68,16 +68,16 @@ resource "aws_iam_role" "security_discord_lambda_role" {
   tags = {
     Environment = "account-wide"
     ManagedBy   = "terraform"
-    Name        = "koneksi-security-discord-lambda-role"
+    Name        = "bongaquino-security-discord-lambda-role"
     Owner       = "security"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Security Discord bot Lambda execution role"
   }
 }
 
 # IAM Policy for Security Lambda Function
 resource "aws_iam_role_policy" "security_discord_lambda_policy" {
-  name = "koneksi-security-discord-lambda-policy"
+  name = "bongaquino-security-discord-lambda-policy"
   role = aws_iam_role.security_discord_lambda_role.id
 
   policy = jsonencode({
@@ -90,7 +90,7 @@ resource "aws_iam_role_policy" "security_discord_lambda_policy" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/koneksi-security-discord-notifier:*"
+        Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/bongaquino-security-discord-notifier:*"
       },
       {
         Effect = "Allow"
@@ -98,7 +98,7 @@ resource "aws_iam_role_policy" "security_discord_lambda_policy" {
           "ssm:GetParameter",
           "ssm:GetParameters"
         ]
-        Resource = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/koneksi/security/*"
+        Resource = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/bongaquino/security/*"
       }
     ]
   })
@@ -109,7 +109,7 @@ resource "aws_iam_role_policy" "security_discord_lambda_policy" {
 # =============================================================================
 resource "aws_lambda_function" "security_discord_notifier" {
   filename         = "../lambda/security_discord_notifier.zip"
-  function_name    = "koneksi-security-discord-notifier"
+  function_name    = "bongaquino-security-discord-notifier"
   role            = aws_iam_role.security_discord_lambda_role.arn
   handler         = "discord_notifier.lambda_handler"
   runtime         = "python3.9"
@@ -120,10 +120,10 @@ resource "aws_lambda_function" "security_discord_notifier" {
   environment {
     variables = {
       DISCORD_WEBHOOK_URL = var.discord_webhook_url
-      DEFAULT_USERNAME    = "🛡️ Koneksi Security Bot"
+      DEFAULT_USERNAME    = "🛡️ bongaquino Security Bot"
       DEFAULT_AVATAR_URL  = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg"
       ENVIRONMENT         = "security"
-      PROJECT             = "koneksi"
+      PROJECT             = "bongaquino"
       
       # Security-themed colors
       SUCCESS_COLOR      = "65280"     # Green
@@ -141,9 +141,9 @@ resource "aws_lambda_function" "security_discord_notifier" {
     Environment = "account-wide"
     ManagedBy   = "terraform"
     Module      = "security-discord-notifications"
-    Name        = "koneksi-security-discord-notifier"
+    Name        = "bongaquino-security-discord-notifier"
     Owner       = "security"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Send security alerts to Discord"
   }
 }
@@ -174,7 +174,7 @@ resource "aws_sns_topic_subscription" "security_discord_lambda" {
 resource "aws_ssm_parameter" "security_discord_webhook_url" {
   count = var.store_webhook_in_parameter_store ? 1 : 0
   
-  name  = "/koneksi/security/discord/webhook_url"
+  name  = "/bongaquino/security/discord/webhook_url"
   type  = "SecureString"
   value = var.discord_webhook_url
 
@@ -183,9 +183,9 @@ resource "aws_ssm_parameter" "security_discord_webhook_url" {
   tags = {
     Environment = "account-wide"
     ManagedBy   = "terraform"
-    Name        = "koneksi-security-discord-webhook-url"
+    Name        = "bongaquino-security-discord-webhook-url"
     Owner       = "security"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Store Discord webhook URL securely"
   }
 }
@@ -196,7 +196,7 @@ resource "aws_ssm_parameter" "security_discord_webhook_url" {
 resource "aws_cloudwatch_metric_alarm" "security_lambda_errors" {
   count = var.enable_lambda_monitoring ? 1 : 0
 
-  alarm_name          = "koneksi-security-discord-lambda-errors"
+  alarm_name          = "bongaquino-security-discord-lambda-errors"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "Errors"
@@ -215,9 +215,9 @@ resource "aws_cloudwatch_metric_alarm" "security_lambda_errors" {
   tags = {
     Environment = "account-wide"
     ManagedBy   = "terraform"
-    Name        = "koneksi-security-discord-lambda-errors"
+    Name        = "bongaquino-security-discord-lambda-errors"
     Owner       = "security"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Monitor security Discord bot health"
   }
 } 

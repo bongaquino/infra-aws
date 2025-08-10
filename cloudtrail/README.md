@@ -120,7 +120,7 @@ module "cloudtrail" {
   source = "./cloudtrail"
 
   # Basic configuration
-  organization_name = "koneksi"
+  organization_name = "bongaquino"
   
   # Security monitoring
   enable_security_monitoring = true
@@ -138,7 +138,7 @@ module "cloudtrail" {
   alarm_sns_topic_arn = "arn:aws:sns:ap-southeast-1:123456789012:security-alerts"
   
   tags = {
-    Project     = "Koneksi"
+    Project     = "bongaquino"
     Environment = "Multi-Environment"
     Owner       = "DevOps Team"
   }
@@ -152,7 +152,7 @@ module "cloudtrail" {
   source = "./cloudtrail"
 
   # Basic configuration
-  organization_name = "koneksi"
+  organization_name = "bongaquino"
   
   # Enhanced security
   enable_security_monitoring = true
@@ -174,7 +174,7 @@ module "cloudtrail" {
   sns_topic_arn      = module.security_notifications.topic_arn
   
   tags = {
-    Project     = "Koneksi"
+    Project     = "bongaquino"
     Environment = "Production"
     Compliance  = "SOC2-PCI-DSS"
     Owner       = "Security Team"
@@ -189,7 +189,7 @@ module "cloudtrail" {
   source = "./cloudtrail"
 
   # Organization settings
-  organization_name = "koneksi"
+  organization_name = "bongaquino"
   
   # Maximum security configuration
   enable_security_monitoring = true
@@ -213,7 +213,7 @@ module "cloudtrail" {
   alarm_sns_topic_arn = module.compliance_alerts.topic_arn
   
   tags = {
-    Project     = "Koneksi"
+    Project     = "bongaquino"
     Environment = "Compliance"
     Retention   = "10-years"
     Classification = "confidential"
@@ -225,7 +225,7 @@ module "cloudtrail" {
 
 1. **Navigate to module directory**:
 ```bash
-cd koneksi-aws/cloudtrail
+cd bongaquino-aws/cloudtrail
 ```
 
 2. **Initialize Terraform**:
@@ -235,24 +235,24 @@ terraform init
 
 3. **Plan the deployment**:
 ```bash
-AWS_PROFILE=koneksi terraform plan
+AWS_PROFILE=bongaquino terraform plan
 ```
 
 4. **Apply the configuration**:
 ```bash
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 5. **Verify CloudTrail is working**:
 ```bash
 # Check trail status
-aws cloudtrail describe-trails --trail-name-list koneksi-cloudtrail
+aws cloudtrail describe-trails --trail-name-list bongaquino-cloudtrail
 
 # Check log group
-aws logs describe-log-groups --log-group-name-prefix "/aws/cloudtrail/koneksi"
+aws logs describe-log-groups --log-group-name-prefix "/aws/cloudtrail/bongaquino"
 
 # Test security alarms
-aws cloudwatch describe-alarms --alarm-names koneksi-root-usage
+aws cloudwatch describe-alarms --alarm-names bongaquino-root-usage
 ```
 
 ## Input Variables
@@ -260,7 +260,7 @@ aws cloudwatch describe-alarms --alarm-names koneksi-root-usage
 ### Basic Configuration
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `organization_name` | string | `koneksi` | Organization name for resource naming |
+| `organization_name` | string | `bongaquino` | Organization name for resource naming |
 
 ### CloudTrail Settings
 | Variable | Type | Default | Description |
@@ -545,7 +545,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudtrail_processing_delay" {
 ```bash
 # Check for suspicious activity in last 24 hours
 aws logs start-query \
-  --log-group-name "/aws/cloudtrail/koneksi" \
+  --log-group-name "/aws/cloudtrail/bongaquino" \
   --start-time $(date -d '24 hours ago' +%s) \
   --end-time $(date +%s) \
   --query-string 'fields @timestamp, sourceIPAddress, eventName, userIdentity.type | filter sourceIPAddress != "AWS Internal"'
@@ -555,7 +555,7 @@ aws logs start-query \
 ```bash
 # Track specific user activity
 aws logs start-query \
-  --log-group-name "/aws/cloudtrail/koneksi" \
+  --log-group-name "/aws/cloudtrail/bongaquino" \
   --start-time $(date -d '7 days ago' +%s) \
   --end-time $(date +%s) \
   --query-string 'fields @timestamp, eventName, resources | filter userIdentity.userName = "suspicious-user"'
@@ -565,7 +565,7 @@ aws logs start-query \
 ```bash
 # Find who accessed specific resources
 aws logs start-query \
-  --log-group-name "/aws/cloudtrail/koneksi" \
+  --log-group-name "/aws/cloudtrail/bongaquino" \
   --start-time $(date -d '30 days ago' +%s) \
   --end-time $(date +%s) \
   --query-string 'fields @timestamp, userIdentity, eventName | filter resources[0].ARN like /specific-resource-arn/'
@@ -591,7 +591,7 @@ def lambda_handler(event, context):
     """
     
     response = logs_client.start_query(
-        logGroupName='/aws/cloudtrail/koneksi',
+        logGroupName='/aws/cloudtrail/bongaquino',
         startTime=int((datetime.now() - timedelta(hours=1)).timestamp()),
         endTime=int(datetime.now().timestamp()),
         queryString=query
@@ -610,7 +610,7 @@ def lambda_handler(event, context):
 #### CloudTrail Not Logging
 ```bash
 # Check trail status
-aws cloudtrail get-trail-status --name koneksi-cloudtrail
+aws cloudtrail get-trail-status --name bongaquino-cloudtrail
 
 # Expected output should show:
 # "IsLogging": true
@@ -620,7 +620,7 @@ aws cloudtrail get-trail-status --name koneksi-cloudtrail
 **Solutions**:
 1. Verify S3 bucket policy allows CloudTrail access
 2. Check IAM permissions for CloudTrail service role
-3. Ensure trail is enabled: `aws cloudtrail start-logging --name koneksi-cloudtrail`
+3. Ensure trail is enabled: `aws cloudtrail start-logging --name bongaquino-cloudtrail`
 
 #### S3 Bucket Permission Errors
 ```
@@ -657,24 +657,24 @@ Unexpected CloudTrail charges
 
 ```bash
 # Comprehensive CloudTrail status check
-aws cloudtrail describe-trails --trail-name-list koneksi-cloudtrail
-aws cloudtrail get-trail-status --name koneksi-cloudtrail
-aws cloudtrail get-event-selectors --trail-name koneksi-cloudtrail
+aws cloudtrail describe-trails --trail-name-list bongaquino-cloudtrail
+aws cloudtrail get-trail-status --name bongaquino-cloudtrail
+aws cloudtrail get-event-selectors --trail-name bongaquino-cloudtrail
 
 # Check S3 bucket configuration
-aws s3api get-bucket-policy --bucket koneksi-cloudtrail-logs
-aws s3api get-bucket-versioning --bucket koneksi-cloudtrail-logs
-aws s3api get-bucket-encryption --bucket koneksi-cloudtrail-logs
+aws s3api get-bucket-policy --bucket bongaquino-cloudtrail-logs
+aws s3api get-bucket-versioning --bucket bongaquino-cloudtrail-logs
+aws s3api get-bucket-encryption --bucket bongaquino-cloudtrail-logs
 
 # Verify CloudWatch Logs integration
-aws logs describe-log-groups --log-group-name-prefix "/aws/cloudtrail/koneksi"
-aws logs describe-metric-filters --log-group-name "/aws/cloudtrail/koneksi"
+aws logs describe-log-groups --log-group-name-prefix "/aws/cloudtrail/bongaquino"
+aws logs describe-metric-filters --log-group-name "/aws/cloudtrail/bongaquino"
 
 # Test security alarms
-aws cloudwatch describe-alarms --alarm-name-prefix "koneksi-"
+aws cloudwatch describe-alarms --alarm-name-prefix "bongaquino-"
 aws cloudwatch get-metric-statistics \
   --namespace "CloudTrail/SecurityMetrics" \
-  --metric-name "koneksi-root-usage" \
+  --metric-name "bongaquino-root-usage" \
   --start-time $(date -d '24 hours ago' --iso-8601) \
   --end-time $(date --iso-8601) \
   --period 3600 \

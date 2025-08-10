@@ -13,7 +13,7 @@ variable "discord_webhook_url" {
 variable "project" {
   description = "Project name"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "region" {
@@ -28,7 +28,7 @@ variable "region" {
 variable "discord_username" {
   description = "Username for Discord webhook messages"
   type        = string
-  default     = "🛡️ Koneksi Security Bot"
+  default     = "🛡️ bongaquino Security Bot"
 }
 
 variable "discord_avatar_url" {

@@ -3,8 +3,8 @@
 # Generate logs for both ALBs
 # This script will make requests to both ALBs for 1 minute to generate real logs
 
-MAIN_ALB="koneksi-uat-alb-1965161443.ap-southeast-1.elb.amazonaws.com"
-SERVICES_ALB="koneksi-uat-alb-services-835893911.ap-southeast-1.elb.amazonaws.com"
+MAIN_ALB="bongaquino-uat-alb-1965161443.ap-southeast-1.elb.amazonaws.com"
+SERVICES_ALB="bongaquino-uat-alb-services-835893911.ap-southeast-1.elb.amazonaws.com"
 
 echo "🚀 Starting log generation for 1 minute..."
 echo "📊 Main ALB: $MAIN_ALB"
@@ -64,11 +64,11 @@ done
 
 echo ""
 echo "✅ Log generation complete!"
-echo "📁 Check S3 bucket: koneksi-uat-alb-logs"
+echo "📁 Check S3 bucket: bongaquino-uat-alb-logs"
 echo "📊 Check CloudWatch Log Groups:"
-echo "   - /aws/applicationloadbalancer/koneksi-uat-main-alb/access-logs"
-echo "   - /aws/applicationloadbalancer/koneksi-uat-main-alb/connection-logs"
-echo "   - /aws/applicationloadbalancer/koneksi-uat-services-alb/access-logs"
-echo "   - /aws/applicationloadbalancer/koneksi-uat-services-alb/connection-logs"
+echo "   - /aws/applicationloadbalancer/bongaquino-uat-main-alb/access-logs"
+echo "   - /aws/applicationloadbalancer/bongaquino-uat-main-alb/connection-logs"
+echo "   - /aws/applicationloadbalancer/bongaquino-uat-services-alb/access-logs"
+echo "   - /aws/applicationloadbalancer/bongaquino-uat-services-alb/connection-logs"
 echo ""
 echo "🔍 You can check the logs in a few minutes after Lambda processing..." 

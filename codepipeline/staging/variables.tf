@@ -19,7 +19,7 @@ variable "ec2_instance_ip" {
 variable "github_repo" {
   description = "GitHub repository URL"
   type        = string
-  default     = "koneksi-tech/koneksi-backend"
+  default     = "bongaquino-tech/bongaquino-backend"
 }
 
 variable "github_branch" {
@@ -37,5 +37,5 @@ variable "ssh_user" {
 variable "ssh_key_parameter_name" {
   description = "AWS Systems Manager Parameter Store name for SSH private key"
   type        = string
-  default     = "/koneksi/staging/ssh-key"
+  default     = "/bongaquino/staging/ssh-key"
 } 

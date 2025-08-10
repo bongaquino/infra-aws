@@ -12,7 +12,7 @@ phases:
     commands:
       - echo "Logging in to Amazon ECR..."
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/koneksi-staging-backend-ecs
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/bongaquino-staging-backend-ecs
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 
   build:
@@ -37,16 +37,16 @@ phases:
       - |
         cat > taskdef.json << EOF
         {
-          "family": "koneksi-staging-task",
+          "family": "bongaquino-staging-task",
           "networkMode": "awsvpc",
           "requiresCompatibilities": ["FARGATE"],
           "cpu": "8192",
           "memory": "16384",
-          "executionRoleArn": "arn:aws:iam::$AWS_ACCOUNT_ID:role/koneksi-staging-task-execution-role",
-          "taskRoleArn": "arn:aws:iam::$AWS_ACCOUNT_ID:role/koneksi-staging-task-role",
+          "executionRoleArn": "arn:aws:iam::$AWS_ACCOUNT_ID:role/bongaquino-staging-task-execution-role",
+          "taskRoleArn": "arn:aws:iam::$AWS_ACCOUNT_ID:role/bongaquino-staging-task-role",
           "containerDefinitions": [
             {
-              "name": "koneksi-staging-backend",
+              "name": "bongaquino-staging-backend",
               "image": "$REPOSITORY_URI:$IMAGE_TAG",
               "essential": true,
               "portMappings": [
@@ -62,7 +62,7 @@ phases:
                 },
                 {
                   "name": "API_URL", 
-                  "value": "https://staging.koneksi.co.kr"
+                  "value": "https://staging.bongaquino.co.kr"
                 },
                 {
                   "name": "MODE",
@@ -70,32 +70,32 @@ phases:
                 }
               ],
               "secrets": [
-                {"name": "APP_NAME", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/APP_NAME"},
-                {"name": "APP_VERSION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/APP_VERSION"},
-                {"name": "IPFS_NODE_URL", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/IPFS_NODE_URL"},
-                {"name": "JWT_REFRESH_EXPIRATION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/JWT_REFRESH_EXPIRATION"},
-                {"name": "JWT_SECRET", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/JWT_SECRET"},
-                {"name": "POSTMARK_API_KEY", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/POSTMARK_API_KEY"},
-                {"name": "POSTMARK_FROM", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/POSTMARK_FROM"},
-                {"name": "REDIS_HOST", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/REDIS_HOST"},
-                {"name": "REDIS_PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/REDIS_PORT"},
-                {"name": "REDIS_PREFIX", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/REDIS_PREFIX"},
-                {"name": "APP_KEY", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/APP_KEY"},
-                {"name": "IPFS_DOWNLOAD_URL", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/IPFS_DOWNLOAD_URL"},
-                {"name": "JWT_TOKEN_EXPIRATION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/JWT_TOKEN_EXPIRATION"},
-                {"name": "MODE", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MODE"},
-                {"name": "MONGO_DATABASE", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_DATABASE"},
-                {"name": "MONGO_HOST", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_HOST"},
-                {"name": "MONGO_PASSWORD", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_PASSWORD"},
-                {"name": "MONGO_PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_PORT"},
-                {"name": "MONGO_USER", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/MONGO_USER"},
-                {"name": "PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/PORT"},
-                {"name": "DB_PASSWORD", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/koneksi/staging/db/password"}
+                {"name": "APP_NAME", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/APP_NAME"},
+                {"name": "APP_VERSION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/APP_VERSION"},
+                {"name": "IPFS_NODE_URL", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/IPFS_NODE_URL"},
+                {"name": "JWT_REFRESH_EXPIRATION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/JWT_REFRESH_EXPIRATION"},
+                {"name": "JWT_SECRET", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/JWT_SECRET"},
+                {"name": "POSTMARK_API_KEY", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/POSTMARK_API_KEY"},
+                {"name": "POSTMARK_FROM", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/POSTMARK_FROM"},
+                {"name": "REDIS_HOST", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/REDIS_HOST"},
+                {"name": "REDIS_PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/REDIS_PORT"},
+                {"name": "REDIS_PREFIX", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/REDIS_PREFIX"},
+                {"name": "APP_KEY", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/APP_KEY"},
+                {"name": "IPFS_DOWNLOAD_URL", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/IPFS_DOWNLOAD_URL"},
+                {"name": "JWT_TOKEN_EXPIRATION", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/JWT_TOKEN_EXPIRATION"},
+                {"name": "MODE", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/MODE"},
+                {"name": "MONGO_DATABASE", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/MONGO_DATABASE"},
+                {"name": "MONGO_HOST", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/MONGO_HOST"},
+                {"name": "MONGO_PASSWORD", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/MONGO_PASSWORD"},
+                {"name": "MONGO_PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/MONGO_PORT"},
+                {"name": "MONGO_USER", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/MONGO_USER"},
+                {"name": "PORT", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/PORT"},
+                {"name": "DB_PASSWORD", "valueFrom": "arn:aws:ssm:ap-southeast-1:$AWS_ACCOUNT_ID:parameter/bongaquino/staging/db/password"}
               ],
               "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                  "awslogs-group": "/ecs/koneksi-staging",
+                  "awslogs-group": "/ecs/bongaquino-staging",
                   "awslogs-region": "ap-southeast-1",
                   "awslogs-stream-prefix": "ecs"
                 }
@@ -107,9 +107,9 @@ phases:
       - echo "Registering new task definition..."
       - aws ecs register-task-definition --cli-input-json file://taskdef.json
       - echo "Updating service to use latest task definition..."
-      - aws ecs update-service --cluster koneksi-staging-cluster --service koneksi-staging-service --task-definition koneksi-staging-task --force-new-deployment
+      - aws ecs update-service --cluster bongaquino-staging-cluster --service bongaquino-staging-service --task-definition bongaquino-staging-task --force-new-deployment
       - echo "Writing imagedefinitions.json for ECS deployment..."
-      - printf '[{"name":"koneksi-staging-backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"bongaquino-staging-backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:

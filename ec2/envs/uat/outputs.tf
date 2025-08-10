@@ -15,5 +15,5 @@ output "uat_bastion_private_ip" {
 
 output "uat_bastion_ssh_command" {
   description = "SSH command to connect to the UAT bastion"
-  value       = "ssh -i koneksi-uat-key ubuntu@${aws_instance.uat_bastion.public_ip}"
+  value       = "ssh -i bongaquino-uat-key ubuntu@${aws_instance.uat_bastion.public_ip}"
 } 

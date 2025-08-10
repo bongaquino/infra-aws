@@ -5,17 +5,17 @@
 All staging endpoints are configured and working:
 
 ### **Frontend Application**
-- **URL**: `https://app-staging.koneksi.co.kr`
+- **URL**: `https://app-staging.bongaquino.co.kr`
 - **Type**: React Web Application
 - **Status**: ✅ Live
 - **Configuration**: Amplify + CloudFront
 
 ## Backend API
 
-- **Service**: Koneksi Backend API
+- **Service**: bongaquino Backend API
 - **Environment**: Staging
-- **URL**: `https://staging.koneksi.co.kr`
-- **Description**: Main backend API service for the Koneksi platform in staging environment
+- **URL**: `https://staging.bongaquino.co.kr`
+- **Description**: Main backend API service for the bongaquino platform in staging environment
 - **Expected Response**: JSON with health status
 - **Monitoring**: HTTP status code and response time checking
 - **Alert Conditions**: 
@@ -34,7 +34,7 @@ All staging endpoints are configured and working:
 
 ### **Staging Server**
 - **IP**: `52.77.36.120`
-- **Domain**: `staging.koneksi.co.kr`
+- **Domain**: `staging.bongaquino.co.kr`
 - **Location**: AWS/Cloud Infrastructure
 
 ### **Internal Services**
@@ -59,8 +59,8 @@ localhost:6379              # Redis
 
 ### **External Health Check**
 ```bash
-curl https://staging.koneksi.co.kr
-# Returns: {"data":{"healthy":true,"name":"Koneksi","version":"1.0.0"},"message":null,"meta":null,"status":"success"}
+curl https://staging.bongaquino.co.kr
+# Returns: {"data":{"healthy":true,"name":"bongaquino","version":"1.0.0"},"message":null,"meta":null,"status":"success"}
 ```
 
 ### **Internal Health Checks (Server-Side)**
@@ -80,8 +80,8 @@ All staging domains are configured in Route53:
 
 ```hcl
 # Route53 DNS Records
-staging.koneksi.co.kr        → 52.77.36.120
-app-staging.koneksi.co.kr    → CloudFront distribution
+staging.bongaquino.co.kr        → 52.77.36.120
+app-staging.bongaquino.co.kr    → CloudFront distribution
 ```
 
 ## 📝 **Nginx Configuration**
@@ -89,10 +89,10 @@ app-staging.koneksi.co.kr    → CloudFront distribution
 The staging server uses Nginx proxy for SSL termination and routing:
 
 ```nginx
-# staging.koneksi.co.kr.conf
-server_name staging.koneksi.co.kr;
-ssl_certificate /etc/nginx-proxy/ssl/live/staging.koneksi.co.kr/fullchain.pem;
-ssl_certificate_key /etc/nginx-proxy/ssl/live/staging.koneksi.co.kr/privkey.pem;
+# staging.bongaquino.co.kr.conf
+server_name staging.bongaquino.co.kr;
+ssl_certificate /etc/nginx-proxy/ssl/live/staging.bongaquino.co.kr/fullchain.pem;
+ssl_certificate_key /etc/nginx-proxy/ssl/live/staging.bongaquino.co.kr/privkey.pem;
 ```
 
 ## 🔄 **Docker Services**
@@ -115,7 +115,7 @@ ssl_certificate_key /etc/nginx-proxy/ssl/live/staging.koneksi.co.kr/privkey.pem;
 
 All staging endpoints are monitored by:
 - **Server-side monitoring**: 5-minute health checks
-- **Discord notifications**: Real-time alerts via `🟡 Koneksi Staging Bot`
+- **Discord notifications**: Real-time alerts via `🟡 bongaquino Staging Bot`
 - **CloudWatch integration**: Metrics and logs
 - **Daily health reports**: Comprehensive system status
 
@@ -123,8 +123,8 @@ All staging endpoints are monitored by:
 
 ```bash
 # Test all endpoints
-curl https://app-staging.koneksi.co.kr
-curl https://staging.koneksi.co.kr
+curl https://app-staging.bongaquino.co.kr
+curl https://staging.bongaquino.co.kr
 
 # Internal health checks (on staging server)
 curl localhost:3000/health

@@ -41,7 +41,7 @@ variable "log_retention_days" {
 variable "name_prefix" {
   description = "Prefix for resource names"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "tags" {

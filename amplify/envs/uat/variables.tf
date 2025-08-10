@@ -7,7 +7,7 @@ variable "environment" {
 variable "project" {
   description = "Project name"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "github_token" {
@@ -21,7 +21,7 @@ variable "tags" {
   type        = map(string)
   default = {
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 } 

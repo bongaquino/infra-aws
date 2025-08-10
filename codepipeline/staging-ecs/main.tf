@@ -1,4 +1,4 @@
-# NEW ECS CodePipeline for koneksi-backend to ECS (koneksi-staging-backend-pipeline)
+# NEW ECS CodePipeline for bongaquino-backend to ECS (bongaquino-staging-backend-pipeline)
 
 provider "aws" {
   region = "ap-southeast-1"
@@ -6,19 +6,19 @@ provider "aws" {
 
 locals {
   env = "staging"
-  github_repo = "koneksi-tech/koneksi-backend"  
+  github_repo = "bongaquino-tech/bongaquino-backend"  
   github_branch = "staging"
 }
 
 # ECR Repository for ECS deployment
 resource "aws_ecr_repository" "backend_ecs" {
-  name = "koneksi-${local.env}-backend-ecs"
+  name = "bongaquino-${local.env}-backend-ecs"
   force_delete = true
   image_scanning_configuration {
     scan_on_push = true
   }
   tags = {
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Environment = local.env
     Service     = "ecs"
     ManagedBy   = "terraform"
@@ -27,10 +27,10 @@ resource "aws_ecr_repository" "backend_ecs" {
 
 # S3 bucket for CodePipeline artifacts (ECS)
 resource "aws_s3_bucket" "codepipeline_artifacts_ecs" {
-  bucket = "koneksi-${local.env}-ecs-cd-artifacts"
+  bucket = "bongaquino-${local.env}-ecs-cd-artifacts"
   force_destroy = true
   tags = {
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Environment = local.env
     Service     = "ecs"
     ManagedBy   = "terraform"
@@ -39,7 +39,7 @@ resource "aws_s3_bucket" "codepipeline_artifacts_ecs" {
 
 # IAM Role for CodePipeline (ECS)
 resource "aws_iam_role" "codepipeline_role_ecs" {
-  name = "koneksi-${local.env}-ecs-cd-pipeline-role"
+  name = "bongaquino-${local.env}-ecs-cd-pipeline-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -57,7 +57,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_policy_ecs" {
 
 # Custom policy for CodeStar connections (ECS)
 resource "aws_iam_policy" "codepipeline_codestar_policy_ecs" {
-  name        = "koneksi-${local.env}-ecs-cd-pipeline-codestar-policy"
+  name        = "bongaquino-${local.env}-ecs-cd-pipeline-codestar-policy"
   description = "Allow CodePipeline to use CodeStar connections for ECS"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -80,7 +80,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_codestar_policy_attach_e
 
 # Custom policy for CodeBuild access (ECS)
 resource "aws_iam_policy" "codepipeline_codebuild_policy_ecs" {
-  name        = "koneksi-${local.env}-ecs-cd-pipeline-codebuild-policy"
+  name        = "bongaquino-${local.env}-ecs-cd-pipeline-codebuild-policy"
   description = "Allow CodePipeline to start CodeBuild projects for ECS"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -105,7 +105,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_codebuild_policy_attach_
 
 # ECS deployment policy for CodePipeline
 resource "aws_iam_policy" "codepipeline_ecs_policy" {
-  name        = "koneksi-${local.env}-ecs-cd-pipeline-ecs-policy"
+  name        = "bongaquino-${local.env}-ecs-cd-pipeline-ecs-policy"
   description = "Allow CodePipeline to deploy to ECS"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -156,7 +156,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_ecs_policy_attach" {
 
 # IAM Role for CodeBuild (ECS)
 resource "aws_iam_role" "codebuild_role_ecs" {
-  name = "koneksi-${local.env}-ecs-cd-build-role"
+  name = "bongaquino-${local.env}-ecs-cd-build-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -174,7 +174,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_policy_ecs" {
 
 # ECR policy for CodeBuild to push images (ECS)
 resource "aws_iam_policy" "codebuild_ecr_policy_ecs" {
-  name        = "koneksi-${local.env}-ecs-cd-build-ecr-policy"
+  name        = "bongaquino-${local.env}-ecs-cd-build-ecr-policy"
   description = "Allow CodeBuild to push to ECR for ECS deployment"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -211,8 +211,8 @@ resource "aws_iam_role_policy_attachment" "codebuild_ecr_policy_attach_ecs" {
 
 # CodeBuild project for ECS container build  
 resource "aws_codebuild_project" "staging_build_ecs" {
-  name          = "koneksi-${local.env}-ecs-build"
-  description   = "Build koneksi-backend container for staging ECS"
+  name          = "bongaquino-${local.env}-ecs-build"
+  description   = "Build bongaquino-backend container for staging ECS"
   service_role  = aws_iam_role.codebuild_role_ecs.arn
   artifacts {
     type = "CODEPIPELINE"
@@ -244,7 +244,7 @@ resource "aws_codebuild_project" "staging_build_ecs" {
     buildspec = file("${path.module}/buildspec.yml")
   }
   tags = {
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Environment = local.env
     Service     = "ecs"
     ManagedBy   = "terraform"
@@ -253,7 +253,7 @@ resource "aws_codebuild_project" "staging_build_ecs" {
 
 # CodePipeline for staging ECS deployment
 resource "aws_codepipeline" "staging_backend_pipeline" {
-  name     = "koneksi-${local.env}-backend-pipeline"
+  name     = "bongaquino-${local.env}-backend-pipeline"
   role_arn = aws_iam_role.codepipeline_role_ecs.arn
   artifact_store {
     location = aws_s3_bucket.codepipeline_artifacts_ecs.bucket
@@ -300,8 +300,8 @@ resource "aws_codepipeline" "staging_backend_pipeline" {
       provider         = "ECS"
       input_artifacts  = ["BuildOutput"]
       configuration = {
-        ClusterName = "koneksi-staging-cluster"
-        ServiceName = "koneksi-staging-service"
+        ClusterName = "bongaquino-staging-cluster"
+        ServiceName = "bongaquino-staging-service"
         FileName    = "imagedefinitions.json"
       }
       version = "1"
@@ -311,13 +311,13 @@ resource "aws_codepipeline" "staging_backend_pipeline" {
 
 # GitHub connection for ECS
 resource "aws_codestarconnections_connection" "github_ecs" {
-  name          = "koneksi-staging-github-ecs"
+  name          = "bongaquino-staging-github-ecs"
   provider_type = "GitHub"
 }
 
 # IAM policies for S3 access (ECS)
 resource "aws_iam_policy" "codepipeline_s3_policy_ecs" {
-  name        = "koneksi-${local.env}-ecs-cd-pipeline-s3-policy"
+  name        = "bongaquino-${local.env}-ecs-cd-pipeline-s3-policy"
   description = "Allow CodePipeline to access its artifact bucket for ECS"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -347,7 +347,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_s3_policy_attach_ecs" {
 
 # CloudWatch Logs policy for CodeBuild (ECS)
 resource "aws_iam_policy" "codebuild_logs_policy_ecs" {
-  name        = "koneksi-${local.env}-ecs-cd-build-logs-policy"
+  name        = "bongaquino-${local.env}-ecs-cd-build-logs-policy"
   description = "Allow CodeBuild to write to CloudWatch Logs for ECS"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -372,7 +372,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_logs_policy_attach_ecs" {
 
 # S3 policy for CodeBuild (ECS)
 resource "aws_iam_policy" "codebuild_s3_policy_ecs" {
-  name        = "koneksi-${local.env}-ecs-cd-build-s3-policy"
+  name        = "bongaquino-${local.env}-ecs-cd-build-s3-policy"
   description = "Allow CodeBuild to access S3 artifacts for ECS"
   policy      = jsonencode({
     Version = "2012-10-17",

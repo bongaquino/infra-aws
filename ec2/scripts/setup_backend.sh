@@ -6,8 +6,8 @@
 set -e
 
 # Variables
-BUCKET_NAME="koneksi-terraform-state"
-DYNAMODB_TABLE="koneksi-terraform-locks"
+BUCKET_NAME="bongaquino-terraform-state"
+DYNAMODB_TABLE="bongaquino-terraform-locks"
 REGION="ap-southeast-1"
 
 echo "Setting up Terraform backend infrastructure..."

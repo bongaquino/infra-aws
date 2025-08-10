@@ -1,4 +1,4 @@
-# Staging CodePipeline for koneksi-backend to EC2
+# Staging CodePipeline for bongaquino-backend to EC2
 
 provider "aws" {
   region = "ap-southeast-1"
@@ -6,17 +6,17 @@ provider "aws" {
 
 locals {
   env = "staging"
-  github_repo = "koneksi-tech/koneksi-backend"  
+  github_repo = "bongaquino-tech/bongaquino-backend"  
   github_branch = "staging"
   ec2_instance_ip = "52.77.36.120"
 }
 
 # S3 bucket for CodePipeline artifacts
 resource "aws_s3_bucket" "codepipeline_artifacts" {
-  bucket = "koneksi-${local.env}-cd-artifacts"
+  bucket = "bongaquino-${local.env}-cd-artifacts"
   force_destroy = true
   tags = {
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Environment = local.env
     ManagedBy   = "terraform"
   }
@@ -24,7 +24,7 @@ resource "aws_s3_bucket" "codepipeline_artifacts" {
 
 # IAM Role for CodePipeline
 resource "aws_iam_role" "codepipeline_role" {
-  name = "koneksi-${local.env}-cd-pipeline-role"
+  name = "bongaquino-${local.env}-cd-pipeline-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -42,7 +42,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_policy" {
 
 # Custom policy for CodeStar connections
 resource "aws_iam_policy" "codepipeline_codestar_policy" {
-  name        = "koneksi-${local.env}-cd-pipeline-codestar-policy"
+  name        = "bongaquino-${local.env}-cd-pipeline-codestar-policy"
   description = "Allow CodePipeline to use CodeStar connections"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -65,7 +65,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_codestar_policy_attach" 
 
 # Custom policy for CodeBuild access
 resource "aws_iam_policy" "codepipeline_codebuild_policy" {
-  name        = "koneksi-${local.env}-cd-pipeline-codebuild-policy"
+  name        = "bongaquino-${local.env}-cd-pipeline-codebuild-policy"
   description = "Allow CodePipeline to start CodeBuild projects"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -90,7 +90,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_codebuild_policy_attach"
 
 # IAM Role for CodeBuild (SSH deployment to EC2)
 resource "aws_iam_role" "codebuild_role" {
-  name = "koneksi-${local.env}-cd-build-role"
+  name = "bongaquino-${local.env}-cd-build-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -108,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_policy" {
 
 # SSM policy for CodeBuild to access SSH key
 resource "aws_iam_policy" "codebuild_ssm_policy" {
-  name        = "koneksi-${local.env}-cd-build-ssm-policy"
+  name        = "bongaquino-${local.env}-cd-build-ssm-policy"
   description = "Allow CodeBuild to get SSH key from Parameter Store"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -120,8 +120,8 @@ resource "aws_iam_policy" "codebuild_ssm_policy" {
           "ssm:GetParameters"
         ],
         Resource = [
-          "arn:aws:ssm:ap-southeast-1:*:parameter/koneksi/staging/ssh-key",
-          "arn:aws:ssm:ap-southeast-1:*:parameter/koneksi/staging/github-token"
+          "arn:aws:ssm:ap-southeast-1:*:parameter/bongaquino/staging/ssh-key",
+          "arn:aws:ssm:ap-southeast-1:*:parameter/bongaquino/staging/github-token"
         ]
       },
       {
@@ -142,8 +142,8 @@ resource "aws_iam_role_policy_attachment" "codebuild_ssm_policy_attach" {
 
 # CodeBuild project for EC2 deployment  
 resource "aws_codebuild_project" "staging_deploy" {
-  name          = "koneksi-${local.env}-deploy"
-  description   = "Deploy koneksi-backend to EC2 instance via SSH"
+  name          = "bongaquino-${local.env}-deploy"
+  description   = "Deploy bongaquino-backend to EC2 instance via SSH"
   service_role  = aws_iam_role.codebuild_role.arn
   artifacts {
     type = "CODEPIPELINE"
@@ -171,7 +171,7 @@ resource "aws_codebuild_project" "staging_deploy" {
     buildspec = file("${path.module}/buildspec.yml")
   }
   tags = {
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Environment = local.env
     ManagedBy   = "terraform"
   }
@@ -179,7 +179,7 @@ resource "aws_codebuild_project" "staging_deploy" {
 
 # CodePipeline for staging EC2 deployment
 resource "aws_codepipeline" "staging_pipeline" {
-  name     = "koneksi-${local.env}-deploy-pipeline"
+  name     = "bongaquino-${local.env}-deploy-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
   artifact_store {
     location = aws_s3_bucket.codepipeline_artifacts.bucket
@@ -221,13 +221,13 @@ resource "aws_codepipeline" "staging_pipeline" {
 
 # GitHub connection
 resource "aws_codestarconnections_connection" "github" {
-  name          = "koneksi-staging-github"
+  name          = "bongaquino-staging-github"
   provider_type = "GitHub"
 }
 
 # IAM policies for S3 access
 resource "aws_iam_policy" "codepipeline_s3_policy" {
-  name        = "koneksi-${local.env}-cd-pipeline-s3-policy"
+  name        = "bongaquino-${local.env}-cd-pipeline-s3-policy"
   description = "Allow CodePipeline to access its artifact bucket"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -257,7 +257,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_s3_policy_attach" {
 
 # CloudWatch Logs policy for CodeBuild
 resource "aws_iam_policy" "codebuild_logs_policy" {
-  name        = "koneksi-${local.env}-cd-build-logs-policy"
+  name        = "bongaquino-${local.env}-cd-build-logs-policy"
   description = "Allow CodeBuild to write to CloudWatch Logs"
   policy      = jsonencode({
     Version = "2012-10-17",
@@ -282,7 +282,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_logs_policy_attach" {
 
 # S3 policy for CodeBuild
 resource "aws_iam_policy" "codebuild_s3_policy" {
-  name        = "koneksi-${local.env}-cd-build-s3-policy"
+  name        = "bongaquino-${local.env}-cd-build-s3-policy"
   description = "Allow CodeBuild to access S3 artifacts"
   policy      = jsonencode({
     Version = "2012-10-17",

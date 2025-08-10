@@ -7,15 +7,15 @@ Complete staging setup for Discord monitoring - focused and streamlined!
 ### **Step 1: No Discord Setup Needed!**
 
 ✅ **Staging uses the same Discord webhook as UAT**
-- Same channel: `#koneksi-alerts`
+- Same channel: `#bongaquino-alerts`
 - Same webhook URL (already configured)
-- Different bot name: `🟡 Koneksi Staging Bot`
+- Different bot name: `🟡 bongaquino Staging Bot`
 - Ready to deploy immediately!
 
 ### **Step 2: Deploy Staging Monitoring**
 
 ```bash
-cd koneksi-aws/discord_notifications
+cd bongaquino-aws/discord_notifications
 ./deploy_all_environments.sh
 ```
 
@@ -29,7 +29,7 @@ After deployment, test with:
 
 ```bash
 aws sns publish \
-  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:koneksi-staging-staging-discord-notifications" \
+  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:bongaquino-staging-staging-discord-notifications" \
   --message "🎯 Staging test message" \
   --subject "Staging Test"
 ```
@@ -40,12 +40,12 @@ aws sns publish \
 
 | Feature | UAT | Staging |
 |---------|-----|---------|
-| **Discord Channel** | `#koneksi-alerts` | `#koneksi-alerts` (SAME) |
+| **Discord Channel** | `#bongaquino-alerts` | `#bongaquino-alerts` (SAME) |
 | **Webhook URL** | Configured | SAME as UAT |
-| **Bot Name** | `🔵 Koneksi UAT Bot` | `🟡 Koneksi Staging Bot` |
+| **Bot Name** | `🔵 bongaquino UAT Bot` | `🟡 bongaquino Staging Bot` |
 | **Alert Colors** | Standard | Orange-tinted (staging) |
 | **Thresholds** | Relaxed | Same as UAT |
-| **SNS Topic** | `koneksi-uat-uat-discord-notifications` | `koneksi-staging-staging-discord-notifications` |
+| **SNS Topic** | `bongaquino-uat-uat-discord-notifications` | `bongaquino-staging-staging-discord-notifications` |
 
 ---
 

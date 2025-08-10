@@ -21,9 +21,9 @@ provider "aws" {
 # Route53 Hosted Zone
 # =============================================================================
 resource "aws_route53_zone" "main" {
-  name = "koneksi.co.kr"
+  name = "bongaquino.co.kr"
   tags = {
-    Name = "koneksi-zone"
+    Name = "bongaquino-zone"
   }
   lifecycle {
     prevent_destroy = true
@@ -35,10 +35,10 @@ resource "aws_route53_zone" "main" {
 # =============================================================================
 resource "aws_route53_record" "mx" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "koneksi.co.kr"
+  name    = "bongaquino.co.kr"
   type    = "MX"
   ttl     = 300
-  records = ["0 koneksi-co-kr.mail.protection.outlook.com."]
+  records = ["0 bongaquino-co-kr.mail.protection.outlook.com."]
   lifecycle {
     prevent_destroy = true
   }
@@ -49,7 +49,7 @@ resource "aws_route53_record" "mx" {
 # =============================================================================
 resource "aws_route53_record" "txt_ms" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "koneksi.co.kr"
+  name    = "bongaquino.co.kr"
   type    = "TXT"
   ttl     = 120
   records = ["MS=ms62474739 _globalsign-domain-verification=ZP-vTECIFv7iE3MUd-yPRvNCiL8OWfyFTB-YinM08S"]
@@ -60,7 +60,7 @@ resource "aws_route53_record" "txt_ms" {
 
 resource "aws_route53_record" "txt_dkim" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "20250604040914pm._domainkey.koneksi.co.kr"
+  name    = "20250604040914pm._domainkey.bongaquino.co.kr"
   type    = "TXT"
   ttl     = 300
   records = ["k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCsDAsE41iUNu31DwH9xTX6kcFuKvaUllZ3mp5A1dEiSnJs23HoT0TLzFY9bs/P9iMnY6jtRzhSTOFFBAX+PydIOWIm0AS7Bf3uA74NWUs8ZoXiHhLYgEKMxtxmJJONa5gfMHLzWrmR+tpyy/qNElwnCV1SRnG+cp1x+3+4NiE0QIDAQAB"]
@@ -74,7 +74,7 @@ resource "aws_route53_record" "txt_dkim" {
 # =============================================================================
 resource "aws_route53_record" "autodiscover" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "autodiscover.koneksi.co.kr"
+  name    = "autodiscover.bongaquino.co.kr"
   type    = "CNAME"
   ttl     = 300
   records = ["autodiscover.outlook.com."]
@@ -85,7 +85,7 @@ resource "aws_route53_record" "autodiscover" {
 
 resource "aws_route53_record" "pm_bounces" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "pm-bounces.koneksi.co.kr"
+  name    = "pm-bounces.bongaquino.co.kr"
   type    = "CNAME"
   ttl     = 300
   records = ["pm.mtasv.net."]
@@ -96,7 +96,7 @@ resource "aws_route53_record" "pm_bounces" {
 
 resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "www.koneksi.co.kr"
+  name    = "www.bongaquino.co.kr"
   type    = "CNAME"
   ttl     = 300
   records = ["balancer.wixdns.net."]
@@ -110,7 +110,7 @@ resource "aws_route53_record" "www" {
 # =============================================================================
 resource "aws_route53_record" "gateway" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "gateway.koneksi.co.kr"
+  name    = "gateway.bongaquino.co.kr"
   type    = "A"
   ttl     = 300
   records = ["27.255.70.17"]
@@ -121,7 +121,7 @@ resource "aws_route53_record" "gateway" {
 
 resource "aws_route53_record" "ipfs" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "ipfs.koneksi.co.kr"
+  name    = "ipfs.bongaquino.co.kr"
   type    = "A"
   ttl     = 300
   records = ["27.255.70.17"]
@@ -132,7 +132,7 @@ resource "aws_route53_record" "ipfs" {
 
 resource "aws_route53_record" "staging" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "staging.koneksi.co.kr"
+  name    = "staging.bongaquino.co.kr"
   type    = "A"
   ttl     = 300
   records = ["52.77.36.120"]
@@ -146,7 +146,7 @@ resource "aws_route53_record" "staging" {
 # =============================================================================
 resource "aws_route53_record" "amplify_main" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "app-staging.koneksi.co.kr"
+  name    = "app-staging.bongaquino.co.kr"
   type    = "A"
   alias {
     name                   = "d1numm9pbccz2w.cloudfront.net."
@@ -160,7 +160,7 @@ resource "aws_route53_record" "amplify_main" {
 
 resource "aws_route53_record" "amplify_www" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "www.app-staging.koneksi.co.kr"
+  name    = "www.app-staging.bongaquino.co.kr"
   type    = "A"
   alias {
     name                   = "d1234abcd.cloudfront.net."
@@ -190,10 +190,10 @@ resource "aws_route53_health_check" "main" {
 
 resource "aws_route53_record" "uat" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "uat.koneksi.co.kr"
+  name    = "uat.bongaquino.co.kr"
   type    = "A"
   alias {
-    name                   = "dualstack.koneksi-uat-alb-630040688.ap-southeast-1.elb.amazonaws.com."
+    name                   = "dualstack.bongaquino-uat-alb-630040688.ap-southeast-1.elb.amazonaws.com."
     zone_id                = "Z1LMS91P8CMLE5"
     evaluate_target_health = false
   }

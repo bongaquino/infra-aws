@@ -1,6 +1,6 @@
 # AWS Amplify Module
 
-This module creates an AWS Amplify app for hosting the Koneksi web application. It provides:
+This module creates an AWS Amplify app for hosting the bongaquino web application. It provides:
 - GitHub repository integration
 - Automatic branch builds and deployments
 - Environment-specific configurations
@@ -72,14 +72,14 @@ The following environment variables are configured:
 module "amplify" {
   source = "./modules/app"
 
-  app_name       = "koneksi-web-staging"
-  repository_url = "https://github.com/koneksi-tech/koneksi-web"
+  app_name       = "bongaquino-web-staging"
+  repository_url = "https://github.com/bongaquino-tech/bongaquino-web"
   github_token   = var.github_token
   environment    = "staging"
   domain_name    = var.domain_name
 
   tags = {
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Environment = "staging"
     ManagedBy   = "terraform"
     Component   = "amplify"
@@ -90,7 +90,7 @@ module "amplify" {
 
 ## Required Variables
 
-- `app_name`: Name of the Amplify app (e.g., koneksi-web-staging)
+- `app_name`: Name of the Amplify app (e.g., bongaquino-web-staging)
 - `repository_url`: URL of the GitHub repository
 - `github_token`: GitHub personal access token
 - `environment`: Environment name (staging, uat, prod)

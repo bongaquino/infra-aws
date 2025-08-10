@@ -4,27 +4,27 @@
 
 # Get the staging Discord SNS topic
 data "aws_sns_topic" "staging_discord_notifications" {
-  name = "koneksi-staging-discord-notifications"
+  name = "bongaquino-staging-discord-notifications"
 }
 
 # CodePipeline State Change Events
 resource "aws_cloudwatch_event_rule" "codepipeline_state_change" {
-  name        = "koneksi-staging-codepipeline-state-change"
+  name        = "bongaquino-staging-codepipeline-state-change"
   description = "Capture CodePipeline state changes for staging"
 
   event_pattern = jsonencode({
     source      = ["aws.codepipeline"]
     detail-type = ["CodePipeline Pipeline Execution State Change"]
     detail = {
-      pipeline = ["koneksi-staging-deploy-pipeline"]
+      pipeline = ["bongaquino-staging-deploy-pipeline"]
       state = ["SUCCEEDED", "FAILED", "STARTED", "CANCELED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-staging-codepipeline-state-change"
+    Name        = "bongaquino-staging-codepipeline-state-change"
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
@@ -38,22 +38,22 @@ resource "aws_cloudwatch_event_target" "codepipeline_discord" {
 
 # CodeBuild Project State Change Events
 resource "aws_cloudwatch_event_rule" "codebuild_state_change" {
-  name        = "koneksi-staging-codebuild-state-change"
+  name        = "bongaquino-staging-codebuild-state-change"
   description = "Capture CodeBuild project state changes for staging"
 
   event_pattern = jsonencode({
     source      = ["aws.codebuild"]
     detail-type = ["CodeBuild Build State Change"]
     detail = {
-      project-name = ["koneksi-staging-deploy"]
+      project-name = ["bongaquino-staging-deploy"]
       build-status = ["IN_PROGRESS", "SUCCEEDED", "FAILED", "STOPPED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-staging-codebuild-discord"
+    Name        = "bongaquino-staging-codebuild-discord"
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }
@@ -98,7 +98,7 @@ output "staging_monitoring_setup" {
     codepipeline_rule = aws_cloudwatch_event_rule.codepipeline_state_change.name
     codebuild_rule   = aws_cloudwatch_event_rule.codebuild_state_change.name
     sns_topic        = data.aws_sns_topic.staging_discord_notifications.name
-    bot_name         = "Koneksi Staging Bot"
+    bot_name         = "bongaquino Staging Bot"
     environment      = "staging"
   }
 } 

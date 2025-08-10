@@ -176,7 +176,7 @@ module "bastion_host" {
   # Basic configuration
   ami_id             = "ami-0c55b159cbfafe1d0"  # Latest Amazon Linux 2
   instance_type      = "t3.micro"
-  key_name           = "koneksi-staging-key"
+  key_name           = "bongaquino-staging-key"
   
   # Network configuration
   public_subnet_id   = module.vpc.public_subnet_ids[0]
@@ -188,12 +188,20 @@ module "bastion_host" {
   
   # Environment
   environment        = "staging"
-  project           = "koneksi"
-  name_prefix       = "koneksi-staging"
+<<<<<<< HEAD
+  project           = "bongaquino"
+=======
+  project           = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+  name_prefix       = "bongaquino-staging"
   
   tags = {
     Environment = "staging"
-    Project     = "koneksi"
+<<<<<<< HEAD
+    Project     = "bongaquino"
+=======
+    Project     = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
     Purpose     = "bastion-host"
   }
 }
@@ -208,7 +216,7 @@ module "production_instances" {
   # Production-grade configuration
   ami_id             = "ami-0c55b159cbfafe1d0"
   instance_type      = "t3.medium"
-  key_name           = "koneksi-prod-key"
+  key_name           = "bongaquino-prod-key"
   
   # Network configuration
   public_subnet_id   = module.vpc.public_subnet_ids[0]
@@ -220,8 +228,12 @@ module "production_instances" {
   
   # Production settings
   environment        = "production"
-  project           = "koneksi"
-  name_prefix       = "koneksi-prod"
+<<<<<<< HEAD
+  project           = "bongaquino"
+=======
+  project           = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+  name_prefix       = "bongaquino-prod"
   
   # Enhanced monitoring and backup
   enable_detailed_monitoring = true
@@ -230,7 +242,11 @@ module "production_instances" {
   
   tags = {
     Environment     = "production"
-    Project         = "koneksi"
+<<<<<<< HEAD
+    Project         = "bongaquino"
+=======
+    Project         = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
     CriticalLevel   = "high"
     BackupRequired  = "true"
   }
@@ -247,12 +263,12 @@ module "web_servers" {
 
   ami_id           = data.aws_ami.web_server.id
   instance_type    = "t3.small"
-  key_name         = "koneksi-web-key"
+  key_name         = "bongaquino-web-key"
   public_subnet_id = module.vpc.public_subnet_ids[count.index]
   public_sg_id     = module.security_groups.web_sg_id
   
   environment      = "production"
-  name_prefix      = "koneksi-web-${count.index + 1}"
+  name_prefix      = "bongaquino-web-${count.index + 1}"
   
   tags = {
     Role = "web-server"
@@ -267,7 +283,7 @@ module "db_servers" {
 
   ami_id           = data.aws_ami.db_server.id
   instance_type    = "r5.large"
-  key_name         = "koneksi-db-key"
+  key_name         = "bongaquino-db-key"
   public_subnet_id = module.vpc.private_subnet_ids[count.index]
   public_sg_id     = module.security_groups.db_sg_id
   
@@ -275,7 +291,7 @@ module "db_servers" {
   root_volume_type = "io2"
   
   environment      = "production"
-  name_prefix      = "koneksi-db-${count.index + 1}"
+  name_prefix      = "bongaquino-db-${count.index + 1}"
   
   tags = {
     Role = "database-server"
@@ -312,7 +328,7 @@ module "db_servers" {
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
 | `environment` | string | `"staging"` | Environment name for tagging |
-| `project` | string | `"koneksi"` | Project name for tagging |
+| `project` | string | `"bongaquino"` | Project name for tagging |
 | `tags` | map(string) | `{}` | Additional tags for all resources |
 
 ### Advanced Options
@@ -353,7 +369,7 @@ module "db_servers" {
 ```hcl
 # Security group configuration example
 resource "aws_security_group" "bastion" {
-  name        = "koneksi-bastion-sg"
+  name        = "bongaquino-bastion-sg"
   description = "Security group for bastion host"
   vpc_id      = var.vpc_id
 
@@ -374,7 +390,7 @@ resource "aws_security_group" "bastion" {
   }
 
   tags = {
-    Name = "koneksi-bastion-sg"
+    Name = "bongaquino-bastion-sg"
   }
 }
 ```
@@ -391,7 +407,7 @@ resource "aws_security_group" "bastion" {
 ```hcl
 # Instance monitoring
 resource "aws_cloudwatch_metric_alarm" "high_cpu" {
-  alarm_name          = "koneksi-instance-high-cpu"
+  alarm_name          = "bongaquino-instance-high-cpu"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -410,7 +426,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
 
 # Instance status monitoring
 resource "aws_cloudwatch_metric_alarm" "instance_status_check" {
-  alarm_name          = "koneksi-instance-status-check"
+  alarm_name          = "bongaquino-instance-status-check"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "StatusCheckFailed"
@@ -464,7 +480,7 @@ resource "aws_cloudwatch_dashboard" "ec2_monitoring" {
 ```hcl
 # Backup plan
 resource "aws_backup_plan" "ec2_backup" {
-  name = "koneksi-ec2-backup-plan"
+  name = "bongaquino-ec2-backup-plan"
 
   rule {
     rule_name         = "daily_backup"
@@ -485,7 +501,7 @@ resource "aws_backup_plan" "ec2_backup" {
 
 # Backup vault
 resource "aws_backup_vault" "ec2_vault" {
-  name        = "koneksi-ec2-backup-vault"
+  name        = "bongaquino-ec2-backup-vault"
   kms_key_arn = aws_kms_key.backup.arn
 
   tags = {
@@ -530,7 +546,7 @@ locals {
 # Auto-stop instances during off-hours
 resource "aws_lambda_function" "instance_scheduler" {
   filename         = "instance_scheduler.zip"
-  function_name    = "koneksi-instance-scheduler"
+  function_name    = "bongaquino-instance-scheduler"
   role            = aws_iam_role.scheduler_role.arn
   handler         = "scheduler.lambda_handler"
   runtime         = "python3.9"
@@ -613,25 +629,25 @@ aws cloudwatch get-metric-statistics \
 aws ec2 describe-security-groups --group-ids sg-12345678
 
 # Verify key pair
-aws ec2 describe-key-pairs --key-names koneksi-staging-key
+aws ec2 describe-key-pairs --key-names bongaquino-staging-key
 ```
 
 ## Environment-Specific Deployment
 
 ### Staging Environment
 ```bash
-cd koneksi-aws/ec2/envs/staging
+cd bongaquino-aws/ec2/envs/staging
 terraform init
-AWS_PROFILE=koneksi terraform plan
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform plan
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 ### Production Environment
 ```bash
-cd koneksi-aws/ec2/envs/prod
+cd bongaquino-aws/ec2/envs/prod
 terraform init
-AWS_PROFILE=koneksi terraform plan
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform plan
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 ## Best Practices

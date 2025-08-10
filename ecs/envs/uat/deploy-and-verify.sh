@@ -15,10 +15,10 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-CLUSTER_NAME="koneksi-uat-cluster"
-SERVICE_NAME="koneksi-uat-service"
+CLUSTER_NAME="bongaquino-uat-cluster"
+SERVICE_NAME="bongaquino-uat-service"
 REGION="ap-southeast-1"
-AWS_PROFILE="koneksi"
+AWS_PROFILE="bongaquino"
 
 print_status() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -249,7 +249,7 @@ test_health_check() {
     print_status "Testing application health with new configuration..."
     
     # Get ALB endpoint
-    ALB_ENDPOINT="https://server-uat.koneksi.co.kr"
+    ALB_ENDPOINT="https://server-uat.bongaquino.co.kr"
     
     # Test health check
     HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$ALB_ENDPOINT/check-health" || echo "000")

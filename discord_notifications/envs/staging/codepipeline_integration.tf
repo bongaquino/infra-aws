@@ -7,22 +7,22 @@
 
 # CloudWatch Event Rule for CodePipeline State Changes
 resource "aws_cloudwatch_event_rule" "codepipeline_state_change" {
-  name        = "koneksi-staging-codepipeline-discord-notifications"
+  name        = "bongaquino-staging-codepipeline-discord-notifications"
   description = "Capture CodePipeline state changes for Staging"
 
   event_pattern = jsonencode({
     source        = ["aws.codepipeline"]
     detail-type   = ["CodePipeline Pipeline Execution State Change"]
     detail = {
-      pipeline = ["koneksi-staging-backend-pipeline"]
+      pipeline = ["bongaquino-staging-backend-pipeline"]
       state    = ["STARTED", "SUCCEEDED", "FAILED", "CANCELED", "SUPERSEDED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-staging-codepipeline-discord"
+    Name        = "bongaquino-staging-codepipeline-discord"
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }
@@ -30,22 +30,22 @@ resource "aws_cloudwatch_event_rule" "codepipeline_state_change" {
 
 # CloudWatch Event Rule for CodePipeline Stage Changes
 resource "aws_cloudwatch_event_rule" "codepipeline_stage_change" {
-  name        = "koneksi-staging-codepipeline-stage-discord-notifications"
+  name        = "bongaquino-staging-codepipeline-stage-discord-notifications"
   description = "Capture CodePipeline stage changes for Staging"
 
   event_pattern = jsonencode({
     source        = ["aws.codepipeline"]
     detail-type   = ["CodePipeline Stage Execution State Change"]
     detail = {
-      pipeline = ["koneksi-staging-backend-pipeline"]
+      pipeline = ["bongaquino-staging-backend-pipeline"]
       state    = ["STARTED", "SUCCEEDED", "FAILED", "CANCELED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-staging-codepipeline-stage-discord"
+    Name        = "bongaquino-staging-codepipeline-stage-discord"
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }
@@ -53,22 +53,22 @@ resource "aws_cloudwatch_event_rule" "codepipeline_stage_change" {
 
 # CloudWatch Event Rule for CodePipeline Action Changes (for more detailed monitoring)
 resource "aws_cloudwatch_event_rule" "codepipeline_action_change" {
-  name        = "koneksi-staging-codepipeline-action-discord-notifications"
+  name        = "bongaquino-staging-codepipeline-action-discord-notifications"
   description = "Capture CodePipeline action changes for Staging"
 
   event_pattern = jsonencode({
     source        = ["aws.codepipeline"]
     detail-type   = ["CodePipeline Pipeline Execution State Change"]
     detail = {
-      pipeline = ["koneksi-staging-backend-pipeline"]
+      pipeline = ["bongaquino-staging-backend-pipeline"]
       state    = ["FAILED"]  # Only capture failed actions for noise reduction
     }
   })
 
   tags = {
-    Name        = "koneksi-staging-codepipeline-action-discord"
+    Name        = "bongaquino-staging-codepipeline-action-discord"
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }

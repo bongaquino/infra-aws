@@ -26,7 +26,7 @@ provider "aws" {
 # Data Sources
 # =============================================================================
 data "aws_route53_zone" "main" {
-  name = "koneksi.co.kr"
+  name = "bongaquino.co.kr"
 }
 
 # =============================================================================
@@ -43,7 +43,7 @@ resource "aws_acm_certificate" "cert" {
   }
 
   tags = {
-    Name      = "koneksi-cert"
+    Name      = "bongaquino-cert"
     ManagedBy = "terraform"
   }
 } 

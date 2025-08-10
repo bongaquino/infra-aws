@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 # Configuration
 ENVIRONMENTS=("uat" "staging")
 REGION="ap-southeast-1"
-PROJECT="koneksi"
+PROJECT="bongaquino"
 
 echo -e "${BLUE}🚀 Deploying Complete AWS Monitoring to All Environments${NC}"
 echo -e "${BLUE}==========================================================${NC}"
@@ -127,7 +127,7 @@ test_environment() {
     echo -e "\n${BLUE}🧪 Testing $env environment...${NC}"
     
     # Get SNS topic ARN
-    SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:koneksi-$env-$env-discord-notifications"
+    SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:bongaquino-$env-$env-discord-notifications"
     
     # Send test message
     aws sns publish \
@@ -162,9 +162,9 @@ show_webhook_instructions() {
     echo -e "   https://discord.com/api/webhooks/1389071411087151207/WtPm43jiQUEzdyisH9rNcP4pt4OBX14aryy5WnfrHDzdGwHf1NmwqjD9ksrEZoPo30-h"
     echo -e ""
     echo -e "${GREEN}2. Staging (Uses same webhook as UAT):${NC}"
-    echo -e "   - Uses #koneksi-alerts channel (same as UAT)"
+    echo -e "   - Uses #bongaquino-alerts channel (same as UAT)"
     echo -e "   - Uses same webhook URL as UAT"
-    echo -e "   - Different bot name: '🟡 Koneksi Staging Bot'"
+    echo -e "   - Different bot name: '🟡 bongaquino Staging Bot'"
     echo -e ""
     echo -e "${YELLOW}To create webhooks:${NC}"
     echo -e "1. Go to Discord Server Settings > Integrations > Webhooks"
@@ -269,15 +269,15 @@ create_deployment_summary() {
 # AWS Discord Monitoring Deployment Summary
 
 **Deployment Date:** $(date)
-**Project:** Koneksi
+**Project:** bongaquino
 **Region:** ap-southeast-1
 
 ## 🌍 Environments Deployed
 
 ### UAT Environment
 - **Status:** ✅ Active
-- **Discord Channel:** #koneksi-alerts
-- **SNS Topic:** koneksi-uat-uat-discord-notifications
+- **Discord Channel:** #bongaquino-alerts
+- **SNS Topic:** bongaquino-uat-uat-discord-notifications
 - **Components:**
   - ✅ Discord Notifications
   - ✅ ALB Monitoring
@@ -289,9 +289,9 @@ create_deployment_summary() {
 
 ### Staging Environment
 - **Status:** 🔄 Ready for deployment
-- **Discord Channel:** #koneksi-alerts (same as UAT)
-- **Bot Name:** 🟡 Koneksi Staging Bot
-- **SNS Topic:** koneksi-staging-staging-discord-notifications
+- **Discord Channel:** #bongaquino-alerts (same as UAT)
+- **Bot Name:** 🟡 bongaquino Staging Bot
+- **SNS Topic:** bongaquino-staging-staging-discord-notifications
 
 
 
@@ -332,12 +332,12 @@ create_deployment_summary() {
 ## 🔧 Next Steps
 
  1. **Complete Staging Setup:**
-    - Create Discord channel for staging (#koneksi-staging-alerts)
+    - Create Discord channel for staging (#bongaquino-staging-alerts)
     - Generate webhook URL for staging environment  
     - Deploy monitoring to staging environment
 
 2. **Backend Integration:**
-   - Add Go monitoring package to koneksi-backend
+   - Add Go monitoring package to bongaquino-backend
    - Implement custom metrics in application code
    - Configure environment-specific thresholds
 
@@ -354,7 +354,7 @@ create_deployment_summary() {
 ## 📞 Support
 
 For issues or questions:
-- Check CloudWatch logs: /aws/lambda/koneksi-*-discord-notifier
+- Check CloudWatch logs: /aws/lambda/bongaquino-*-discord-notifier
 - Test with: \`aws sns publish --topic-arn <SNS_TOPIC_ARN> --message "test"\`
 - Review Terraform state: \`terraform show\`
 

@@ -4,27 +4,27 @@
 
 # Get the Discord SNS topic
 data "aws_sns_topic" "discord_notifications" {
-  name = "koneksi-uat-discord-notifications"
+  name = "bongaquino-uat-discord-notifications"
 }
 
 # CodePipeline State Change Events
 resource "aws_cloudwatch_event_rule" "codepipeline_state_change" {
-  name        = "koneksi-uat-codepipeline-state-change"
+  name        = "bongaquino-uat-codepipeline-state-change"
   description = "Capture CodePipeline state changes"
 
   event_pattern = jsonencode({
     source      = ["aws.codepipeline"]
     detail-type = ["CodePipeline Pipeline Execution State Change"]
     detail = {
-      pipeline = ["koneksi-uat-backend-pipeline"]
+      pipeline = ["bongaquino-uat-backend-pipeline"]
       state = ["SUCCEEDED", "FAILED", "STARTED", "CANCELED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-uat-codepipeline-state-change"
+    Name        = "bongaquino-uat-codepipeline-state-change"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
@@ -41,7 +41,7 @@ resource "aws_cloudwatch_event_target" "codepipeline_discord" {
 
 # CodeBuild Project State Change Events
 resource "aws_cloudwatch_event_rule" "codebuild_state_change" {
-  name        = "koneksi-uat-codebuild-state-change"
+  name        = "bongaquino-uat-codebuild-state-change"
   description = "Capture CodeBuild project state changes"
 
   event_pattern = jsonencode({
@@ -53,9 +53,9 @@ resource "aws_cloudwatch_event_rule" "codebuild_state_change" {
   })
 
   tags = {
-    Name        = "koneksi-uat-codebuild-discord"
+    Name        = "bongaquino-uat-codebuild-discord"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
   }
@@ -73,7 +73,7 @@ resource "aws_cloudwatch_event_target" "codebuild_discord" {
 
 # ECR Image Scan Results
 resource "aws_cloudwatch_event_rule" "ecr_scan_results" {
-  name        = "koneksi-uat-ecr-scan-results"
+  name        = "bongaquino-uat-ecr-scan-results"
   description = "Capture ECR image scan results"
 
   event_pattern = jsonencode({
@@ -81,14 +81,14 @@ resource "aws_cloudwatch_event_rule" "ecr_scan_results" {
     detail-type = ["ECR Image Scan"]
     detail = {
       scan-status = ["COMPLETE"]
-      repository-name = ["koneksi-uat-backend"]
+      repository-name = ["bongaquino-uat-backend"]
     }
   })
 
   tags = {
-    Name        = "koneksi-uat-ecr-scan-results"
+    Name        = "bongaquino-uat-ecr-scan-results"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
@@ -105,23 +105,23 @@ resource "aws_cloudwatch_event_target" "ecr_scan_discord" {
 
 # CodePipeline Approval Actions
 resource "aws_cloudwatch_event_rule" "codepipeline_approval" {
-  name        = "koneksi-uat-codepipeline-approval"
+  name        = "bongaquino-uat-codepipeline-approval"
   description = "Capture CodePipeline approval actions"
 
   event_pattern = jsonencode({
     source      = ["aws.codepipeline"]
     detail-type = ["CodePipeline Stage Execution State Change"]
     detail = {
-      pipeline = ["koneksi-uat-backend-pipeline"]
+      pipeline = ["bongaquino-uat-backend-pipeline"]
       stage = ["ApprovalStage"]
       state = ["STARTED", "SUCCEEDED", "FAILED"]
     }
   })
 
   tags = {
-    Name        = "koneksi-uat-codepipeline-approval"
+    Name        = "bongaquino-uat-codepipeline-approval"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }

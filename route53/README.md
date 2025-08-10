@@ -37,7 +37,11 @@ The Route 53 module creates a robust DNS infrastructure that supports complex ro
 │                                                                           │ 
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────────────┐│ 
 │  │  Hosted Zone    │  │  Health Checks  │  │       Routing Policies      ││ 
-│  │ koneksi.co.kr   │  │   & Monitoring  │  │                             ││ 
+<<<<<<< HEAD
+│  │ bongaquino.com   │  │   & Monitoring  │  │                             ││ 
+=======
+│  │ bongaquino.co.kr   │  │   & Monitoring  │  │                             ││ 
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 │  │                 │  │                 │  │  • Weighted Routing         ││ 
 │  │ • A Records     │  │ • Endpoint      │  │  • Latency-based            ││ 
 │  │ • CNAME Records │  │   Health        │  │  • Geolocation              ││ 
@@ -98,20 +102,25 @@ route53/
 ## Current Domain Configuration
 
 ### Primary Domain Records
-- **Root Domain**: `koneksi.co.kr`
-- **WWW Subdomain**: `www.koneksi.co.kr` → Wix hosting
-- **Staging Environment**: `staging.koneksi.co.kr` → AWS EC2
-- **Application Staging**: `app-staging.koneksi.co.kr` → AWS Amplify
-- **UAT Environment**: `app-uat.koneksi.co.kr` → AWS Amplify
+<<<<<<< HEAD
+- **Root Domain**: `bongaquino.com`
+- **WWW Subdomain**: `www.bongaquino.com` → Personal portfolio hosting
+=======
+- **Root Domain**: `bongaquino.co.kr`
+- **WWW Subdomain**: `www.bongaquino.co.kr` → Wix hosting
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+- **Staging Environment**: `staging.bongaquino.co.kr` → AWS EC2
+- **Application Staging**: `app-staging.bongaquino.co.kr` → AWS Amplify
+- **UAT Environment**: `app-uat.bongaquino.co.kr` → AWS Amplify
 
 ### Service Endpoints
-- **API Gateway**: `gateway.koneksi.co.kr` → External server
-- **IPFS Services**: `ipfs.koneksi.co.kr` → IPFS nodes
+- **API Gateway**: `gateway.bongaquino.co.kr` → External server
+- **IPFS Services**: `ipfs.bongaquino.co.kr` → IPFS nodes
 - **Email Services**: MX records for Microsoft 365
 
 ### Email Configuration
-- **MX Record**: `koneksi-co-kr.mail.protection.outlook.com` (Microsoft 365)
-- **Autodiscover**: `autodiscover.koneksi.co.kr` → Outlook configuration
+- **MX Record**: `bongaquino-co-kr.mail.protection.outlook.com` (Microsoft 365)
+- **Autodiscover**: `autodiscover.bongaquino.co.kr` → Outlook configuration
 - **DKIM Authentication**: Configured for email security
 - **SPF/DMARC**: Email authentication and anti-spoofing
 
@@ -124,18 +133,18 @@ module "route53" {
   source = "./route53"
 
   # Basic domain configuration
-  domain_name = "koneksi.co.kr"
+  domain_name = "bongaquino.co.kr"
   aws_region  = "ap-southeast-1"
   
   # A records for primary services
   a_records = {
     "staging" = {
-      name    = "staging.koneksi.co.kr"
+      name    = "staging.bongaquino.co.kr"
       records = ["52.77.36.120"]
       ttl     = 300
     }
     "gateway" = {
-      name    = "gateway.koneksi.co.kr"
+      name    = "gateway.bongaquino.co.kr"
       records = ["27.255.70.17"]
       ttl     = 300
     }
@@ -144,12 +153,12 @@ module "route53" {
   # CNAME records for subdomains
   cname_records = {
     "www" = {
-      name    = "www.koneksi.co.kr"
+      name    = "www.bongaquino.co.kr"
       records = ["balancer.wixdns.net."]
       ttl     = 300
     }
     "autodiscover" = {
-      name    = "autodiscover.koneksi.co.kr"
+      name    = "autodiscover.bongaquino.co.kr"
       records = ["autodiscover.outlook.com."]
       ttl     = 300
     }
@@ -157,7 +166,11 @@ module "route53" {
   
   tags = {
     Environment = "production"
-    Project     = "koneksi"
+<<<<<<< HEAD
+    Project     = "bongaquino"
+=======
+    Project     = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
   }
 }
 ```
@@ -168,19 +181,19 @@ module "route53" {
 module "route53_advanced" {
   source = "./route53"
 
-  domain_name = "koneksi.co.kr"
+  domain_name = "bongaquino.co.kr"
   
   # Alias records for AWS services
   alias_records = {
     "app-staging" = {
-      name                   = "app-staging.koneksi.co.kr"
+      name                   = "app-staging.bongaquino.co.kr"
       alias_name             = "d1numm9pbccz2w.cloudfront.net."
       alias_zone_id          = "Z2FDTNDATAQYW2"
       evaluate_target_health = false
     }
     "uat" = {
-      name                   = "uat.koneksi.co.kr"
-      alias_name             = "dualstack.koneksi-uat-alb-630040688.ap-southeast-1.elb.amazonaws.com."
+      name                   = "uat.bongaquino.co.kr"
+      alias_name             = "dualstack.bongaquino-uat-alb-630040688.ap-southeast-1.elb.amazonaws.com."
       alias_zone_id          = "Z1LMS91P8CMLE5"
       evaluate_target_health = true
     }
@@ -189,7 +202,7 @@ module "route53_advanced" {
   # Health checks for monitoring
   health_checks = {
     "staging_endpoint" = {
-      fqdn              = "staging.koneksi.co.kr"
+      fqdn              = "staging.bongaquino.co.kr"
       port              = 443
       type              = "HTTPS"
       resource_path     = "/health"
@@ -197,7 +210,7 @@ module "route53_advanced" {
       request_interval  = 30
     }
     "api_gateway" = {
-      fqdn              = "gateway.koneksi.co.kr"
+      fqdn              = "gateway.bongaquino.co.kr"
       port              = 80
       type              = "HTTP"
       resource_path     = "/status"
@@ -209,8 +222,8 @@ module "route53_advanced" {
   # Email configuration
   mx_records = {
     "main" = {
-      name    = "koneksi.co.kr"
-      records = ["0 koneksi-co-kr.mail.protection.outlook.com."]
+      name    = "bongaquino.co.kr"
+      records = ["0 bongaquino-co-kr.mail.protection.outlook.com."]
       ttl     = 300
     }
   }
@@ -218,7 +231,7 @@ module "route53_advanced" {
   # TXT records for email authentication
   txt_records = {
     "spf_dmarc" = {
-      name    = "koneksi.co.kr"
+      name    = "bongaquino.co.kr"
       records = [
         "MS=ms62474739",
         "_globalsign-domain-verification=ZP-vTECIFv7iE3MUd-yPRvNCiL8OWfyFTB-YinM08S"
@@ -226,7 +239,7 @@ module "route53_advanced" {
       ttl = 300
     }
     "dkim_selector" = {
-      name    = "20250604040914pm._domainkey.koneksi.co.kr"
+      name    = "20250604040914pm._domainkey.bongaquino.co.kr"
       records = ["k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCsDAsE41iUNu31DwH9xTX6kcFuKvaUllZ3mp5A1dEiSnJs23HoT0TLzFY9bs/P9iMnY6jtRzhSTOFFBAX+PydIOWIm0AS7Bf3uA74NWUs8ZoXiHhLYgEKMxtxmJJONa5gfMHLzWrmR+tpyy/qNElwnCV1SRnG+cp1x+3+4NiE0QIDAQAB"]
       ttl     = 300
     }
@@ -240,12 +253,12 @@ module "route53_advanced" {
 module "route53_weighted" {
   source = "./route53"
 
-  domain_name = "koneksi.co.kr"
+  domain_name = "bongaquino.co.kr"
   
   # Weighted routing for gradual traffic shifting
   weighted_records = {
     "api_blue" = {
-      name            = "api.koneksi.co.kr"
+      name            = "api.bongaquino.co.kr"
       type            = "A"
       records         = ["10.0.1.100"]
       ttl             = 60
@@ -254,7 +267,7 @@ module "route53_weighted" {
       health_check_id = aws_route53_health_check.api_blue.id
     }
     "api_green" = {
-      name            = "api.koneksi.co.kr"
+      name            = "api.bongaquino.co.kr"
       type            = "A"
       records         = ["10.0.2.100"]
       ttl             = 60
@@ -272,12 +285,12 @@ module "route53_weighted" {
 module "route53_geo" {
   source = "./route53"
 
-  domain_name = "koneksi.co.kr"
+  domain_name = "bongaquino.co.kr"
   
   # Geographic routing for global applications
   geolocation_records = {
     "api_asia" = {
-      name                = "api.koneksi.co.kr"
+      name                = "api.bongaquino.co.kr"
       type                = "A"
       records             = ["52.77.36.120"]
       ttl                 = 300
@@ -285,7 +298,7 @@ module "route53_geo" {
       geolocation_continent = "AS"
     }
     "api_default" = {
-      name                = "api.koneksi.co.kr"
+      name                = "api.bongaquino.co.kr"
       type                = "A"
       records             = ["54.156.159.169"]
       ttl                 = 300
@@ -301,7 +314,7 @@ module "route53_geo" {
 ### Basic Configuration
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `domain_name` | string | `"koneksi.co.kr"` | Primary domain name for the hosted zone |
+| `domain_name` | string | `"bongaquino.co.kr"` | Primary domain name for the hosted zone |
 | `aws_region` | string | `"ap-southeast-1"` | AWS region for resources |
 | `enable_lifecycle_protection` | bool | `true` | Enable lifecycle protection for critical records |
 
@@ -354,7 +367,7 @@ module "route53_geo" {
 ```hcl
 a_records = {
   "staging" = {
-    name    = "staging.koneksi.co.kr"
+    name    = "staging.bongaquino.co.kr"
     records = ["52.77.36.120"]
     ttl     = 300
   }
@@ -365,7 +378,7 @@ a_records = {
 ```hcl
 aaaa_records = {
   "ipv6_server" = {
-    name    = "ipv6.koneksi.co.kr"
+    name    = "ipv6.bongaquino.co.kr"
     records = ["2001:db8::1"]
     ttl     = 300
   }
@@ -376,7 +389,7 @@ aaaa_records = {
 ```hcl
 cname_records = {
   "www" = {
-    name    = "www.koneksi.co.kr"
+    name    = "www.bongaquino.co.kr"
     records = ["balancer.wixdns.net."]
     ttl     = 300
   }
@@ -387,8 +400,8 @@ cname_records = {
 ```hcl
 mx_records = {
   "email" = {
-    name    = "koneksi.co.kr"
-    records = ["0 koneksi-co-kr.mail.protection.outlook.com."]
+    name    = "bongaquino.co.kr"
+    records = ["0 bongaquino-co-kr.mail.protection.outlook.com."]
     ttl     = 300
   }
 }
@@ -398,7 +411,7 @@ mx_records = {
 ```hcl
 txt_records = {
   "verification" = {
-    name    = "koneksi.co.kr"
+    name    = "bongaquino.co.kr"
     records = [
       "MS=ms62474739",
       "v=spf1 include:spf.protection.outlook.com -all"
@@ -412,7 +425,7 @@ txt_records = {
 ```hcl
 alias_records = {
   "cloudfront" = {
-    name                   = "cdn.koneksi.co.kr"
+    name                   = "cdn.bongaquino.co.kr"
     alias_name             = "d1234567890.cloudfront.net."
     alias_zone_id          = "Z2FDTNDATAQYW2"
     evaluate_target_health = false
@@ -425,7 +438,7 @@ alias_records = {
 ### Basic Health Check Configuration
 ```hcl
 resource "aws_route53_health_check" "web_server" {
-  fqdn                          = "staging.koneksi.co.kr"
+  fqdn                          = "staging.bongaquino.co.kr"
   port                          = 443
   type                          = "HTTPS"
   resource_path                 = "/health"
@@ -443,7 +456,7 @@ resource "aws_route53_health_check" "web_server" {
 ### Advanced Health Check with Regions
 ```hcl
 resource "aws_route53_health_check" "global_endpoint" {
-  fqdn                          = "api.koneksi.co.kr"
+  fqdn                          = "api.bongaquino.co.kr"
   port                          = 443
   type                          = "HTTPS_STR_MATCH"
   resource_path                 = "/api/health"
@@ -489,7 +502,7 @@ resource "aws_cloudwatch_metric_alarm" "health_check_alarm" {
 # Primary record
 resource "aws_route53_record" "primary" {
   zone_id         = aws_route53_zone.main.zone_id
-  name            = "api.koneksi.co.kr"
+  name            = "api.bongaquino.co.kr"
   type            = "A"
   ttl             = 60
   records         = ["10.0.1.100"]
@@ -504,7 +517,7 @@ resource "aws_route53_record" "primary" {
 # Secondary record
 resource "aws_route53_record" "secondary" {
   zone_id         = aws_route53_zone.main.zone_id
-  name            = "api.koneksi.co.kr"
+  name            = "api.bongaquino.co.kr"
   type            = "A"
   ttl             = 60
   records         = ["10.0.2.100"]
@@ -522,7 +535,7 @@ resource "aws_route53_record" "secondary" {
 # US East region
 resource "aws_route53_record" "us_east" {
   zone_id        = aws_route53_zone.main.zone_id
-  name           = "api.koneksi.co.kr"
+  name           = "api.bongaquino.co.kr"
   type           = "A"
   ttl            = 300
   records        = ["54.156.159.169"]
@@ -536,7 +549,7 @@ resource "aws_route53_record" "us_east" {
 # Asia Pacific region
 resource "aws_route53_record" "ap_southeast" {
   zone_id        = aws_route53_zone.main.zone_id
-  name           = "api.koneksi.co.kr"
+  name           = "api.bongaquino.co.kr"
   type           = "A"
   ttl            = 300
   records        = ["52.77.36.120"]
@@ -555,7 +568,7 @@ resource "aws_route53_record" "ap_southeast" {
 resource "aws_route53_key_signing_key" "main" {
   hosted_zone_id             = aws_route53_zone.main.id
   key_management_service_arn = aws_kms_key.dnssec.arn
-  name                       = "koneksi_dnssec_key"
+  name                       = "bongaquino_dnssec_key"
 }
 
 resource "aws_route53_hosted_zone_dnssec" "main" {
@@ -567,7 +580,7 @@ resource "aws_route53_hosted_zone_dnssec" "main" {
 ### Query Logging
 ```hcl
 resource "aws_cloudwatch_log_group" "route53_query_log" {
-  name              = "/aws/route53/koneksi.co.kr"
+  name              = "/aws/route53/bongaquino.co.kr"
   retention_in_days = 30
 }
 
@@ -661,30 +674,30 @@ resource "aws_route53_query_log" "main" {
 
 ```bash
 # Check DNS resolution
-dig koneksi.co.kr
-nslookup staging.koneksi.co.kr
+dig bongaquino.co.kr
+nslookup staging.bongaquino.co.kr
 
 # Trace DNS resolution path
-dig +trace koneksi.co.kr
+dig +trace bongaquino.co.kr
 
 # Check specific record types
-dig MX koneksi.co.kr
-dig TXT koneksi.co.kr
+dig MX bongaquino.co.kr
+dig TXT bongaquino.co.kr
 
 # Verify name server delegation
-dig NS koneksi.co.kr
+dig NS bongaquino.co.kr
 
 # Test health check status
 aws route53 get-health-check --health-check-id HEALTH_CHECK_ID
 
 # Monitor DNS queries
 aws logs filter-log-events \
-  --log-group-name /aws/route53/koneksi.co.kr \
+  --log-group-name /aws/route53/bongaquino.co.kr \
   --start-time 1640995200 \
   --end-time 1640998800
 
 # Check DNS response times
-dig @8.8.8.8 koneksi.co.kr +stats
+dig @8.8.8.8 bongaquino.co.kr +stats
 ```
 
 ## Dependencies
@@ -724,7 +737,7 @@ For issues related to:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| domain_name | The domain name for the Route 53 hosted zone | `string` | `"koneksi.co.kr"` | no |
+| domain_name | The domain name for the Route 53 hosted zone | `string` | `"bongaquino.co.kr"` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | ttl | The TTL (Time To Live) for all DNS records in seconds | `number` | `300` | no |
 | root_domain_records | List of IP addresses for the root domain A record | `list(string)` | `[]` | no |
@@ -749,4 +762,4 @@ For issues related to:
 - Make sure to replace the example IP addresses and DNS records with your actual values.
 - The TTL for all records is configurable through the `ttl` variable, defaulting to 300 seconds (5 minutes).
 - Records are only created if their corresponding variable has values (empty lists/maps will not create records).
-- For CNAME records, the key should be the subdomain name (e.g., "api" for api.koneksi.co.kr) and the value should be the target domain. 
+- For CNAME records, the key should be the subdomain name (e.g., "api" for api.bongaquino.co.kr) and the value should be the target domain. 

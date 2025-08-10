@@ -100,7 +100,7 @@ test_monitoring() {
     # Send test alert
     if ssh "$SSH_USER@$BOOTSTRAP_IP" "$REMOTE_PATH test"; then
         print_success "Test alert sent successfully"
-        print_warning "Check Discord channel #koneksi-alerts for the test message"
+        print_warning "Check Discord channel #bongaquino-alerts for the test message"
     else
         print_error "Failed to send test alert"
         return 1
@@ -126,7 +126,7 @@ show_status() {
     echo "  • Script: $REMOTE_PATH"
     echo "  • Health Checks: Every 5 minutes"
     echo "  • Daily Summary: 8:00 AM UTC"
-    echo "  • Discord Channel: #koneksi-alerts"
+    echo "  • Discord Channel: #bongaquino-alerts"
     echo ""
     echo -e "${YELLOW}🛠️ Available Commands:${NC}"
     echo "  ssh $SSH_USER@$BOOTSTRAP_IP '$REMOTE_PATH check'      # Run health checks"
@@ -149,7 +149,7 @@ main() {
     # Check if script exists
     if [ ! -f "$SCRIPT_NAME" ]; then
         print_error "Monitoring script '$SCRIPT_NAME' not found in current directory"
-        echo "Please run this script from the koneksi-aws/discord_notifications directory"
+        echo "Please run this script from the bongaquino-aws/discord_notifications directory"
         exit 1
     fi
     

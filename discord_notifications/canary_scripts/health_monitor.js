@@ -13,14 +13,14 @@ const apiCanaryBlueprint = async function () {
     });
 
     let requestOptionsStep1 = {
-        hostname: 'server-uat.koneksi.co.kr',
+        hostname: 'server-uat.bongaquino.co.kr',
         method: 'GET',
         path: '/check-health',
         port: 443,
         protocol: 'https:',
         body: "",
         headers: {
-            'User-Agent': 'CloudWatch-Synthetics/1.0 (Koneksi-UAT-HealthMonitor)',
+            'User-Agent': 'CloudWatch-Synthetics/1.0 (bongaquino-UAT-HealthMonitor)',
             'Accept': 'application/json',
             'Cache-Control': 'no-cache'
         }
@@ -80,7 +80,7 @@ const apiCanaryBlueprint = async function () {
                         }
                         
                         // Validate service name
-                        if (healthData.data.name !== 'Koneksi') {
+                        if (healthData.data.name !== 'bongaquino') {
                             log.warn(`Unexpected service name: $${healthData.data.name}`);
                         }
                         

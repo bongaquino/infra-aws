@@ -1,12 +1,12 @@
 # IAM Accounts Registry
 
-This document maintains a record of all IAM accounts created in the Ardata AWS environment.
+This document maintains a record of all IAM accounts created in the bongaquino AWS environment.
 
 ## Naming Conventions
 
 1. **Usernames**
-   - Format: `firstname.lastname-ardata` (lowercase)
-   - Example: `franz.egos-ardata`, `john.doe-ardata`
+   - Format: `firstname.lastname-bongaquino` (lowercase)
+   - Example: `franz.egos-bongaquino`, `john.doe-bongaquino`
 
 2. **Roles**
    - Developer (capital D)
@@ -19,27 +19,27 @@ This document maintains a record of all IAM accounts created in the Ardata AWS e
    - management (lowercase)
 
 4. **Teams**
-   - ardata (lowercase)
+   - bongaquino (lowercase)
    - devops (lowercase)
    - qa (lowercase)
 
 5. **Email**
-   - Format: `firstname@ardata.tech`
-   - Example: `franz@ardata.tech`, `john@ardata.tech`
+   - Format: `firstname@bongaquino.tech`
+   - Example: `franz@bongaquino.tech`, `john@bongaquino.tech`
 
 ## Active Accounts
 
 | Username | Department | Team | Email | Role | Created Date | Status |
 |----------|------------|------|-------|------|--------------|--------|
-| franz.egos-ardata | developers | ardata | franz@ardata.tech | Developer | 2024-03-19 | Active |
-| bong.aquino-ardata | devops | ardata | bong@ardata.tech | Operations | 2024-12-19 | Active |
+| franz.egos-bongaquino | developers | bongaquino | franz@bongaquino.tech | Developer | 2024-03-19 | Active |
+| bong.aquino-bongaquino | devops | bongaquino | bong@bongaquino.tech | Operations | 2024-12-19 | Active |
 
 ## Account History
 
 | Username | Department | Team | Email | Role | Created Date | Deactivated Date | Reason |
 |----------|------------|------|-------|------|--------------|------------------|--------|
-| test.dev1-ardata | developers | ardata | test.dev1@ardata.tech | test-developer | 2024-03-19 | 2024-03-19 | Test account |
-| test.devops1-ardata | devops | ardata | test.devops1@ardata.tech | test-devops | 2024-03-19 | 2024-03-19 | Test account |
+| test.dev1-bongaquino | developers | bongaquino | test.dev1@bongaquino.tech | test-developer | 2024-03-19 | 2024-03-19 | Test account |
+| test.devops1-bongaquino | devops | bongaquino | test.devops1@bongaquino.tech | test-devops | 2024-03-19 | 2024-03-19 | Test account |
 
 ## Account Management Guidelines
 

@@ -100,7 +100,7 @@ resource "aws_vpc_endpoint" "ssm" {
   tags = merge(
     local.tags,
     {
-      Name = "koneksi-${var.environment}-ssm-endpoint"
+      Name = "bongaquino-${var.environment}-ssm-endpoint"
     }
   )
 }
@@ -122,7 +122,7 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   tags = merge(
     local.tags,
     {
-      Name = "koneksi-${var.environment}-ssmmessages-endpoint"
+      Name = "bongaquino-${var.environment}-ssmmessages-endpoint"
     }
   )
 }
@@ -144,7 +144,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   tags = merge(
     local.tags,
     {
-      Name = "koneksi-${var.environment}-ecr-api-endpoint"
+      Name = "bongaquino-${var.environment}-ecr-api-endpoint"
     }
   )
 }
@@ -166,7 +166,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   tags = merge(
     local.tags,
     {
-      Name = "koneksi-${var.environment}-ecr-dkr-endpoint"
+      Name = "bongaquino-${var.environment}-ecr-dkr-endpoint"
     }
   )
 }
@@ -177,7 +177,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 resource "aws_security_group" "vpc_endpoints" {
   count = var.create_vpc_endpoints ? 1 : 0
 
-  name        = "koneksi-${var.environment}-vpc-endpoints-sg"
+  name        = "bongaquino-${var.environment}-vpc-endpoints-sg"
   description = "Security group for VPC endpoints"
   vpc_id      = local.vpc_id
 
@@ -191,7 +191,7 @@ resource "aws_security_group" "vpc_endpoints" {
   tags = merge(
     local.tags,
     {
-      Name = "koneksi-${var.environment}-vpc-endpoints-sg"
+      Name = "bongaquino-${var.environment}-vpc-endpoints-sg"
     }
   )
 }
@@ -213,7 +213,7 @@ resource "aws_security_group" "private" {
   tags = merge(
     local.tags,
     {
-      Name = "koneksi-${var.environment}-private-sg"
+      Name = "bongaquino-${var.environment}-private-sg"
     }
   )
 }

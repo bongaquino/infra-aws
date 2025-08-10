@@ -4,7 +4,7 @@
 # IPFS External Infrastructure Monitor
 # Monitors IPFS external infrastructure from bootstrap node without hitting protected endpoints
 # Checks: SSL certificates, DNS resolution, connectivity, nginx logs, container health
-# Discord Channel: #koneksi-alerts (same as staging/UAT)
+# Discord Channel: #bongaquino-alerts (same as staging/UAT)
 # =============================================================================
 
 set -euo pipefail
@@ -14,8 +14,8 @@ set -euo pipefail
 # =============================================================================
 
 # IPFS Public Domains
-IPFS_API_DOMAIN="ipfs.koneksi.co.kr"
-IPFS_GATEWAY_DOMAIN="gateway.koneksi.co.kr"
+IPFS_API_DOMAIN="ipfs.bongaquino.co.kr"
+IPFS_GATEWAY_DOMAIN="gateway.bongaquino.co.kr"
 
 # Discord Configuration (same as other monitoring)
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1389071411087151207/WtPm43jiQUEzdyisH9rNcP4pt4OBX14aryy5WnfrHDzdGwHf1NmwqjD9ksrEZoPo30-h"

@@ -10,11 +10,11 @@
 #
 #   # Environment Configuration
 #   environment = "staging"
-#   project     = "koneksi"
+#   project     = "bongaquino"
 #
 #   # Discord Configuration (Same webhook as UAT, different bot name)
 #   discord_webhook_url = "https://discord.com/api/webhooks/1389071411087151207/WtPm43jiQUEzdyisH9rNcP4pt4OBX14aryy5WnfrHDzdGwHf1NmwqjD9ksrEZoPo30-h"
-#   discord_username    = "🟡 Koneksi Staging Bot"
+#   discord_username    = "🟡 bongaquino Staging Bot"
 #   discord_avatar_url  = "https://example.com/staging-bot-avatar.png"
 #
 #   # Message Configuration
@@ -31,7 +31,7 @@
 #   # Tags
 #   tags = {
 #     Environment = "staging"
-#     Project     = "koneksi"
+#     Project     = "bongaquino"
 #     Purpose     = "discord-notifications"
 #     ManagedBy   = "terraform"
 #     CostCenter  = "engineering"

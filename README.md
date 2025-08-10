@@ -1,10 +1,20 @@
-# AWS Deployment
+<<<<<<< HEAD
+# Bong Aquino AWS Deployment
 
-This repository contains the Terraform configurations for deploying Koneksi's AWS infrastructure.
+This repository contains the Terraform configurations for deploying Bong Aquino's AWS infrastructure.
 
 ## Infrastructure Components
 
-- **IAM**: User and group management for ARData team
+- **IAM**: User and group management for Bong Aquino team
+=======
+# AWS Deployment
+
+This repository contains the Terraform configurations for deploying bongaquino's AWS infrastructure.
+
+## Infrastructure Components
+
+- **IAM**: User and group management for bongaquino team
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
   - Test users for developers and devops
   - Group-based access control
   - Custom policies for different roles
@@ -60,7 +70,7 @@ This repository contains the Terraform configurations for deploying Koneksi's AW
 ## Directory Structure
 
 ```
-koneksi-aws/
+bongaquino-aws/
 ├── acm/             # AWS Certificate Manager for SSL/TLS certificates
 ├── amplify/         # AWS Amplify for web app hosting
 ├── cloudfront/      # CloudFront CDN configuration
@@ -147,7 +157,7 @@ For detailed information about managing environments using Terraform workspaces,
 
 ### State File Location
 ```
-s3://koneksi-terraform-state/
+s3://bongaquino-terraform-state/
 ├── vpc/
 │   └── terraform.tfstate.d/
 │       ├── staging/
@@ -181,14 +191,14 @@ rm terraform.tfstate
 
 ### Required Environment Variables
 ```bash
-export AWS_PROFILE=koneksi
+export AWS_PROFILE=bongaquino
 export TF_VAR_environment=staging|uat|prod
 export TF_VAR_region=ap-southeast-1
 ```
 
 ### AWS Profile Configuration
 ```ini
-[profile koneksi]
+[profile bongaquino]
 region = ap-southeast-1
 output = json
 ```
@@ -305,4 +315,8 @@ Detailed service documentation is available in the `docs` directory:
 
 ## Support
 
+<<<<<<< HEAD
 For any issues or questions, contact the DevOps team. 
+=======
+For any issues or questions, contact the DevOps team. 
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435

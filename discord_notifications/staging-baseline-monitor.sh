@@ -3,7 +3,7 @@
 # =============================================================================
 # Staging Server Baseline Monitoring Script
 # Server: 52.77.36.120 (Backend Server)
-# Discord Channel: #koneksi-alerts
+# Discord Channel: #bongaquino-alerts
 # Focus: Core business services only
 # =============================================================================
 
@@ -16,18 +16,18 @@ set -euo pipefail
 # Server Configuration
 AWS_REGION="ap-southeast-1"
 ENVIRONMENT="staging"
-SERVICE="koneksi-backend"
+SERVICE="bongaquino-backend"
 SERVER_IP="52.77.36.120"
-LOG_FILE="/var/log/koneksi-baseline-monitor.log"
-STATE_DIR="/tmp/koneksi-baseline-monitoring"
+LOG_FILE="/var/log/bongaquino-baseline-monitor.log"
+STATE_DIR="/tmp/bongaquino-baseline-monitoring"
 
 # Create directories
 mkdir -p "$STATE_DIR"
 sudo mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
 
 # CloudWatch namespaces
-SERVER_NAMESPACE="Koneksi/Server"
-APP_NAMESPACE="Koneksi/Application"
+SERVER_NAMESPACE="bongaquino/Server"
+APP_NAMESPACE="bongaquino/Application"
 
 # Alert thresholds
 CPU_THRESHOLD=70
@@ -78,7 +78,7 @@ send_discord_alert() {
     local alert_type="$3"
     local details="$4"
     
-    local sns_topic="arn:aws:sns:${AWS_REGION}:985869370256:koneksi-${ENVIRONMENT}-discord-notifications"
+    local sns_topic="arn:aws:sns:${AWS_REGION}:985869370256:bongaquino-${ENVIRONMENT}-discord-notifications"
     
     # Escape details JSON properly by using jq to create proper JSON structure
     local message=$(echo "$details" | jq -c --arg title "$title" --arg description "$description" --arg type "$alert_type" \
@@ -227,7 +227,7 @@ check_backend_api() {
 EOF
 )
             send_discord_alert "✅ Backend API Recovered" \
-                "Koneksi backend API is now responding normally" \
+                "bongaquino backend API is now responding normally" \
                 "success" "$recovery_details"
         fi
     else
@@ -244,7 +244,7 @@ EOF
 EOF
 )
         send_discord_alert "🚨 Backend API Down" \
-            "Koneksi backend API is not responding properly" \
+            "bongaquino backend API is not responding properly" \
             "error" "$details"
     fi
     
@@ -375,13 +375,13 @@ send_health_summary() {
     
     local details=$(cat <<EOF
 {
-    "Server": "koneksi-staging-backend ($SERVER_IP)",
+    "Server": "bongaquino-staging-backend ($SERVER_IP)",
     "Uptime": "$uptime_info",
     "Memory": "$memory_info",
     "Disk Usage": "$disk_info",
     "Staging Endpoints": {
-        "Frontend": "https://app-staging.koneksi.co.kr",
-        "Backend API": "https://staging.koneksi.co.kr",
+        "Frontend": "https://app-staging.bongaquino.co.kr",
+        "Backend API": "https://staging.bongaquino.co.kr",
         "MongoDB Admin": "mongo-express container"
     },
     "Core Services": {

@@ -4,7 +4,7 @@ resource "tls_private_key" "generated" {
 }
 
 resource "aws_key_pair" "generated" {
-  key_name   = "koneksi-staging-key"
+  key_name   = "bongaquino-staging-key"
   public_key = tls_private_key.generated.public_key_openssh
 }
 

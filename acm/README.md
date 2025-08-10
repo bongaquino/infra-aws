@@ -1,6 +1,6 @@
 # AWS Certificate Manager (ACM) Module
 
-This module provisions SSL/TLS certificates using AWS Certificate Manager for the Koneksi infrastructure.
+This module provisions SSL/TLS certificates using AWS Certificate Manager for the bongaquino infrastructure.
 
 ## Overview
 
@@ -20,7 +20,7 @@ The ACM module creates SSL/TLS certificates with automatic DNS validation and li
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Route53 Zone  │    │  ACM Certificate │    │   CloudFront    │
-│  koneksi.co.kr  │───▶│     (SSL/TLS)    │───▶│  Distribution   │
+│  bongaquino.co.kr  │───▶│     (SSL/TLS)    │───▶│  Distribution   │
 │                 │    │                 │    │   (us-east-1)   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 │
@@ -55,11 +55,11 @@ acm/
 module "acm" {
   source = "./acm"
   
-  domain_name = "koneksi.co.kr"
+  domain_name = "bongaquino.co.kr"
   subject_alternative_names = [
-    "*.koneksi.co.kr",
-    "api.koneksi.co.kr",
-    "app.koneksi.co.kr"
+    "*.bongaquino.co.kr",
+    "api.bongaquino.co.kr",
+    "app.bongaquino.co.kr"
   ]
 }
 ```
@@ -68,7 +68,7 @@ module "acm" {
 
 1. **Navigate to ACM directory**:
 ```bash
-cd koneksi-aws/acm
+cd bongaquino-aws/acm
 ```
 
 2. **Initialize Terraform**:
@@ -78,12 +78,12 @@ terraform init
 
 3. **Plan the deployment**:
 ```bash
-AWS_PROFILE=koneksi terraform plan
+AWS_PROFILE=bongaquino terraform plan
 ```
 
 4. **Apply the configuration**:
 ```bash
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 ## Input Variables
@@ -142,27 +142,27 @@ provider "aws" {
 ### Single Domain Certificate
 
 ```hcl
-domain_name = "api.koneksi.co.kr"
+domain_name = "api.bongaquino.co.kr"
 subject_alternative_names = []
 ```
 
 ### Wildcard Certificate
 
 ```hcl
-domain_name = "koneksi.co.kr"
-subject_alternative_names = ["*.koneksi.co.kr"]
+domain_name = "bongaquino.co.kr"
+subject_alternative_names = ["*.bongaquino.co.kr"]
 ```
 
 ### Multi-Domain Certificate
 
 ```hcl
-domain_name = "koneksi.co.kr"
+domain_name = "bongaquino.co.kr"
 subject_alternative_names = [
-  "*.koneksi.co.kr",
-  "app-staging.koneksi.co.kr",
-  "app-uat.koneksi.co.kr",
-  "api-staging.koneksi.co.kr",
-  "api-uat.koneksi.co.kr"
+  "*.bongaquino.co.kr",
+  "app-staging.bongaquino.co.kr",
+  "app-uat.bongaquino.co.kr",
+  "api-staging.bongaquino.co.kr",
+  "api-uat.bongaquino.co.kr"
 ]
 ```
 

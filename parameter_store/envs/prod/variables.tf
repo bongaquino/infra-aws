@@ -7,7 +7,7 @@ variable "environment" {
 variable "project" {
   description = "Project name"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "parameters" {

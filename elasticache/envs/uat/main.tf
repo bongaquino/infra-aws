@@ -1,9 +1,9 @@
 module "vpc" {
   source = "../../../vpc"
 
-  name_prefix = "koneksi-uat"
+  name_prefix = "bongaquino-uat"
   environment = "uat"
-  project     = "koneksi"
+  project     = "bongaquino"
 
   availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
   
@@ -19,9 +19,9 @@ module "vpc" {
 module "elasticache" {
   source = "../../"
 
-  name_prefix = "koneksi-uat"
+  name_prefix = "bongaquino-uat"
   environment = "uat"
-  project     = "koneksi"
+  project     = "bongaquino"
 
   vpc_id                = module.vpc.vpc_id
   vpc_security_group_id = module.vpc.private_sg_id
@@ -53,7 +53,7 @@ module "elasticache" {
 
   tags = {
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 } 

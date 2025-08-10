@@ -1,6 +1,6 @@
 # AWS Amplify Module
 
-This module provisions and manages AWS Amplify applications for hosting React/Vite applications in the Koneksi infrastructure, with full CI/CD pipeline integration and multi-environment support.
+This module provisions and manages AWS Amplify applications for hosting React/Vite applications in the bongaquino infrastructure, with full CI/CD pipeline integration and multi-environment support.
 
 ## Overview
 
@@ -127,18 +127,18 @@ Each environment can be configured with:
 ### Current Deployments
 
 #### Staging Environment
-- **App Name**: `koneksi-web-staging`
+- **App Name**: `bongaquino-web-staging`
 - **Branch**: `staging`
-- **Domain**: `app-staging.koneksi.co.kr`
+- **Domain**: `app-staging.bongaquino.co.kr`
 - **Environment**: `staging`
-- **API URL**: `https://api-staging.koneksi.co.kr`
+- **API URL**: `https://api-staging.bongaquino.co.kr`
 
 #### UAT Environment  
-- **App Name**: `koneksi-web-uat`
+- **App Name**: `bongaquino-web-uat`
 - **Branch**: `main`
-- **Domain**: `app-uat.koneksi.co.kr`
+- **Domain**: `app-uat.bongaquino.co.kr`
 - **Environment**: `production`
-- **API URL**: `https://api-uat.koneksi.co.kr`
+- **API URL**: `https://api-uat.bongaquino.co.kr`
 
 ## Usage
 
@@ -149,8 +149,12 @@ module "amplify" {
   source = "./amplify"
   
   # Basic settings
-  app_name         = "koneksi-web-staging"
-  repository       = "https://github.com/koneksi-tech/koneksi-web"
+  app_name         = "bongaquino-web-staging"
+<<<<<<< HEAD
+  repository       = "https://github.com/bongaquino/bongaquino-web"
+=======
+  repository       = "https://github.com/bongaquino-tech/bongaquino-web"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
   github_token     = var.github_token
   
   # Branch configuration
@@ -161,13 +165,17 @@ module "amplify" {
   vite_environment = "staging"
   
   # Custom domain (optional)
-  domain_name      = "app-staging.koneksi.co.kr"
-  api_url         = "https://api-staging.koneksi.co.kr"
+  domain_name      = "app-staging.bongaquino.co.kr"
+  api_url         = "https://api-staging.bongaquino.co.kr"
   
   # Tagging
   environment     = "staging"
-  project         = "koneksi"
-  name_prefix     = "koneksi-staging"
+<<<<<<< HEAD
+  project         = "bongaquino"
+=======
+  project         = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+  name_prefix     = "bongaquino-staging"
 }
 ```
 
@@ -175,7 +183,7 @@ module "amplify" {
 
 1. **Navigate to environment directory**:
 ```bash
-cd koneksi-aws/amplify/envs/staging
+cd bongaquino-aws/amplify/envs/staging
 ```
 
 2. **Initialize Terraform**:
@@ -190,33 +198,33 @@ export TF_VAR_github_token="your_github_token_here"
 
 4. **Plan the deployment**:
 ```bash
-AWS_PROFILE=koneksi terraform plan
+AWS_PROFILE=bongaquino terraform plan
 ```
 
 5. **Apply the configuration**:
 ```bash
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 ### Environment-Specific Configuration
 
 #### UAT Environment (`envs/uat/terraform.tfvars`)
 ```hcl
-app_name         = "koneksi-web-uat"
+app_name         = "bongaquino-web-uat"
 branch_name      = "main"
 vite_environment = "production"
 ```
 
 #### Staging Environment (`envs/staging/terraform.tfvars`)
 ```hcl
-app_name         = "koneksi-web-staging"
+app_name         = "bongaquino-web-staging"
 branch_name      = "staging"
 vite_environment = "staging"
 ```
 
 #### Production Environment (`envs/prod/terraform.tfvars`)
 ```hcl
-app_name         = "koneksi-web-prod"
+app_name         = "bongaquino-web-prod"
 branch_name      = "main"
 vite_environment = "production"
 ```
@@ -228,7 +236,11 @@ vite_environment = "production"
 |----------|------|---------|-------------|
 | `aws_region` | string | `ap-southeast-1` | AWS region for deployment |
 | `app_name` | string | - | Name of the Amplify app |
-| `repository` | string | `https://github.com/koneksi-tech/koneksi-web` | GitHub repository URL |
+<<<<<<< HEAD
+| `repository` | string | `https://github.com/bongaquino/bongaquino-web` | GitHub repository URL |
+=======
+| `repository` | string | `https://github.com/bongaquino-tech/bongaquino-web` | GitHub repository URL |
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 | `github_token` | string | - | GitHub personal access token (sensitive) |
 
 ### Branch Configuration
@@ -248,7 +260,7 @@ vite_environment = "production"
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
 | `environment` | string | `staging` | Environment name for tagging |
-| `project` | string | `koneksi` | Project name for tagging |
+| `project` | string | `bongaquino` | Project name for tagging |
 | `name_prefix` | string | - | Prefix for resource names |
 | `tags` | map(string) | `{}` | Additional tags for all resources |
 
@@ -323,7 +335,7 @@ vite_environment = "production"
 # Custom domain with subdomain support
 resource "aws_amplify_domain_association" "main" {
   app_id      = aws_amplify_app.main.id
-  domain_name = "koneksi.co.kr"
+  domain_name = "bongaquino.co.kr"
   
   sub_domain {
     branch_name = "staging"
@@ -396,16 +408,16 @@ environment_variables = {
 ### Common Commands
 ```bash
 # Check app status
-aws amplify get-app --app-id d3qql0lsyaps7f --profile koneksi
+aws amplify get-app --app-id d3qql0lsyaps7f --profile bongaquino
 
 # List build jobs
-aws amplify list-jobs --app-id d3qql0lsyaps7f --branch-name staging --profile koneksi
+aws amplify list-jobs --app-id d3qql0lsyaps7f --branch-name staging --profile bongaquino
 
 # Get build logs
-aws amplify get-job --app-id d3qql0lsyaps7f --branch-name staging --job-id <job-id> --profile koneksi
+aws amplify get-job --app-id d3qql0lsyaps7f --branch-name staging --job-id <job-id> --profile bongaquino
 
 # Start manual deployment
-aws amplify start-job --app-id d3qql0lsyaps7f --branch-name staging --job-type RELEASE --profile koneksi
+aws amplify start-job --app-id d3qql0lsyaps7f --branch-name staging --job-type RELEASE --profile bongaquino
 ```
 
 ## Best Practices

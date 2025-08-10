@@ -44,6 +44,6 @@ output "usage_instructions" {
       codepipeline    = "Configure this SNS topic in your CodePipeline notification rules"
       custom_message  = "Send structured messages with: {\"title\": \"Custom Title\", \"description\": \"Message content\", \"type\": \"success\"}"
     }
-    clean_naming_note = "✅ This setup uses CLEAN NAMING: koneksi-uat-discord-notifier (no double uat!)"
+    clean_naming_note = "✅ This setup uses CLEAN NAMING: bongaquino-uat-discord-notifier (no double uat!)"
   }
 } 

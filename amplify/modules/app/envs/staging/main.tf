@@ -13,11 +13,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "koneksi-terraform-state"
+    bucket         = "bongaquino-terraform-state"
     key            = "amplify/staging/terraform.tfstate"
     region         = "ap-southeast-1"
     encrypt        = true
-    dynamodb_table = "koneksi-terraform-locks"
+    dynamodb_table = "bongaquino-terraform-locks"
   }
 }
 
@@ -26,7 +26,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "koneksi"
+      Project     = "bongaquino"
       Environment = "staging"
       ManagedBy   = "terraform"
       Component   = "amplify"
@@ -53,7 +53,7 @@ module "amplify" {
   }
 
   tags = {
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Environment = "staging"
     ManagedBy   = "terraform"
     Component   = "amplify"

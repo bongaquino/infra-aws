@@ -1,6 +1,6 @@
 # AWS S3 Module
 
-This module provisions secure, encrypted S3 buckets with comprehensive lifecycle management, monitoring, and security features for the Koneksi infrastructure, primarily designed for Terraform state storage and general-purpose object storage.
+This module provisions secure, encrypted S3 buckets with comprehensive lifecycle management, monitoring, and security features for the bongaquino infrastructure, primarily designed for Terraform state storage and general-purpose object storage.
 
 ## Overview
 
@@ -81,8 +81,8 @@ module "terraform_state" {
   source = "./s3"
   
   # Basic configuration
-  bucket_name = "koneksi-terraform-state-unique-id"
-  project     = "koneksi"
+  bucket_name = "bongaquino-terraform-state-unique-id"
+  project     = "bongaquino"
   environment = "shared"
   aws_region  = "ap-southeast-1"
   
@@ -109,8 +109,8 @@ module "production_storage" {
   source = "./s3"
   
   # Basic configuration
-  bucket_name = "koneksi-prod-storage-unique-id"
-  project     = "koneksi"
+  bucket_name = "bongaquino-prod-storage-unique-id"
+  project     = "bongaquino"
   environment = "production"
   
   # Advanced lifecycle rules
@@ -154,8 +154,8 @@ module "web_assets" {
   source = "./s3"
   
   # Basic configuration
-  bucket_name = "koneksi-web-assets-unique-id"
-  project     = "koneksi"
+  bucket_name = "bongaquino-web-assets-unique-id"
+  project     = "bongaquino"
   environment = "production"
   
   # CORS configuration for web assets
@@ -164,8 +164,8 @@ module "web_assets" {
       allowed_headers = ["*"]
       allowed_methods = ["GET", "HEAD"]
       allowed_origins = [
-        "https://app.koneksi.co.kr",
-        "https://app-staging.koneksi.co.kr"
+        "https://app.bongaquino.co.kr",
+        "https://app-staging.bongaquino.co.kr"
       ]
       expose_headers  = ["ETag"]
       max_age_seconds = 3600
@@ -181,7 +181,7 @@ module "web_assets" {
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "arn:aws:s3:::koneksi-web-assets-unique-id/*"
+        Resource  = "arn:aws:s3:::bongaquino-web-assets-unique-id/*"
       }
     ]
   })
@@ -194,16 +194,16 @@ module "web_assets" {
 ```bash
 # Edit terraform.tfvars
 bucket_name = "your-globally-unique-bucket-name"
-project     = "koneksi"
+project     = "bongaquino"
 environment = "shared"
 ```
 
 2. **Deploy the bucket**:
 ```bash
-cd koneksi-aws/s3
+cd bongaquino-aws/s3
 terraform init
-AWS_PROFILE=koneksi terraform plan
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform plan
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 3. **Configure backend** (for Terraform state):
@@ -225,7 +225,7 @@ terraform {
 |----------|------|---------|-------------|
 | `bucket_name` | string | - | S3 bucket name (must be globally unique) |
 | `aws_region` | string | `ap-southeast-1` | AWS region for deployment |
-| `project` | string | `koneksi` | Project name for tagging |
+| `project` | string | `bongaquino` | Project name for tagging |
 | `environment` | string | `staging` | Environment name for tagging |
 | `name_prefix` | string | - | Prefix for resource names |
 
@@ -275,7 +275,7 @@ cors_rules = [
   {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "HEAD", "POST"]
-    allowed_origins = ["https://app.koneksi.co.kr"]
+    allowed_origins = ["https://app.bongaquino.co.kr"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3600
   }

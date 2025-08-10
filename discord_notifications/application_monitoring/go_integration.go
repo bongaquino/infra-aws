@@ -50,7 +50,7 @@ func NewDiscordMonitoring(environment, service string) (*DiscordMonitoring, erro
 
 	snsTopicArn := os.Getenv("DISCORD_SNS_TOPIC_ARN")
 	if snsTopicArn == "" {
-		snsTopicArn = fmt.Sprintf("arn:aws:sns:ap-southeast-1:985869370256:koneksi-%s-%s-discord-notifications", environment, environment)
+		snsTopicArn = fmt.Sprintf("arn:aws:sns:ap-southeast-1:985869370256:bongaquino-%s-%s-discord-notifications", environment, environment)
 	}
 
 	return &DiscordMonitoring{
@@ -88,7 +88,7 @@ func (dm *DiscordMonitoring) SendMetric(ctx context.Context, metric MetricData) 
 
 	namespace := metric.Namespace
 	if namespace == "" {
-		namespace = "Koneksi/Application"
+		namespace = "bongaquino/Application"
 	}
 
 	input := &cloudwatch.PutMetricDataInput{
@@ -251,7 +251,7 @@ func (dm *DiscordMonitoring) RecordServerCPUUsage(ctx context.Context, cpuPercen
 		MetricName: "ServerCPUUsage",
 		Value:      cpuPercent,
 		Unit:       types.StandardUnitPercent,
-		Namespace:  "Koneksi/Server",
+		Namespace:  "bongaquino/Server",
 	})
 }
 
@@ -271,7 +271,7 @@ func (dm *DiscordMonitoring) RecordServerMemoryUsage(ctx context.Context, memory
 		MetricName: "ServerMemoryUsage",
 		Value:      memoryPercent,
 		Unit:       types.StandardUnitPercent,
-		Namespace:  "Koneksi/Server",
+		Namespace:  "bongaquino/Server",
 	})
 }
 
@@ -292,7 +292,7 @@ func (dm *DiscordMonitoring) RecordServerDiskUsage(ctx context.Context, diskPerc
 		MetricName: "ServerDiskUsage",
 		Value:      diskPercent,
 		Unit:       types.StandardUnitPercent,
-		Namespace:  "Koneksi/Server",
+		Namespace:  "bongaquino/Server",
 	})
 }
 
@@ -318,7 +318,7 @@ func (dm *DiscordMonitoring) RecordDockerContainerHealth(ctx context.Context, co
 		Dimensions: map[string]string{
 			"ContainerName": containerName,
 		},
-		Namespace: "Koneksi/Docker",
+		Namespace: "bongaquino/Docker",
 	})
 }
 
@@ -340,7 +340,7 @@ func (dm *DiscordMonitoring) CheckBackendAPIHealth(ctx context.Context) error {
 	// If API is down, send critical alert
 	if responseTime > 10000 { // 10 seconds timeout
 		return dm.SendCriticalAlert(ctx, "Backend API Down",
-			"Koneksi backend API is not responding",
+			"bongaquino backend API is not responding",
 			map[string]interface{}{
 				"Endpoint":      "localhost:3000/",
 				"Response Time": fmt.Sprintf("%dms", responseTime),
@@ -357,7 +357,7 @@ func (dm *DiscordMonitoring) SendServerHealthSummary(ctx context.Context, stats 
 	return dm.SendInfoAlert(ctx, "Server Health Summary",
 		"Daily health report for staging server",
 		map[string]interface{}{
-			"Server":      "koneksi-staging-backend (52.77.36.120)",
+			"Server":      "bongaquino-staging-backend (52.77.36.120)",
 			"Report Time": time.Now().Format("2006-01-02 15:04:05 UTC"),
 			"Stats":       stats,
 		})
@@ -384,7 +384,7 @@ import (
 
 func main() {
 	// Initialize monitoring for staging environment
-	monitor, err := monitoring.NewDiscordMonitoring("staging", "koneksi-backend")
+	monitor, err := monitoring.NewDiscordMonitoring("staging", "bongaquino-backend")
 	if err != nil {
 		log.Fatal("Failed to initialize monitoring:", err)
 	}

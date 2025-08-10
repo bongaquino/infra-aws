@@ -6,7 +6,7 @@
 - **Server:** 218.38.136.34 (IPFS Peer-02)
 - **OS:** Ubuntu 24.04 LTS
 - **SSH User:** ipfs
-- **Hostname:** koneksi-ipfs-kr-peer-02
+- **Hostname:** bongaquino-ipfs-kr-peer-02
 - **Storage:** 125TB RAID-6 (2% used)
 
 ### 🔧 **What Was Deployed**
@@ -14,7 +14,7 @@
 #### 1. **Monitoring Script**
 - **Location:** `/home/ipfs/ipfs-peer-02-monitor.sh`
 - **Size:** 25KB (714 lines)
-- **Discord Channel:** #koneksi-alerts
+- **Discord Channel:** #bongaquino-alerts
 - **Webhook:** Same as staging/UAT setup
 
 #### 2. **Health Checks Implemented**
@@ -30,7 +30,7 @@
 - ✅ **Whitelisted IPs**: 
   - 112.200.100.154 (Bong's IP)
   - 52.77.36.120 (Backend Server)
-  - 18.139.136.149 (Koneksi UAT Bastion)
+  - 18.139.136.149 (bongaquino UAT Bastion)
   - 27.255.70.17 (Bootstrap Node)
   - 218.38.136.33 (IPFS Peer-01)
 
@@ -103,7 +103,7 @@
 ### 📁 **Docker Configuration**
 - **IPFS Container**: `ipfs` (Up about an hour, healthy)
 - **Cluster Container**: `ipfs-cluster` (Up about an hour)
-- **Docker Compose Path**: `/home/ipfs/koneksi-ipfs/docker-compose/koneksi-ipfs-kr-peer-02`
+- **Docker Compose Path**: `/home/ipfs/bongaquino-ipfs/docker-compose/bongaquino-ipfs-kr-peer-02`
 
 ---
 

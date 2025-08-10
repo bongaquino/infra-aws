@@ -299,10 +299,10 @@ def get_pipeline_context(pipeline_name: str) -> str:
     Get contextual information about what a pipeline does
     """
     pipeline_contexts = {
-        'koneksi-staging-backend-pipeline': '🖥️ **Backend API Deployment** - Deploys Go backend to staging ECS cluster',
-        'koneksi-uat-backend-pipeline': '🖥️ **Backend API Deployment** - Deploys Go backend to UAT ECS cluster',
-        'koneksi-staging-deploy-pipeline': '🚀 **Staging Deployment** - ECS deployment pipeline for staging environment',
-        'koneksi-uat-deploy-pipeline': '🚀 **UAT Deployment** - ECS deployment pipeline for UAT environment'
+        'bongaquino-staging-backend-pipeline': '🖥️ **Backend API Deployment** - Deploys Go backend to staging ECS cluster',
+        'bongaquino-uat-backend-pipeline': '🖥️ **Backend API Deployment** - Deploys Go backend to UAT ECS cluster',
+        'bongaquino-staging-deploy-pipeline': '🚀 **Staging Deployment** - ECS deployment pipeline for staging environment',
+        'bongaquino-uat-deploy-pipeline': '🚀 **UAT Deployment** - ECS deployment pipeline for UAT environment'
     }
     
     return pipeline_contexts.get(pipeline_name, '🔧 **Deployment Pipeline** - Application deployment automation')
@@ -417,17 +417,17 @@ def get_build_context(project_name: str) -> str:
     Get contextual information about what a build project does
     """
     build_contexts = {
-        'koneksi-staging-backend-build': '🏗️ **Backend Build** - Compiles Go backend and pushes to ECR for staging',
-        'koneksi-uat-backend-build': '🏗️ **Backend Build** - Compiles Go backend and pushes to ECR for UAT',
-        'koneksi-staging-deploy': '🚀 **Staging Build** - Builds and deploys to staging environment',
-        'koneksi-uat-deploy': '🚀 **UAT Build** - Builds and deploys to UAT environment'
+        'bongaquino-staging-backend-build': '🏗️ **Backend Build** - Compiles Go backend and pushes to ECR for staging',
+        'bongaquino-uat-backend-build': '🏗️ **Backend Build** - Compiles Go backend and pushes to ECR for UAT',
+        'bongaquino-staging-deploy': '🚀 **Staging Build** - Builds and deploys to staging environment',
+        'bongaquino-uat-deploy': '🚀 **UAT Build** - Builds and deploys to UAT environment'
     }
     
     return build_contexts.get(project_name, '🔧 **Build Project** - Compiles and packages application code')
 
 def get_pipeline_failure_reason(detail: Dict[str, Any], pipeline_name: str, stage_name: str, action_name: str) -> str:
     """
-    Analyze Koneksi CodePipeline failure and provide detailed reason
+    Analyze bongaquino CodePipeline failure and provide detailed reason
     """
     # Try to extract failure details from the event
     failure_details = detail.get('action-execution-result', {})
@@ -489,9 +489,9 @@ def get_pipeline_failure_reason(detail: Dict[str, Any], pipeline_name: str, stag
 
 def get_pipeline_troubleshooting(pipeline_name: str, stage_name: str, action_name: str) -> str:
     """
-    Provide troubleshooting recommendations for Koneksi pipeline failures
+    Provide troubleshooting recommendations for bongaquino pipeline failures
     """
-    # Project-specific troubleshooting for Koneksi
+    # Project-specific troubleshooting for bongaquino
     if 'backend' in pipeline_name:
         if 'Deploy' in stage_name:
             return """• Check ECS service health and task status in AWS console
@@ -520,7 +520,7 @@ def get_pipeline_troubleshooting(pipeline_name: str, stage_name: str, action_nam
 • Ensure buildspec.yml has correct Go build commands
 • Check if tests pass locally before pushing"""
     
-    # Generic troubleshooting steps for Koneksi
+    # Generic troubleshooting steps for bongaquino
     return """• Check CloudWatch logs for detailed error messages
 • Verify IAM roles have required ECS and ECR permissions
 • Review recent code changes that might have caused the failure
@@ -530,7 +530,7 @@ def get_pipeline_troubleshooting(pipeline_name: str, stage_name: str, action_nam
 
 def get_codebuild_failure_reason(detail: Dict[str, Any], project_name: str) -> str:
     """
-    Analyze Koneksi CodeBuild failure and provide detailed reason
+    Analyze bongaquino CodeBuild failure and provide detailed reason
     """
     # Extract build phases to identify where failure occurred
     build_complete_detail = detail.get('additional-information', {})
@@ -596,9 +596,9 @@ def get_codebuild_failure_reason(detail: Dict[str, Any], project_name: str) -> s
 
 def get_codebuild_troubleshooting(project_name: str) -> str:
     """
-    Provide troubleshooting recommendations for Koneksi CodeBuild failures
+    Provide troubleshooting recommendations for bongaquino CodeBuild failures
     """
-    # Project-specific troubleshooting for Koneksi
+    # Project-specific troubleshooting for bongaquino
     if 'backend' in project_name:
         return """• Check Go version compatibility (ensure correct version in buildspec.yml)
 • Verify go.mod and go.sum files are up to date (go mod tidy)
@@ -615,7 +615,7 @@ def get_codebuild_troubleshooting(project_name: str) -> str:
 • Check database connection strings and credentials
 • Verify all required environment variables are configured"""
     
-    # Generic troubleshooting for Koneksi
+    # Generic troubleshooting for bongaquino
     return """• Review CloudWatch logs for specific Go compilation errors
 • Check buildspec.yml syntax and Go build commands
 • Verify IAM service role has required ECR and ECS permissions

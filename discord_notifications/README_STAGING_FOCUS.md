@@ -28,9 +28,9 @@ We've successfully refocused the monitoring system to **complete staging first**
 ### **1. No Discord Setup Needed!**
 ```
 ✅ Staging uses the same Discord webhook as UAT
-- Same channel: "#koneksi-alerts"
+- Same channel: "#bongaquino-alerts"
 - Same webhook URL (already configured)
-- Different bot name: "🟡 Koneksi Staging Bot"
+- Different bot name: "🟡 bongaquino Staging Bot"
 ```
 
 ### **2. Deploy Staging**
@@ -43,7 +43,7 @@ We've successfully refocused the monitoring system to **complete staging first**
 ### **3. Test Staging**
 ```bash
 aws sns publish \
-  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:koneksi-staging-staging-discord-notifications" \
+  --topic-arn "arn:aws:sns:ap-southeast-1:985869370256:bongaquino-staging-staging-discord-notifications" \
   --message "Test message" \
   --subject "Staging Test"
 ```
@@ -67,8 +67,8 @@ aws sns publish \
 |---------|-----|---------|
 | **Status** | ✅ Active | 🔄 Ready to deploy |
 | **Webhook** | ✅ Configured | ✅ Same as UAT |
-| **Channel** | `#koneksi-alerts` | `#koneksi-alerts` (SAME) |
-| **Bot Name** | `🔵 Koneksi UAT Bot` | `🟡 Koneksi Staging Bot` |
+| **Channel** | `#bongaquino-alerts` | `#bongaquino-alerts` (SAME) |
+| **Bot Name** | `🔵 bongaquino UAT Bot` | `🟡 bongaquino Staging Bot` |
 | **Colors** | Standard | Orange-tinted |
 
 ---
@@ -76,7 +76,7 @@ aws sns publish \
 ## 📁 **Clean File Structure**
 
 ```
-koneksi-aws/discord_notifications/
+bongaquino-aws/discord_notifications/
 ├── 🎯 STAGING_SETUP.md              # Focused staging guide
 ├── 🚀 deploy_all_environments.sh    # Simplified 2-env script
 ├── 📋 MONITORING_GUIDE.md           # Updated for staging focus

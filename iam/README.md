@@ -125,7 +125,7 @@ iam/
 - `AdministratorAccess`
 - `AWSSupportAccess`
 
-### Developers Group (Koneksi)
+### Developers Group (bongaquino)
 **Members**: Application developers, frontend/backend engineers
 **Permissions**:
 - PowerUser Access (most services except IAM management)
@@ -140,10 +140,10 @@ iam/
 - Amplify full access for frontend deployments
 - SSM Parameter Store read/write for configuration
 
-### ARData Developers Group
-**Members**: ARData team developers and contractors
+### bongaquino Developers Group
+**Members**: bongaquino team developers and contractors
 **Permissions**:
-- PowerUser Access scoped to ARData resources
+- PowerUser Access scoped to bongaquino resources
 - Isolated development environments
 - Limited cross-team resource access
 
@@ -162,24 +162,36 @@ iam/
 # Define users in terraform.tfvars or locals.tf
 users = {
   "developer1" = {
-    username   = "john.doe-koneksi"
+    username   = "john.doe-bongaquino"
     department = "developers"
-    team       = "koneksi"
-    email      = "john.doe@koneksi.co.kr"
+<<<<<<< HEAD
+    team       = "bongaquino"
+=======
+    team       = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+    email      = "john.doe@bongaquino.co.kr"
     role       = "Developer"
   }
   "devops1" = {
-    username   = "jane.smith-koneksi"
+    username   = "jane.smith-bongaquino"
     department = "devops"
-    team       = "koneksi" 
-    email      = "jane.smith@koneksi.co.kr"
+<<<<<<< HEAD
+    team       = "bongaquino" 
+=======
+    team       = "bongaquino" 
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+    email      = "jane.smith@bongaquino.co.kr"
     role       = "Operations"
   }
   "manager1" = {
-    username   = "mike.johnson-koneksi"
+    username   = "mike.johnson-bongaquino"
     department = "management"
-    team       = "koneksi"
-    email      = "mike.johnson@koneksi.co.kr"
+<<<<<<< HEAD
+    team       = "bongaquino"
+=======
+    team       = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+    email      = "mike.johnson@bongaquino.co.kr"
     role       = "Management"
   }
 }
@@ -188,40 +200,52 @@ users = {
 ### Multi-Team Setup
 
 ```hcl
-# Koneksi team members
+# bongaquino team members
 locals {
-  koneksi_users = {
+  bongaquino_users = {
     "frontend_dev" = {
-      username   = "alex.kim-koneksi"
+      username   = "alex.kim-bongaquino"
       department = "developers"
-      team       = "koneksi"
-      email      = "alex.kim@koneksi.co.kr"
+<<<<<<< HEAD
+      team       = "bongaquino"
+=======
+      team       = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+      email      = "alex.kim@bongaquino.co.kr"
       role       = "Developer"
     }
     "backend_dev" = {
-      username   = "sarah.lee-koneksi"
+      username   = "sarah.lee-bongaquino"
       department = "developers"
-      team       = "koneksi"
-      email      = "sarah.lee@koneksi.co.kr"
+<<<<<<< HEAD
+      team       = "bongaquino"
+=======
+      team       = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+      email      = "sarah.lee@bongaquino.co.kr"
       role       = "Developer"
     }
   }
 
-  # ARData team members
-  ardata_users = {
+  # bongaquino team members
+  bongaquino_users = {
     "data_engineer" = {
-      username   = "david.park-ardata"
+      username   = "david.park-bongaquino"
       department = "developers"
-      team       = "ardata"
-      email      = "david.park@ardata.com"
+<<<<<<< HEAD
+      team       = "bongaquino"
+=======
+      team       = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
+      email      = "david.park@bongaquino.com"
       role       = "Developer"
     }
   }
 
   # Merge all users
   all_users = merge(
-    local.koneksi_users,
-    local.ardata_users
+    local.bongaquino_users,
+    local.bongaquino_users
   )
 }
 ```
@@ -245,8 +269,8 @@ resource "aws_iam_policy" "s3_bucket_access" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::koneksi-dev-*/*",
-          "arn:aws:s3:::ardata-dev-*/*"
+          "arn:aws:s3:::bongaquino-dev-*/*",
+          "arn:aws:s3:::bongaquino-dev-*/*"
         ]
       },
       {
@@ -255,8 +279,8 @@ resource "aws_iam_policy" "s3_bucket_access" {
           "s3:ListBucket"
         ]
         Resource = [
-          "arn:aws:s3:::koneksi-dev-*",
-          "arn:aws:s3:::ardata-dev-*"
+          "arn:aws:s3:::bongaquino-dev-*",
+          "arn:aws:s3:::bongaquino-dev-*"
         ]
       }
     ]

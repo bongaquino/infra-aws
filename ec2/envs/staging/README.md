@@ -62,7 +62,7 @@ After applying the configuration, you can access the instances using the followi
 
 - `aws_region`: AWS region (default: ap-southeast-1)
 - `environment`: Environment name (default: staging)
-- `project`: Project name (default: koneksi)
+- `project`: Project name (default: bongaquino)
 - `instance_type`: EC2 instance type (default: t3a.micro)
 - `ami_id`: AMI ID for EC2 instances
 - `vpc_id`: VPC ID

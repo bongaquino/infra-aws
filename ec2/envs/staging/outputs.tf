@@ -15,5 +15,5 @@ output "staging_backend_private_ip" {
 
 output "staging_ssh_command" {
   description = "SSH command to connect to the staging backend"
-  value       = "ssh -i koneksi-staging-key ubuntu@${aws_instance.staging_backend.public_ip}"
+  value       = "ssh -i bongaquino-staging-key ubuntu@${aws_instance.staging_backend.public_ip}"
 } 

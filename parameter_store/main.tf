@@ -16,7 +16,7 @@ provider "aws" {
 resource "aws_ssm_parameter" "parameters" {
   for_each = var.parameters
 
-  name  = "/koneksi/${local.environment}/${each.key}"
+  name  = "/bongaquino/${local.environment}/${each.key}"
   type  = "String"
   value = each.value
 
@@ -27,7 +27,7 @@ resource "aws_ssm_parameter" "parameters" {
 resource "aws_ssm_parameter" "secure_parameters" {
   for_each = var.secure_parameters
 
-  name  = "/koneksi/${local.environment}/${each.key}"
+  name  = "/bongaquino/${local.environment}/${each.key}"
   type  = "SecureString"
   value = each.value
 

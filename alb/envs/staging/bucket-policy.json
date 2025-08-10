@@ -7,7 +7,7 @@
         "AWS": "arn:aws:iam::114774131450:root"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs/main-alb/AWSLogs/985869370256/*"
+      "Resource": "arn:aws:s3:::bongaquino-staging-alb-logs/main-alb/AWSLogs/985869370256/*"
     },
     {
       "Effect": "Allow",
@@ -15,7 +15,7 @@
         "AWS": "arn:aws:iam::114774131450:root"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs/main-alb-connections/AWSLogs/985869370256/*"
+      "Resource": "arn:aws:s3:::bongaquino-staging-alb-logs/main-alb-connections/AWSLogs/985869370256/*"
     },
     {
       "Effect": "Allow",
@@ -23,7 +23,7 @@
         "Service": "delivery.logs.amazonaws.com"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs/*"
+      "Resource": "arn:aws:s3:::bongaquino-staging-alb-logs/*"
     },
     {
       "Effect": "Allow",
@@ -31,7 +31,7 @@
         "Service": "delivery.logs.amazonaws.com"
       },
       "Action": "s3:GetBucketAcl",
-      "Resource": "arn:aws:s3:::koneksi-staging-alb-logs"
+      "Resource": "arn:aws:s3:::bongaquino-staging-alb-logs"
     }
   ]
 }

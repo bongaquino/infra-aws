@@ -19,7 +19,7 @@ variable "environment" {
 variable "project" {
   description = "Project name"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 # =============================================================================
@@ -28,7 +28,7 @@ variable "project" {
 variable "discord_username" {
   description = "Username for Discord webhook messages"
   type        = string
-  default     = "🔵 Koneksi UAT Bot"
+  default     = "🔵 bongaquino UAT Bot"
 }
 
 variable "discord_avatar_url" {
@@ -102,7 +102,7 @@ variable "tags" {
   type        = map(string)
   default = {
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Owner       = "devops"
     Purpose     = "discord-notifications"
   }

@@ -6,11 +6,11 @@ provider "aws" {
 resource "aws_instance" "staging_backend" {
   ami           = "ami-01938df366ac2d954"  # Real AMI from AWS
   instance_type = "c6a.xlarge"            # Real instance type from AWS
-  key_name      = "koneksi-staging-key"   # Real key from AWS
+  key_name      = "bongaquino-staging-key"   # Real key from AWS
   subnet_id     = "subnet-07fd670efb8a816db"  # Public subnet
   vpc_security_group_ids = ["sg-066e2c5f4bfdab814"]  # Real security group from AWS
   
-  iam_instance_profile = "koneksi-staging-ec2-ssm-profile"  # Real IAM profile from AWS
+  iam_instance_profile = "bongaquino-staging-ec2-ssm-profile"  # Real IAM profile from AWS
   
   # Match real configuration
   monitoring                 = false
@@ -32,8 +32,8 @@ resource "aws_instance" "staging_backend" {
   }
 
   tags = {
-    Name        = "koneksi-staging-backend"
-    Project     = "koneksi"
+    Name        = "bongaquino-staging-backend"
+    Project     = "bongaquino"
     Environment = "staging"
     ManagedBy   = "terraform"
   }

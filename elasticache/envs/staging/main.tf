@@ -1,9 +1,9 @@
 module "elasticache" {
   source = "../../"
 
-  name_prefix = "koneksi"
+  name_prefix = "bongaquino"
   environment = "staging"
-  project     = "koneksi"
+  project     = "bongaquino"
 
   vpc_id                = "vpc-0b98dadc3584aaa34"  # UAT VPC ID from previous conversation
   vpc_security_group_id = "sg-05eedf18d93530de8"   # New private security group
@@ -34,7 +34,7 @@ module "elasticache" {
 
   tags = {
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 } 

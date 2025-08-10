@@ -5,31 +5,31 @@
 Updated both environment bot names to clearly indicate which environment they're from:
 
 ### **Before:**
-- UAT: `Koneksi UAT Bot`
-- Staging: `🟡 Koneksi Staging Bot`
+- UAT: `bongaquino UAT Bot`
+- Staging: `🟡 bongaquino Staging Bot`
 
 ### **After:**
-- UAT: `🔵 Koneksi UAT Bot` (added blue circle)
-- Staging: `🟡 Koneksi Staging Bot` (already had yellow circle)
+- UAT: `🔵 bongaquino UAT Bot` (added blue circle)
+- Staging: `🟡 bongaquino Staging Bot` (already had yellow circle)
 
 ## 🎨 **What You'll See in Discord**
 
-Both bots will post to the same `#koneksi-alerts` channel:
+Both bots will post to the same `#bongaquino-alerts` channel:
 
 ### **UAT Alerts:**
 ```
-🔵 Koneksi UAT Bot  [BOT]  Today at 2:30 PM
+🔵 bongaquino UAT Bot  [BOT]  Today at 2:30 PM
 🔴 CRITICAL: Database Connection Lost
 Environment: UAT
-Service: koneksi-backend
+Service: bongaquino-backend
 ```
 
 ### **Staging Alerts:**
 ```
-🟡 Koneksi Staging Bot  [BOT]  Today at 2:31 PM  
+🟡 bongaquino Staging Bot  [BOT]  Today at 2:31 PM  
 ⚠️ WARNING: High Memory Usage
 Environment: staging
-Service: koneksi-backend
+Service: bongaquino-backend
 ```
 
 ## 📁 **Files Updated**
@@ -43,8 +43,8 @@ Service: koneksi-backend
 ## 🚀 **Ready to Deploy**
 
 Both environments are ready:
-- **UAT**: `🔵 Koneksi UAT Bot` ✅ Already deployed
-- **Staging**: `🟡 Koneksi Staging Bot` 🔄 Ready to deploy
+- **UAT**: `🔵 bongaquino UAT Bot` ✅ Already deployed
+- **Staging**: `🟡 bongaquino Staging Bot` 🔄 Ready to deploy
 
 **Deploy staging now:**
 ```bash

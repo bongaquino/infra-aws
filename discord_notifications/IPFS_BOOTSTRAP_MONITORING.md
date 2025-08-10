@@ -49,7 +49,7 @@ This monitoring solution provides **comprehensive incident response automation**
 
 ```bash
 # Copy script to bootstrap node
-scp koneksi-aws/discord_notifications/ipfs-bootstrap-monitor.sh ipfs@27.255.70.17:~/
+scp bongaquino-aws/discord_notifications/ipfs-bootstrap-monitor.sh ipfs@27.255.70.17:~/
 
 # SSH to bootstrap node
 ssh ipfs@27.255.70.17
@@ -75,8 +75,8 @@ chmod +x ipfs-bootstrap-monitor.sh
 ## 🔧 Configuration
 
 ### Discord Integration
-- **Channel**: `#koneksi-alerts` (same as staging/UAT)
-- **Webhook**: Uses existing koneksi webhook
+- **Channel**: `#bongaquino-alerts` (same as staging/UAT)
+- **Webhook**: Uses existing bongaquino webhook
 - **Bot Name**: `🔗 IPFS Bootstrap Monitor`
 
 ### Monitoring Schedule
@@ -177,7 +177,7 @@ Details: Node ID: 12D3KooWRJRahRo8i..., Response time: 245ms
 3. **Service Restart Failed**
    ```bash
    # Manual service restart
-   cd /home/ipfs/koneksi-ipfs/docker-compose/koneksi-ipfs-kr-bootstrap-02
+   cd /home/ipfs/bongaquino-ipfs/docker-compose/bongaquino-ipfs-kr-bootstrap-02
    docker-compose restart
    ```
 

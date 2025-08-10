@@ -1,6 +1,6 @@
 # Application Load Balancer (ALB) Module
 
-This module provisions Application Load Balancers with advanced features including rate limiting, comprehensive monitoring, logging, and automated log processing for the Koneksi infrastructure.
+This module provisions Application Load Balancers with advanced features including rate limiting, comprehensive monitoring, logging, and automated log processing for the bongaquino infrastructure.
 
 ## Overview
 
@@ -103,7 +103,7 @@ module "alb" {
   # Basic settings
   region      = "ap-southeast-1"
   environment = "staging"
-  project     = "koneksi"
+  project     = "bongaquino"
   
   # Network configuration
   vpc_id                = module.vpc.vpc_id
@@ -136,13 +136,13 @@ module "alb" {
   create_secondary_alb = true
   
   # Custom names
-  alb_name           = "koneksi-main-alb"
-  secondary_alb_name = "koneksi-services-alb"
+  alb_name           = "bongaquino-main-alb"
+  secondary_alb_name = "bongaquino-services-alb"
   
   # Advanced features
   enable_rate_limiting = true
   enable_access_logs   = true
-  access_logs_bucket   = "koneksi-alb-logs"
+  access_logs_bucket   = "bongaquino-alb-logs"
   
   # Health check tuning
   health_check_timeout  = 30
@@ -156,7 +156,7 @@ module "alb" {
 
 1. **Navigate to ALB directory**:
 ```bash
-cd koneksi-aws/alb
+cd bongaquino-aws/alb
 ```
 
 2. **Initialize Terraform**:
@@ -166,12 +166,12 @@ terraform init -backend-config=envs/staging/backend.tf
 
 3. **Plan the deployment**:
 ```bash
-AWS_PROFILE=koneksi terraform plan -var-file=envs/staging/terraform.tfvars
+AWS_PROFILE=bongaquino terraform plan -var-file=envs/staging/terraform.tfvars
 ```
 
 4. **Apply the configuration**:
 ```bash
-AWS_PROFILE=koneksi terraform apply -var-file=envs/staging/terraform.tfvars
+AWS_PROFILE=bongaquino terraform apply -var-file=envs/staging/terraform.tfvars
 ```
 
 ## Input Variables

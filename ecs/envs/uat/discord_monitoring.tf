@@ -4,12 +4,12 @@
 
 # Get the Discord SNS topic
 data "aws_sns_topic" "discord_notifications" {
-  name = "koneksi-uat-discord-notifications"
+  name = "bongaquino-uat-discord-notifications"
 }
 
 # ECS Service CPU Utilization Alarm
 resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high" {
-  alarm_name          = "koneksi-uat-ecs-cpu-high"
+  alarm_name          = "bongaquino-uat-ecs-cpu-high"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -21,21 +21,21 @@ resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   dimensions = {
-    ServiceName = "koneksi-uat-service"
-    ClusterName = "koneksi-uat-cluster"
+    ServiceName = "bongaquino-uat-service"
+    ClusterName = "bongaquino-uat-cluster"
   }
 
   tags = {
-    Name        = "koneksi-uat-ecs-cpu-high"
+    Name        = "bongaquino-uat-ecs-cpu-high"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
 
 # ECS Service Memory Utilization Alarm
 resource "aws_cloudwatch_metric_alarm" "ecs_memory_high" {
-  alarm_name          = "koneksi-uat-ecs-memory-high"
+  alarm_name          = "bongaquino-uat-ecs-memory-high"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "MemoryUtilization"
@@ -47,21 +47,21 @@ resource "aws_cloudwatch_metric_alarm" "ecs_memory_high" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   dimensions = {
-    ServiceName = "koneksi-uat-service"
-    ClusterName = "koneksi-uat-cluster"
+    ServiceName = "bongaquino-uat-service"
+    ClusterName = "bongaquino-uat-cluster"
   }
 
   tags = {
-    Name        = "koneksi-uat-ecs-memory-high"
+    Name        = "bongaquino-uat-ecs-memory-high"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
 
 # ECS Service Running Task Count Alarm
 resource "aws_cloudwatch_metric_alarm" "ecs_tasks_stopped" {
-  alarm_name          = "koneksi-uat-ecs-tasks-stopped"
+  alarm_name          = "bongaquino-uat-ecs-tasks-stopped"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "RunningTaskCount"
@@ -73,28 +73,28 @@ resource "aws_cloudwatch_metric_alarm" "ecs_tasks_stopped" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   dimensions = {
-    ServiceName = "koneksi-uat-service"
-    ClusterName = "koneksi-uat-cluster"
+    ServiceName = "bongaquino-uat-service"
+    ClusterName = "bongaquino-uat-cluster"
   }
 
   tags = {
-    Name        = "koneksi-uat-ecs-tasks-stopped"
+    Name        = "bongaquino-uat-ecs-tasks-stopped"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
 
 # ECS Service Task Definition Changes (EventBridge Rule)
 resource "aws_cloudwatch_event_rule" "ecs_task_state_change" {
-  name        = "koneksi-uat-ecs-task-state-change"
+  name        = "bongaquino-uat-ecs-task-state-change"
   description = "Capture ECS task state changes"
 
   event_pattern = jsonencode({
     source      = ["aws.ecs"]
     detail-type = ["ECS Task State Change"]
     detail = {
-      clusterArn = ["arn:aws:ecs:ap-southeast-1:985869370256:cluster/koneksi-uat-cluster"]
+      clusterArn = ["arn:aws:ecs:ap-southeast-1:985869370256:cluster/bongaquino-uat-cluster"]
       lastStatus = ["STOPPED"]
       stoppedReason = [{
         "exists": true
@@ -103,9 +103,9 @@ resource "aws_cloudwatch_event_rule" "ecs_task_state_change" {
   })
 
   tags = {
-    Name        = "koneksi-uat-ecs-task-state-change"
+    Name        = "bongaquino-uat-ecs-task-state-change"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 }
@@ -131,23 +131,23 @@ resource "aws_cloudwatch_event_target" "ecs_task_state_discord" {
 
 # CloudWatch Logs Error Detection
 resource "aws_cloudwatch_log_metric_filter" "ecs_application_errors" {
-  name           = "koneksi-uat-ecs-application-errors"
-  log_group_name = "/ecs/koneksi-uat"
+  name           = "bongaquino-uat-ecs-application-errors"
+  log_group_name = "/ecs/bongaquino-uat"
   pattern        = "ERROR"
 
   metric_transformation {
     name      = "ApplicationErrors"
-    namespace = "Koneksi/ECS"
+    namespace = "bongaquino/ECS"
     value     = "1"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs_application_errors" {
-  alarm_name          = "koneksi-uat-ecs-application-errors"
+  alarm_name          = "bongaquino-uat-ecs-application-errors"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "ApplicationErrors"
-  namespace           = "Koneksi/ECS"
+  namespace           = "bongaquino/ECS"
   period              = "300"
   statistic           = "Sum"
   threshold           = "5"
@@ -155,9 +155,9 @@ resource "aws_cloudwatch_metric_alarm" "ecs_application_errors" {
   alarm_actions       = [data.aws_sns_topic.discord_notifications.arn]
 
   tags = {
-    Name        = "koneksi-uat-ecs-application-errors"
+    Name        = "bongaquino-uat-ecs-application-errors"
     Environment = "uat"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     ManagedBy   = "terraform"
   }
 } 

@@ -1,6 +1,6 @@
 # Staging CD Pipeline Setup
 
-This directory contains the Terraform configuration for setting up a Continuous Deployment pipeline that deploys the `koneksi-backend` application from the `staging` branch to the existing EC2 instance at `52.77.36.120`.
+This directory contains the Terraform configuration for setting up a Continuous Deployment pipeline that deploys the `bongaquino-backend` application from the `staging` branch to the existing EC2 instance at `52.77.36.120`.
 
 ## Overview
 
@@ -16,9 +16,9 @@ The CD pipeline consists of:
 1. **AWS CLI configured** with appropriate permissions
 2. **Terraform** installed
 3. **SSH private key** for the EC2 instance
-4. **GitHub repository access** to `koneksi-tech/koneksi-backend`
+4. **GitHub repository access** to `bongaquino-tech/bongaquino-backend`
 5. **Existing EC2 instance** at `52.77.36.120` with:
-   - `/home/ubuntu/koneksi-backend` directory already set up
+   - `/home/ubuntu/bongaquino-backend` directory already set up
    - Docker and docker-compose installed
    - Git repository already cloned
 
@@ -31,16 +31,16 @@ First, you need to store your SSH private key in AWS Systems Manager Parameter S
 ```bash
 # Read your SSH key and store it in Parameter Store
 aws ssm put-parameter \
-  --name "/koneksi/staging/ssh-key" \
+  --name "/bongaquino/staging/ssh-key" \
   --type "SecureString" \
-  --value "$(cat ~/Documents/Koneksi/koneksi-staging-key.pem)" \
+  --value "$(cat ~/Documents/bongaquino/bongaquino-staging-key.pem)" \
   --region ap-southeast-1
 ```
 
 ### 2. Run the Setup Script
 
 ```bash
-cd koneksi-aws/cd-setup/staging
+cd bongaquino-aws/cd-setup/staging
 chmod +x setup.sh
 ./setup.sh
 ```
@@ -56,7 +56,7 @@ terraform apply
 After applying the Terraform configuration:
 
 1. Go to the AWS Console → Developer Tools → Settings → Connections
-2. Find the connection created by Terraform (name: `koneksi-staging-github-connection`)
+2. Find the connection created by Terraform (name: `bongaquino-staging-github-connection`)
 3. Click "Pending" and then "Connect"
 4. Choose "GitHub" and click "Connect to GitHub"
 5. Authorize AWS to access your GitHub account
@@ -68,11 +68,11 @@ Once the GitHub connection is established, the pipeline will automatically trigg
 
 ## Pipeline Flow
 
-1. **Source Stage**: Monitors the `staging` branch of `koneksi-tech/koneksi-backend`
+1. **Source Stage**: Monitors the `staging` branch of `bongaquino-tech/bongaquino-backend`
 2. **Deploy Stage**: 
    - Retrieves SSH key from Parameter Store
    - Connects to existing EC2 instance via SSH
-   - Navigates to `/home/ubuntu/koneksi-backend`
+   - Navigates to `/home/ubuntu/bongaquino-backend`
    - Pulls latest changes from staging branch
    - Builds the Go application
    - Restarts services using docker-compose (if available) or individual containers
@@ -88,7 +88,7 @@ chmod +x trigger-deployment.sh
 
 # Or using AWS CLI directly
 aws codepipeline start-pipeline-execution \
-  --name koneksi-staging-deploy-pipeline \
+  --name bongaquino-staging-deploy-pipeline \
   --region ap-southeast-1
 ```
 
@@ -114,11 +114,11 @@ aws codepipeline start-pipeline-execution \
 - Check the CodeBuild logs for detailed error messages
 - Verify that the Go application builds successfully
 - Ensure Docker is running on the EC2 instance
-- Check that the `/home/ubuntu/koneksi-backend` directory exists and contains the repository
+- Check that the `/home/ubuntu/bongaquino-backend` directory exists and contains the repository
 
 ### Deployment Issues
 - Verify that docker-compose.yml exists in the repository (if using docker-compose)
-- Check that the Docker network `koneksi-network` exists
+- Check that the Docker network `bongaquino-network` exists
 - Ensure the application is accessible on port 3000
 
 ## Security Considerations

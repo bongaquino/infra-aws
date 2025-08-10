@@ -30,7 +30,7 @@ if [[ ! "$ACTION" =~ ^(grant|revoke|list)$ ]]; then
 fi
 
 # Set secret name
-SECRET_NAME="koneksi/${ENVIRONMENT}/ssh-key"
+SECRET_NAME="bongaquino/${ENVIRONMENT}/ssh-key"
 
 # Function to list current access
 list_access() {

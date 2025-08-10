@@ -32,8 +32,8 @@ resource "aws_iam_group" "management" {
   name = "management"
 }
 
-resource "aws_iam_group" "ardata_developers" {
-  name = "ardata-developers"
+resource "aws_iam_group" "bongaquino_developers" {
+  name = "bongaquino-developers"
 }
 
 # =============================================================================
@@ -54,8 +54,8 @@ resource "aws_iam_group_policy_attachment" "management" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
-resource "aws_iam_group_policy_attachment" "ardata_developers" {
-  group      = aws_iam_group.ardata_developers.name
+resource "aws_iam_group_policy_attachment" "bongaquino_developers" {
+  group      = aws_iam_group.bongaquino_developers.name
   policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
 }
 
@@ -120,9 +120,9 @@ resource "aws_iam_policy" "cloudwatch_logs_access" {
           "logs:DescribeLogStreams"
         ],
         Resource = [
-          "arn:aws:logs:${var.aws_region}:*:log-group:/ecs/koneksi-uat:*",
-          "arn:aws:logs:${var.aws_region}:*:log-group:/ecs/koneksi-prod:*",
-          "arn:aws:logs:${var.aws_region}:*:log-group:/ecs/koneksi-staging:*"
+          "arn:aws:logs:${var.aws_region}:*:log-group:/ecs/bongaquino-uat:*",
+          "arn:aws:logs:${var.aws_region}:*:log-group:/ecs/bongaquino-prod:*",
+          "arn:aws:logs:${var.aws_region}:*:log-group:/ecs/bongaquino-staging:*"
         ]
       }
     ]
@@ -189,8 +189,8 @@ resource "aws_iam_group_policy_attachment" "developers_ssm_parameter_store" {
   policy_arn = aws_iam_policy.ssm_parameter_store_rw.arn
 }
 
-resource "aws_iam_group_policy_attachment" "ardata_developers_cloudwatch_logs" {
-  group      = aws_iam_group.ardata_developers.name
+resource "aws_iam_group_policy_attachment" "bongaquino_developers_cloudwatch_logs" {
+  group      = aws_iam_group.bongaquino_developers.name
   policy_arn = aws_iam_policy.cloudwatch_logs_access.arn
 }
 

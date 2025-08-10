@@ -56,10 +56,10 @@ EOF
     # Create environment-specific backend config files (no key)
     for env in staging uat prod; do
         cat > "$module/envs/$env/backend.tf" << EOF
-bucket         = "koneksi-terraform-state"
+bucket         = "bongaquino-terraform-state"
 region         = "ap-southeast-1"
 encrypt        = true
-dynamodb_table = "koneksi-terraform-locks"
+dynamodb_table = "bongaquino-terraform-locks"
 EOF
         
         # Create terraform.tfvars for each environment
@@ -68,14 +68,22 @@ EOF
 # Environment Configuration
 # =============================================================================
 environment = "$env"
-project     = "koneksi"
+<<<<<<< HEAD
+project     = "bongaquino"
+=======
+project     = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 
 # =============================================================================
 # Tags
 # =============================================================================
 tags = {
   Environment = "$env"
-  Project     = "koneksi"
+<<<<<<< HEAD
+  Project     = "bongaquino"
+=======
+  Project     = "bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
   ManagedBy   = "terraform"
 }
 EOF

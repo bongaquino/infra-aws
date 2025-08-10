@@ -3,7 +3,7 @@
 # Function to get VPC ID
 get_vpc_id() {
     local vpc_id=$(aws ec2 describe-vpcs \
-        --filters "Name=tag:Project,Values=koneksi" "Name=tag:Environment,Values=$1" \
+        --filters "Name=tag:Project,Values=bongaquino" "Name=tag:Environment,Values=$1" \
         --query 'Vpcs[0].VpcId' \
         --output text)
     echo "$vpc_id"

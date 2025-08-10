@@ -8,7 +8,7 @@ set -e
 
 # Configuration
 REGION="ap-southeast-1"
-PROFILE="koneksi"
+PROFILE="bongaquino"
 ENVIRONMENT="uat"
 
 # Colors for output
@@ -65,9 +65,9 @@ test_health_endpoint() {
     print_status "Testing health endpoints before setup..."
     
     ENDPOINTS=(
-        "https://server-uat.koneksi.co.kr/check-health"
-        "https://mongo-uat.koneksi.co.kr"
-        "https://app-uat.koneksi.co.kr"
+        "https://server-uat.bongaquino.co.kr/check-health"
+        "https://mongo-uat.bongaquino.co.kr"
+        "https://app-uat.bongaquino.co.kr"
     )
     
     for ENDPOINT in "${ENDPOINTS[@]}"; do
@@ -75,7 +75,7 @@ test_health_endpoint() {
         
         # Use credentials for mongo endpoint
         if [[ "$ENDPOINT" == *"mongo-uat"* ]]; then
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -u "admin:koneksiPassw0rd" "$ENDPOINT" || echo "000")
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -u "admin:bongaquinoPassw0rd" "$ENDPOINT" || echo "000")
         else
             HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$ENDPOINT" || echo "000")
         fi
@@ -145,7 +145,7 @@ deploy_monitoring() {
 send_test_alert() {
     print_status "Sending test Discord notification..."
     
-    SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:koneksi-$ENVIRONMENT-discord-notifications"
+    SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:bongaquino-$ENVIRONMENT-discord-notifications"
     
     TEST_MESSAGE=$(cat <<EOF
 {
@@ -154,12 +154,12 @@ send_test_alert() {
   "type": "success",
   "details": {
     "Endpoints": [
-      "https://server-uat.koneksi.co.kr/check-health",
-      "https://mongo-uat.koneksi.co.kr",
-      "https://app-uat.koneksi.co.kr"
+      "https://server-uat.bongaquino.co.kr/check-health",
+      "https://mongo-uat.bongaquino.co.kr",
+      "https://app-uat.bongaquino.co.kr"
     ],
     "Check Frequency": "Every 5 minutes",
-    "Canary Name": "koneksi-uat-health-monitor",
+    "Canary Name": "bongaquino-uat-health-monitor",
     "Environment": "uat",
     "Alert Types": [
       "🚨 Endpoint down/unreachable",
@@ -188,11 +188,11 @@ show_monitoring_info() {
     echo ""
     echo "📊 Monitoring Details:"
     echo "  • Endpoints:"
-    echo "    - https://server-uat.koneksi.co.kr/check-health"
-    echo "    - https://mongo-uat.koneksi.co.kr"
-    echo "    - https://app-uat.koneksi.co.kr"
+    echo "    - https://server-uat.bongaquino.co.kr/check-health"
+    echo "    - https://mongo-uat.bongaquino.co.kr"
+    echo "    - https://app-uat.bongaquino.co.kr"
     echo "  • Check Frequency: Every 5 minutes"
-    echo "  • Canary Name: koneksi-uat-health-monitor"
+    echo "  • Canary Name: bongaquino-uat-health-monitor"
     echo "  • Timeout: 60 seconds"
     echo ""
     echo "🚨 Alert Conditions:"
@@ -202,14 +202,14 @@ show_monitoring_info() {
     echo "  • Unhealthy status in response (immediate alert)"
     echo ""
     echo "📱 Discord Notifications:"
-    echo "  • Channel: #koneksi-alerts"
-    echo "  • Bot: 🔵 Koneksi UAT Bot"
-    echo "  • SNS Topic: koneksi-uat-discord-notifications"
+    echo "  • Channel: #bongaquino-alerts"
+    echo "  • Bot: 🔵 bongaquino UAT Bot"
+    echo "  • SNS Topic: bongaquino-uat-discord-notifications"
     echo ""
     echo "🔗 AWS Console Links:"
-    echo "  • CloudWatch Synthetics: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#synthetics:canary/detail/koneksi-uat-health-monitor"
+    echo "  • CloudWatch Synthetics: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#synthetics:canary/detail/bongaquino-uat-health-monitor"
     echo "  • CloudWatch Alarms: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#alarmsV2:"
-    echo "  • Canary Logs: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/\$252Faws\$252Flambda\$252Fcwsyn-koneksi-uat-health-monitor"
+    echo "  • Canary Logs: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/\$252Faws\$252Flambda\$252Fcwsyn-bongaquino-uat-health-monitor"
     echo ""
     
     print_success "Health endpoint monitoring is now active!"
@@ -218,7 +218,7 @@ show_monitoring_info() {
 
 # Main deployment function
 main() {
-    echo "🏥 Koneksi UAT Health Endpoint Monitoring Setup"
+    echo "🏥 bongaquino UAT Health Endpoint Monitoring Setup"
     echo "=============================================="
     echo ""
     

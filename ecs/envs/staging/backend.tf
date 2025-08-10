@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "koneksi-terraform-state"
+    bucket         = "bongaquino-terraform-state"
     key            = "ecs/terraform.tfstate"
     region         = "ap-southeast-1"
-    dynamodb_table = "koneksi-terraform-locks"
+    dynamodb_table = "bongaquino-terraform-locks"
     encrypt        = true
   }
 } 

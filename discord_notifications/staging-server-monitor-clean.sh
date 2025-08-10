@@ -8,11 +8,17 @@ set -e
 
 # Configuration
 ENVIRONMENT="staging"
-PROJECT="koneksi"
+<<<<<<< HEAD
+PROJECT="bongaquino"
 REGION="ap-southeast-1"
-PROFILE="koneksi"
+PROFILE="bongaquino"
+=======
+PROJECT="bongaquino"
+REGION="ap-southeast-1"
+PROFILE="bongaquino"
+>>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 SERVER_IP="$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null || echo "local")"
-SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:koneksi-staging-discord-notifications"
+SNS_TOPIC_ARN="arn:aws:sns:$REGION:985869370256:bongaquino-staging-discord-notifications"
 
 # Colors for output
 RED='\033[0;31m'
@@ -62,9 +68,9 @@ check_health_endpoints() {
     local success_rate_count=0
     local success_rate="0%"
     
-    # Test staging.koneksi.co.kr (backend API)
+    # Test staging.bongaquino.co.kr (backend API)
     local start_time=$(date +%s)
-    local response=$(curl -s -w "%{http_code}" https://staging.koneksi.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    local response=$(curl -s -w "%{http_code}" https://staging.bongaquino.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local end_time=$(date +%s)
     local response_time=$(((end_time - start_time) * 1000))
     local http_code="${response: -3}"
@@ -80,8 +86,8 @@ check_health_endpoints() {
         ((success_rate_count++))
     fi
     
-    # Test app-staging.koneksi.co.kr (frontend)
-    local app_response=$(curl -s -w "%{http_code}" https://app-staging.koneksi.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    # Test app-staging.bongaquino.co.kr (frontend)
+    local app_response=$(curl -s -w "%{http_code}" https://app-staging.bongaquino.co.kr --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local app_http_code="${app_response: -3}"
     
     if [[ "$app_http_code" == "200" ]]; then
@@ -90,7 +96,7 @@ check_health_endpoints() {
     fi
     
     # Test MongoDB admin interface
-    local mongo_response=$(curl -s -w "%{http_code}" -u "admin:pass" https://mongo-staging.koneksi.co.kr/ --max-time 10 2>/dev/null || echo "TIMEOUT000")
+    local mongo_response=$(curl -s -w "%{http_code}" -u "admin:pass" https://mongo-staging.bongaquino.co.kr/ --max-time 10 2>/dev/null || echo "TIMEOUT000")
     local mongo_http_code="${mongo_response: -3}"
     
     if [[ "$mongo_http_code" == "200" ]]; then
@@ -119,8 +125,8 @@ get_ecs_info() {
     local ecs_info=$(aws ecs describe-services \
         --region "$REGION" \
         --profile "$PROFILE" \
-        --cluster koneksi-staging-cluster \
-        --services koneksi-staging-service \
+        --cluster bongaquino-staging-cluster \
+        --services bongaquino-staging-service \
         --query 'services[0].{runningCount:runningCount,desiredCount:desiredCount,status:status}' \
         --output text 2>/dev/null || echo "")
     
@@ -149,7 +155,7 @@ get_app_health() {
     local version="1.0.0"
     
     # Test backend API health
-    local api_response=$(curl -s https://staging.koneksi.co.kr --max-time 10 2>/dev/null || echo "")
+    local api_response=$(curl -s https://staging.bongaquino.co.kr --max-time 10 2>/dev/null || echo "")
     if [[ "$api_response" != *"healthy"* ]]; then
         backend_api="❌ Unhealthy"
     fi
@@ -178,16 +184,16 @@ send_health_summary() {
     local details=$(cat <<EOF
 {
     "Environment": "staging",
-    "Server": "koneksi-staging-backend (ALB)",
+    "Server": "bongaquino-staging-backend (ALB)",
     "Test Type": "Lambda Function Update Verification",
     "Health Monitoring": "Primary endpoint monitoring with CloudWatch Synthetics",
-    "Backend API": "$backend_status (https://staging.koneksi.co.kr)",
-    "Frontend App": "$app_status (https://app-staging.koneksi.co.kr)",
-    "MongoDB Admin": "$mongo_status (https://mongo-staging.koneksi.co.kr/)",
+    "Backend API": "$backend_status (https://staging.bongaquino.co.kr)",
+    "Frontend App": "$app_status (https://app-staging.bongaquino.co.kr)",
+    "MongoDB Admin": "$mongo_status (https://mongo-staging.bongaquino.co.kr/)",
     "Response Time": "$backend_response_time",
     "Success Rate": "$success_rate",
-    "ECS Service Cluster": "koneksi-staging-cluster", 
-    "ECS Service": "koneksi-staging-service",
+    "ECS Service Cluster": "bongaquino-staging-cluster", 
+    "ECS Service": "bongaquino-staging-service",
     "Running Tasks": "$running_tasks",
     "CPU": "$cpu_usage",
     "Memory": "$memory_usage",
@@ -213,8 +219,8 @@ test_endpoints() {
     
     # Test each endpoint
     local endpoints=(
-        "https://staging.koneksi.co.kr"
-        "https://app-staging.koneksi.co.kr"
+        "https://staging.bongaquino.co.kr"
+        "https://app-staging.bongaquino.co.kr"
     )
     
     for endpoint in "${endpoints[@]}"; do
@@ -247,7 +253,7 @@ main() {
             send_discord_alert "🧪 Staging Quick Test" \
                 "Testing Staging Discord notifications" \
                 "info" \
-                '{"Test": "Successful", "Environment": "staging", "Server": "koneksi-staging-backend"}'
+                '{"Test": "Successful", "Environment": "staging", "Server": "bongaquino-staging-backend"}'
             ;;
         *)
             echo "Usage: $0 {summary|test-endpoints|quick-test}"

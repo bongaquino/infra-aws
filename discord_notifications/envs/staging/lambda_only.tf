@@ -8,14 +8,14 @@ data "aws_region" "current" {}
 
 # Create SNS Topic with Clean Name
 resource "aws_sns_topic" "staging_discord_notifications" {
-  name = "koneksi-staging-discord-notifications"
+  name = "bongaquino-staging-discord-notifications"
 
   tags = {
     Environment = "staging"
     ManagedBy   = "terraform"
-    Name        = "koneksi-staging-discord-notifications"
+    Name        = "bongaquino-staging-discord-notifications"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Discord webhook notifications"
   }
 }
@@ -29,7 +29,7 @@ data "archive_file" "discord_notifier_zip" {
 
 # IAM Role for Lambda
 resource "aws_iam_role" "staging_discord_lambda_role" {
-  name = "koneksi-staging-discord-lambda-role"
+  name = "bongaquino-staging-discord-lambda-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -47,16 +47,16 @@ resource "aws_iam_role" "staging_discord_lambda_role" {
   tags = {
     Environment = "staging"
     ManagedBy   = "terraform"
-    Name        = "koneksi-staging-discord-lambda-role"
+    Name        = "bongaquino-staging-discord-lambda-role"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
   }
 }
 
 # IAM Policy for Lambda
 resource "aws_iam_role_policy" "staging_discord_lambda_policy" {
-  name = "koneksi-staging-discord-lambda-policy"
+  name = "bongaquino-staging-discord-lambda-policy"
   role = aws_iam_role.staging_discord_lambda_role.id
 
   policy = jsonencode({
@@ -88,15 +88,15 @@ resource "aws_iam_role_policy" "staging_discord_lambda_policy" {
 
 # CloudWatch Log Group for Lambda
 resource "aws_cloudwatch_log_group" "staging_discord_lambda_logs" {
-  name              = "/aws/lambda/koneksi-staging-discord-notifier"
+  name              = "/aws/lambda/bongaquino-staging-discord-notifier"
   retention_in_days = var.log_retention_days
 
   tags = {
     Environment = "staging"
     ManagedBy   = "terraform"
-    Name        = "koneksi-staging-discord-lambda-logs"
+    Name        = "bongaquino-staging-discord-lambda-logs"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
   }
 }
@@ -104,7 +104,7 @@ resource "aws_cloudwatch_log_group" "staging_discord_lambda_logs" {
 # Lambda Function
 resource "aws_lambda_function" "staging_discord_notifier" {
   filename         = "../../lambda/discord_notifier.zip"
-  function_name    = "koneksi-staging-discord-notifier"  # CLEAN NAME!
+  function_name    = "bongaquino-staging-discord-notifier"  # CLEAN NAME!
   role            = aws_iam_role.staging_discord_lambda_role.arn
   handler         = "discord_notifier.lambda_handler"
   runtime         = "python3.9"
@@ -115,10 +115,10 @@ resource "aws_lambda_function" "staging_discord_notifier" {
   environment {
     variables = {
       DISCORD_WEBHOOK_URL = var.discord_webhook_url
-      DEFAULT_USERNAME    = "Koneksi Staging Bot"
+      DEFAULT_USERNAME    = "bongaquino Staging Bot"
       DEFAULT_AVATAR_URL  = "https://example.com/staging-bot-avatar.png"
       ENVIRONMENT         = "staging"
-      PROJECT             = "koneksi"
+      PROJECT             = "bongaquino"
       
       # Color configuration
       SUCCESS_COLOR      = var.success_message_color
@@ -136,9 +136,9 @@ resource "aws_lambda_function" "staging_discord_notifier" {
     Environment = "staging"
     ManagedBy   = "terraform"
     Module      = "discord-notifications"
-    Name        = "koneksi-staging-discord-notifier"
+    Name        = "bongaquino-staging-discord-notifier"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "Send notifications to Discord"
   }
 }
@@ -163,7 +163,7 @@ resource "aws_sns_topic_subscription" "staging_discord_lambda" {
 resource "aws_cloudwatch_metric_alarm" "staging_discord_lambda_errors" {
   count = var.enable_lambda_monitoring ? 1 : 0
 
-  alarm_name          = "koneksi-staging-discord-lambda-errors"
+  alarm_name          = "bongaquino-staging-discord-lambda-errors"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "Errors"
@@ -181,9 +181,9 @@ resource "aws_cloudwatch_metric_alarm" "staging_discord_lambda_errors" {
   tags = {
     Environment = "staging"
     ManagedBy   = "terraform"
-    Name        = "koneksi-staging-discord-lambda-errors"
+    Name        = "bongaquino-staging-discord-lambda-errors"
     Owner       = "devops"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Purpose     = "discord-notifications"
   }
 } 

@@ -1,6 +1,6 @@
 # AWS Systems Manager Parameter Store Module
 
-This module manages configuration parameters and secrets using AWS Systems Manager Parameter Store for the Koneksi infrastructure, providing secure, scalable, and centralized configuration management.
+This module manages configuration parameters and secrets using AWS Systems Manager Parameter Store for the bongaquino infrastructure, providing secure, scalable, and centralized configuration management.
 
 ## Overview
 
@@ -75,14 +75,14 @@ parameter_store/
 
 All parameters follow a consistent naming pattern:
 ```
-/koneksi/{environment}/{parameter_name}
+/bongaquino/{environment}/{parameter_name}
 ```
 
 Examples:
-- `/koneksi/staging/database-host`
-- `/koneksi/staging/jwt-secret`
-- `/koneksi/prod/api-url`
-- `/koneksi/prod/database-password`
+- `/bongaquino/staging/database-host`
+- `/bongaquino/staging/jwt-secret`
+- `/bongaquino/prod/api-url`
+- `/bongaquino/prod/database-password`
 
 ## Usage
 
@@ -96,8 +96,8 @@ module "parameter_store" {
   
   # Standard parameters (plain text)
   parameters = {
-    "database-host" = "staging-db.koneksi.internal"
-    "api-url"       = "https://api-staging.koneksi.co.kr"
+    "database-host" = "staging-db.bongaquino.internal"
+    "api-url"       = "https://api-staging.bongaquino.co.kr"
     "app-version"   = "1.2.3"
     "debug-mode"    = "true"
   }
@@ -116,23 +116,23 @@ module "parameter_store" {
 
 1. **Navigate to Parameter Store directory**:
 ```bash
-cd koneksi-aws/parameter_store
+cd bongaquino-aws/parameter_store
 ```
 
 2. **Deploy to specific environment**:
 ```bash
 cd envs/staging
 terraform init
-AWS_PROFILE=koneksi terraform plan
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform plan
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 3. **Using workspace-based deployment**:
 ```bash
 # Main directory approach
 terraform workspace select staging
-AWS_PROFILE=koneksi terraform plan -var-file=staging.tfvars
-AWS_PROFILE=koneksi terraform apply -var-file=staging.tfvars
+AWS_PROFILE=bongaquino terraform plan -var-file=staging.tfvars
+AWS_PROFILE=bongaquino terraform apply -var-file=staging.tfvars
 ```
 
 ## Input Variables
@@ -166,9 +166,9 @@ AWS_PROFILE=koneksi terraform apply -var-file=staging.tfvars
 **Examples**:
 ```hcl
 parameters = {
-  "app-name"        = "koneksi-backend"
+  "app-name"        = "bongaquino-backend"
   "app-version"     = "2.1.0"
-  "database-host"   = "prod-database.koneksi.internal"
+  "database-host"   = "prod-database.bongaquino.internal"
   "database-port"   = "5432"
   "redis-host"      = "prod-redis.cache.amazonaws.com"
   "log-level"       = "info"
@@ -205,22 +205,22 @@ secure_parameters = {
 container_secrets = [
   {
     name      = "DATABASE_PASSWORD"
-    valueFrom = "/koneksi/staging/database-password"
+    valueFrom = "/bongaquino/staging/database-password"
   },
   {
     name      = "JWT_SECRET"
-    valueFrom = "/koneksi/staging/jwt-secret"
+    valueFrom = "/bongaquino/staging/jwt-secret"
   }
 ]
 
 container_environment = [
   {
     name  = "DATABASE_HOST"
-    value = "/koneksi/staging/database-host"
+    value = "/bongaquino/staging/database-host"
   },
   {
     name  = "API_URL"
-    value = "/koneksi/staging/api-url"
+    value = "/bongaquino/staging/api-url"
   }
 ]
 ```
@@ -231,8 +231,8 @@ container_environment = [
 phases:
   pre_build:
     commands:
-      - GITHUB_TOKEN=$(aws ssm get-parameter --name "/koneksi/staging/github-token" --with-decryption --query 'Parameter.Value' --output text)
-      - DATABASE_URL=$(aws ssm get-parameter --name "/koneksi/staging/database-url" --with-decryption --query 'Parameter.Value' --output text)
+      - GITHUB_TOKEN=$(aws ssm get-parameter --name "/bongaquino/staging/github-token" --with-decryption --query 'Parameter.Value' --output text)
+      - DATABASE_URL=$(aws ssm get-parameter --name "/bongaquino/staging/database-url" --with-decryption --query 'Parameter.Value' --output text)
 ```
 
 ### Application Code Examples
@@ -244,12 +244,12 @@ import boto3
 ssm = boto3.client('ssm', region_name='ap-southeast-1')
 
 # Get standard parameter
-response = ssm.get_parameter(Name='/koneksi/staging/database-host')
+response = ssm.get_parameter(Name='/bongaquino/staging/database-host')
 database_host = response['Parameter']['Value']
 
 # Get secure parameter
 response = ssm.get_parameter(
-    Name='/koneksi/staging/database-password',
+    Name='/bongaquino/staging/database-password',
     WithDecryption=True
 )
 database_password = response['Parameter']['Value']
@@ -257,8 +257,8 @@ database_password = response['Parameter']['Value']
 # Get multiple parameters
 response = ssm.get_parameters(
     Names=[
-        '/koneksi/staging/database-host',
-        '/koneksi/staging/database-password'
+        '/bongaquino/staging/database-host',
+        '/bongaquino/staging/database-password'
     ],
     WithDecryption=True
 )
@@ -286,8 +286,8 @@ const getSecureParameter = async (name) => {
 };
 
 // Usage
-const databaseHost = await getParameter('/koneksi/staging/database-host');
-const databasePassword = await getSecureParameter('/koneksi/staging/database-password');
+const databaseHost = await getParameter('/bongaquino/staging/database-host');
+const databasePassword = await getSecureParameter('/bongaquino/staging/database-password');
 ```
 
 #### Go (AWS SDK)
@@ -320,8 +320,8 @@ sess := session.Must(session.NewSession(&aws.Config{
 }))
 svc := ssm.New(sess)
 
-databaseHost, _ := getParameter(svc, "/koneksi/staging/database-host", false)
-databasePassword, _ := getParameter(svc, "/koneksi/staging/database-password", true)
+databaseHost, _ := getParameter(svc, "/bongaquino/staging/database-host", false)
+databasePassword, _ := getParameter(svc, "/bongaquino/staging/database-password", true)
 ```
 
 ## Environment-Specific Examples
@@ -332,10 +332,10 @@ databasePassword, _ := getParameter(svc, "/koneksi/staging/database-password", t
 environment = "staging"
 
 parameters = {
-  "database-host"     = "staging-postgres.koneksi.internal"
+  "database-host"     = "staging-postgres.bongaquino.internal"
   "redis-host"        = "staging-redis.cache.amazonaws.com"
-  "api-url"          = "https://api-staging.koneksi.co.kr"
-  "frontend-url"     = "https://app-staging.koneksi.co.kr"
+  "api-url"          = "https://api-staging.bongaquino.co.kr"
+  "frontend-url"     = "https://app-staging.bongaquino.co.kr"
   "log-level"        = "debug"
   "max-connections"  = "50"
 }
@@ -353,10 +353,10 @@ secure_parameters = {
 environment = "prod"
 
 parameters = {
-  "database-host"     = "prod-postgres.koneksi.internal"
+  "database-host"     = "prod-postgres.bongaquino.internal"
   "redis-host"        = "prod-redis.cache.amazonaws.com"
-  "api-url"          = "https://api.koneksi.co.kr"
-  "frontend-url"     = "https://app.koneksi.co.kr"
+  "api-url"          = "https://api.bongaquino.co.kr"
+  "frontend-url"     = "https://app.bongaquino.co.kr"
   "log-level"        = "info"
   "max-connections"  = "200"
 }
@@ -383,7 +383,7 @@ secure_parameters = {
         "ssm:GetParametersByPath"
       ],
       "Resource": [
-        "arn:aws:ssm:ap-southeast-1:*:parameter/koneksi/staging/*"
+        "arn:aws:ssm:ap-southeast-1:*:parameter/bongaquino/staging/*"
       ]
     },
     {
@@ -413,7 +413,7 @@ secure_parameters = {
         "ssm:GetParameter"
       ],
       "Resource": [
-        "arn:aws:ssm:ap-southeast-1:*:parameter/koneksi/staging/github-token"
+        "arn:aws:ssm:ap-southeast-1:*:parameter/bongaquino/staging/github-token"
       ]
     }
   ]
@@ -441,7 +441,7 @@ secure_parameters = {
 ## Best Practices
 
 ### Naming Conventions
-1. **Use Hierarchical Names**: `/koneksi/{environment}/{service}/{parameter}`
+1. **Use Hierarchical Names**: `/bongaquino/{environment}/{service}/{parameter}`
 2. **Lowercase with Hyphens**: `database-password` not `Database_Password`
 3. **Descriptive Names**: `jwt-secret` not `secret1`
 4. **Environment Separation**: Always include environment in path
@@ -487,10 +487,10 @@ resource "aws_cloudwatch_metric_alarm" "parameter_errors" {
 #### Parameter Not Found
 ```bash
 # Check if parameter exists
-aws ssm get-parameter --name "/koneksi/staging/database-host"
+aws ssm get-parameter --name "/bongaquino/staging/database-host"
 
 # List parameters by path
-aws ssm get-parameters-by-path --path "/koneksi/staging/"
+aws ssm get-parameters-by-path --path "/bongaquino/staging/"
 ```
 
 #### Access Denied

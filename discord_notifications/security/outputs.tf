@@ -40,7 +40,7 @@ output "cloudtrail_integration_info" {
   description = "Information for integrating with CloudTrail security monitoring"
   value = {
     sns_topic_arn    = aws_sns_topic.security_discord_notifications.arn
-    bot_name         = "🛡️ Koneksi Security Bot"
+    bot_name         = "🛡️ bongaquino Security Bot"
     environment      = "account-wide"
     purpose          = "Security monitoring and compliance alerts"
     supported_alerts = [
@@ -58,5 +58,5 @@ output "cloudtrail_integration_info" {
 
 output "test_command" {
   description = "Command to test the security Discord bot"
-  value = "aws sns publish --topic-arn ${aws_sns_topic.security_discord_notifications.arn} --message '{\"title\":\"🧪 Security Bot Test\",\"description\":\"Testing security Discord notifications\",\"type\":\"test\"}' --profile koneksi"
+  value = "aws sns publish --topic-arn ${aws_sns_topic.security_discord_notifications.arn} --message '{\"title\":\"🧪 Security Bot Test\",\"description\":\"Testing security Discord notifications\",\"type\":\"test\"}' --profile bongaquino"
 } 

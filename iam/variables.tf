@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "project" {
   description = "Project name for tagging"
   type        = string
-  default     = "ardata"
+  default     = "bongaquino"
 }
 
 variable "tags" {
@@ -31,7 +31,7 @@ variable "users" {
 variable "name_prefix" {
   description = "Prefix for resource names."
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "service_principal" {

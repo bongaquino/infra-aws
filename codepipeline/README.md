@@ -125,13 +125,13 @@ codepipeline/
 
 ```hcl
 # Deploy to UAT environment
-cd koneksi-aws/codepipeline/uat
+cd bongaquino-aws/codepipeline/uat
 
 # Initialize Terraform
 terraform init
 
 # Apply the configuration
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform apply
 
 # Verify pipeline creation
 aws codepipeline list-pipelines --region ap-southeast-1
@@ -142,15 +142,15 @@ aws codepipeline list-pipelines --region ap-southeast-1
 ```hcl
 # First, store SSH key in Parameter Store
 aws ssm put-parameter \
-  --name "/koneksi/staging/ssh-key" \
+  --name "/bongaquino/staging/ssh-key" \
   --type "SecureString" \
   --value "$(cat ~/path/to/ssh-key.pem)" \
   --region ap-southeast-1
 
 # Deploy pipeline
-cd koneksi-aws/codepipeline/staging
+cd bongaquino-aws/codepipeline/staging
 terraform init
-AWS_PROFILE=koneksi terraform apply
+AWS_PROFILE=bongaquino terraform apply
 ```
 
 ### GitHub Connection Setup
@@ -168,7 +168,7 @@ AWS_PROFILE=koneksi terraform apply
    ```bash
    # Manual trigger
    aws codepipeline start-pipeline-execution \
-     --name koneksi-uat-backend-pipeline \
+     --name bongaquino-uat-backend-pipeline \
      --region ap-southeast-1
    ```
 
@@ -185,7 +185,7 @@ phases:
   pre_build:
     commands:
       - aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/koneksi-uat-backend
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/bongaquino-uat-backend
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
   build:
     commands:
@@ -197,7 +197,7 @@ phases:
       - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:latest
-      - printf '[{"name":"koneksi-uat-backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"bongaquino-uat-backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
@@ -217,7 +217,7 @@ artifacts:
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
 | `environment` | string | - | Environment name (staging/uat/prod) |
-| `project_name` | string | `koneksi` | Project name for resource naming |
+| `project_name` | string | `bongaquino` | Project name for resource naming |
 | `github_repo` | string | - | GitHub repository name |
 | `github_branch` | string | - | Branch to monitor for changes |
 
@@ -320,7 +320,7 @@ resource "aws_cloudwatch_event_rule" "pipeline_state_change" {
 ```hcl
 # Cost allocation tags
 tags = {
-  Project     = "koneksi"
+  Project     = "bongaquino"
   Environment = var.environment
   CostCenter  = "engineering"
   Owner       = "devops-team"
@@ -372,16 +372,16 @@ Error: SSH connection refused
 ```bash
 # Check pipeline status
 aws codepipeline get-pipeline-state \
-  --name koneksi-uat-backend-pipeline
+  --name bongaquino-uat-backend-pipeline
 
 # View build logs
 aws logs describe-log-streams \
-  --log-group-name /aws/codebuild/koneksi-uat-backend-build
+  --log-group-name /aws/codebuild/bongaquino-uat-backend-build
 
 # Check ECS deployment status
 aws ecs describe-services \
-  --cluster koneksi-uat-cluster \
-  --services koneksi-uat-service
+  --cluster bongaquino-uat-cluster \
+  --services bongaquino-uat-service
 
 # Test GitHub connection
 aws codestar-connections list-connections \
@@ -389,7 +389,7 @@ aws codestar-connections list-connections \
 
 # Monitor pipeline execution
 aws codepipeline list-pipeline-executions \
-  --pipeline-name koneksi-uat-backend-pipeline
+  --pipeline-name bongaquino-uat-backend-pipeline
 ```
 
 ## Best Practices

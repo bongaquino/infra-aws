@@ -42,9 +42,9 @@ output "test_command" {
 output "usage_guide" {
   description = "Quick usage guide for the Discord notifications"
   value = <<EOF
-🟡 Koneksi Staging Bot Setup Complete!
+🟡 bongaquino Staging Bot Setup Complete!
 
-✅ Discord Channel: #koneksi-alerts
+✅ Discord Channel: #bongaquino-alerts
 ✅ SNS Topic: ${aws_sns_topic.staging_discord_notifications.name}
 ✅ Lambda Function: ${aws_lambda_function.staging_discord_notifier.function_name}
 
@@ -58,5 +58,5 @@ EOF
 
 output "clean_naming_note" {
   description = "Information about the clean naming convention used"
-  value       = "✅ This setup uses CLEAN NAMING: koneksi-staging-discord-notifier (no double staging!)"
+  value       = "✅ This setup uses CLEAN NAMING: bongaquino-staging-discord-notifier (no double staging!)"
 } 

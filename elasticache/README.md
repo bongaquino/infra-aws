@@ -1,6 +1,6 @@
 # ElastiCache Redis Module
 
-This module provisions a highly available, secure, and monitored Redis cluster using AWS ElastiCache for caching and session management in the Koneksi infrastructure.
+This module provisions a highly available, secure, and monitored Redis cluster using AWS ElastiCache for caching and session management in the bongaquino infrastructure.
 
 ## Overview
 
@@ -83,8 +83,8 @@ module "elasticache" {
   source = "./elasticache"
   
   # Basic settings
-  name_prefix  = "koneksi-staging"
-  project      = "koneksi"
+  name_prefix  = "bongaquino-staging"
+  project      = "bongaquino"
   environment  = "staging"
   aws_region   = "ap-southeast-1"
   
@@ -150,7 +150,7 @@ module "elasticache" {
 
 1. **Navigate to ElastiCache directory**:
 ```bash
-cd koneksi-aws/elasticache
+cd bongaquino-aws/elasticache
 ```
 
 2. **Initialize Terraform**:
@@ -160,12 +160,12 @@ terraform init -backend-config=envs/staging/backend.tf
 
 3. **Plan the deployment**:
 ```bash
-AWS_PROFILE=koneksi terraform plan -var-file=envs/staging/terraform.tfvars
+AWS_PROFILE=bongaquino terraform plan -var-file=envs/staging/terraform.tfvars
 ```
 
 4. **Apply the configuration**:
 ```bash
-AWS_PROFILE=koneksi terraform apply -var-file=envs/staging/terraform.tfvars
+AWS_PROFILE=bongaquino terraform apply -var-file=envs/staging/terraform.tfvars
 ```
 
 ## Input Variables
@@ -174,7 +174,7 @@ AWS_PROFILE=koneksi terraform apply -var-file=envs/staging/terraform.tfvars
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
 | `name_prefix` | string | - | Prefix for resource names |
-| `project` | string | `koneksi` | Project name for tagging |
+| `project` | string | `bongaquino` | Project name for tagging |
 | `environment` | string | `staging` | Environment name for tagging |
 | `aws_region` | string | `ap-southeast-1` | AWS region for deployment |
 
@@ -315,12 +315,12 @@ resource "aws_cloudwatch_metric_alarm" "cache_hit_ratio" {
 ```bash
 # Create manual snapshot
 aws elasticache create-snapshot \
-  --replication-group-id koneksi-staging-redis \
+  --replication-group-id bongaquino-staging-redis \
   --snapshot-name manual-snapshot-$(date +%Y%m%d%H%M%S)
 
 # Restore from snapshot
 aws elasticache create-replication-group \
-  --replication-group-id koneksi-staging-redis-restored \
+  --replication-group-id bongaquino-staging-redis-restored \
   --snapshot-name manual-snapshot-20231201120000
 ```
 
@@ -334,7 +334,7 @@ import redis
 
 # Connect to primary endpoint for writes
 primary_client = redis.Redis(
-    host='koneksi-staging-redis.xxxxx.cache.amazonaws.com',
+    host='bongaquino-staging-redis.xxxxx.cache.amazonaws.com',
     port=6379,
     decode_responses=True,
     ssl=True
@@ -342,7 +342,7 @@ primary_client = redis.Redis(
 
 # Connect to reader endpoint for reads
 reader_client = redis.Redis(
-    host='koneksi-staging-redis-ro.xxxxx.cache.amazonaws.com',
+    host='bongaquino-staging-redis-ro.xxxxx.cache.amazonaws.com',
     port=6379,
     decode_responses=True,
     ssl=True
@@ -363,14 +363,14 @@ const Redis = require('ioredis');
 
 // Primary client for writes
 const primary = new Redis({
-  host: 'koneksi-staging-redis.xxxxx.cache.amazonaws.com',
+  host: 'bongaquino-staging-redis.xxxxx.cache.amazonaws.com',
   port: 6379,
   tls: {}
 });
 
 // Reader client for reads
 const reader = new Redis({
-  host: 'koneksi-staging-redis-ro.xxxxx.cache.amazonaws.com',
+  host: 'bongaquino-staging-redis-ro.xxxxx.cache.amazonaws.com',
   port: 6379,
   tls: {}
 });
@@ -395,13 +395,13 @@ import (
 
 // Primary client for writes
 primaryClient := redis.NewClient(&redis.Options{
-    Addr:     "koneksi-staging-redis.xxxxx.cache.amazonaws.com:6379",
+    Addr:     "bongaquino-staging-redis.xxxxx.cache.amazonaws.com:6379",
     TLSConfig: &tls.Config{},
 })
 
 // Reader client for reads
 readerClient := redis.NewClient(&redis.Options{
-    Addr:     "koneksi-staging-redis-ro.xxxxx.cache.amazonaws.com:6379",
+    Addr:     "bongaquino-staging-redis-ro.xxxxx.cache.amazonaws.com:6379",
     TLSConfig: &tls.Config{},
 })
 

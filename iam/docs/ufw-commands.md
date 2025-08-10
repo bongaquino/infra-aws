@@ -105,7 +105,7 @@ sudo ufw allow from 119.94.162.43 to any   # Alex's IP
 sudo ufw allow from 112.200.100.154 to any # Bong's IP
 
 # Backend Server
-sudo ufw allow from 52.77.36.120 to any    # Koneksi Staging Backend
+sudo ufw allow from 52.77.36.120 to any    # bongaquino Staging Backend
 ```
 
 ## Removing Rules

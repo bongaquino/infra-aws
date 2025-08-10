@@ -19,7 +19,7 @@ variable "environment" {
 variable "project" {
   description = "Project name"
   type        = string
-  default     = "koneksi"
+  default     = "bongaquino"
 }
 
 variable "region" {
@@ -34,7 +34,7 @@ variable "region" {
 variable "discord_username" {
   description = "Username for Discord webhook messages"
   type        = string
-  default     = "🟡 Koneksi Staging Bot"
+  default     = "🟡 bongaquino Staging Bot"
 }
 
 variable "discord_avatar_url" {
@@ -108,7 +108,7 @@ variable "tags" {
   type        = map(string)
   default = {
     Environment = "staging"
-    Project     = "koneksi"
+    Project     = "bongaquino"
     Owner       = "devops"
     Purpose     = "discord-notifications"
     ManagedBy   = "terraform"
