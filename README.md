@@ -115,7 +115,7 @@ environment = "staging"
 region      = "us-east-1"
 
 # Network Configuration
-vpc_cidr           = "10.0.0.0/16"
+vpc_cidr           = "10.0.0.0/16"  # Example private subnet
 availability_zones = ["us-east-1a", "us-east-1b"]
 
 # Security
@@ -178,7 +178,7 @@ Real-time notifications for:
 
 ## 📞 Support
 
-- **📧 Email**: bong@bongaquino.com
+- **📧 Email**: admin@example.com
 - **🐛 Issues**: [GitHub Issues](https://github.com/bongaquino/infra-aws/issues)
 - **📖 Documentation**: [Project Wiki](https://github.com/bongaquino/infra-aws/wiki)
 
