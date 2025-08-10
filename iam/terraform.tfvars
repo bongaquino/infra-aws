@@ -1,35 +1,35 @@
 aws_region = "ap-southeast-1"
 
-project     = "ardata"
-name_prefix = "ardata"
+project     = "bongaquino"
+name_prefix = "bongaquino"
 
 tags = {
-  Project   = "ardata"
+  Project   = "bongaquino"
   ManagedBy = "terraform"
 }
 
 users = {
   franz_egos = {
-    username   = "franz.egos-ardata"
+    username   = "franz.egos-bongaquino"
     department = "developers"
-    team       = "ardata"
-    email      = "franz@ardata.tech"
+    team       = "bongaquino"
+    email      = "franz@bongaquino.tech"
     role       = "Developer"
   }
   devops_admin = {
-    username   = "bong.aquino-ardata"
+    username   = "bong.aquino-bongaquino"
     department = "devops"
-    team       = "ardata"
-    email      = "bong@ardata.tech"
+    team       = "bongaquino"
+    email      = "bong@bongaquino.tech"
     role       = "Operations"
   }
   # Add more users here following the same structure
   # example:
   # john_doe = {
-  #   username   = "john.doe-ardata"
+  #   username   = "john.doe-bongaquino"
   #   department = "devops"
-  #   team       = "ardata"
-  #   email      = "john@ardata.tech"
+  #   team       = "bongaquino"
+  #   email      = "john@bongaquino.tech"
   #   role       = "Operations"
   # }
 }# 

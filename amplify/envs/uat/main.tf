@@ -13,7 +13,7 @@ module "amplify" {
   
   # App Configuration
   app_name      = "bongaquino-web-uat"
-  repository    = "https://github.com/bongaquino-tech/bongaquino-web"
+  repository    = "https://github.com/bongaquino/bongaquino-web"
   branch_name   = "main"
   
   # Domain Configuration

@@ -15,7 +15,7 @@ variable "repository" {
 <<<<<<< HEAD
   default     = "https://github.com/bongaquino/bongaquino-web"
 =======
-  default     = "https://github.com/bongaquino-tech/bongaquino-web"
+  default     = "https://github.com/bongaquino/bongaquino-web"
 >>>>>>> 15079af045cfc1027366c5a44e9882723e779435
 }
 

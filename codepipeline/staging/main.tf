@@ -6,7 +6,7 @@ provider "aws" {
 
 locals {
   env = "staging"
-  github_repo = "bongaquino-tech/bongaquino-backend"  
+  github_repo = "bongaquino/bongaquino-backend"  
   github_branch = "staging"
   ec2_instance_ip = "52.77.36.120"
 }

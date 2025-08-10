@@ -19,7 +19,7 @@ variable "ec2_instance_ip" {
 variable "github_repo" {
   description = "GitHub repository URL"
   type        = string
-  default     = "bongaquino-tech/bongaquino-backend"
+  default     = "bongaquino/bongaquino-backend"
 }
 
 variable "github_branch" {

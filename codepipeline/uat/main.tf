@@ -143,7 +143,7 @@ resource "aws_codepipeline" "backend_pipeline" {
       output_artifacts = ["SourceOutput"]
       configuration = {
         ConnectionArn     = "arn:aws:codestar-connections:ap-southeast-1:985869370256:connection/d089b2df-62f4-46b0-8364-b0eeef3939ec"
-        FullRepositoryId  = "bongaquino-tech/bongaquino-backend"
+        FullRepositoryId  = "bongaquino/bongaquino-backend"
         BranchName        = "main"
         DetectChanges     = "true"
       }
