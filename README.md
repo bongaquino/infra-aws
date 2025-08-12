@@ -178,7 +178,7 @@ Real-time notifications for:
 
 ## 📞 Support
 
-- **📧 Email**: admin@example.com
+- **📧 Email**: bongbongaquino@gmail.com
 - **🐛 Issues**: [GitHub Issues](https://github.com/bongaquino/infra-aws/issues)
 - **📖 Documentation**: [Project Wiki](https://github.com/bongaquino/infra-aws/wiki)
 
