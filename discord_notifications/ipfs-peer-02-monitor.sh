@@ -591,7 +591,7 @@ restart_ipfs_services() {
     send_info_alert "IPFS Service Restart" "Attempting automatic service restart" "Restarting IPFS daemon and cluster services"
     
     # Restart IPFS daemon
-    if ssh_execute "cd /home/ipfs/bongaquino-ipfs/docker-compose/bongaquino-ipfs-kr-peer-02 && docker-compose restart ipfs"; then
+    if ssh_execute "cd /home/ipfs/example-ipfs/docker-compose/example-ipfs-node-peer-02 && docker-compose restart ipfs"; then
         log_message "IPFS daemon restarted successfully"
     else
         log_message "Failed to restart IPFS daemon"
@@ -603,7 +603,7 @@ restart_ipfs_services() {
     sleep 10
     
     # Restart cluster
-    if ssh_execute "cd /home/ipfs/bongaquino-ipfs/docker-compose/bongaquino-ipfs-kr-peer-02 && docker-compose restart ipfs-cluster"; then
+    if ssh_execute "cd /home/ipfs/example-ipfs/docker-compose/example-ipfs-node-peer-02 && docker-compose restart ipfs-cluster"; then
         log_message "IPFS cluster restarted successfully"
     else
         log_message "Failed to restart IPFS cluster"

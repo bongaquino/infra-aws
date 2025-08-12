@@ -145,7 +145,7 @@ module "route53" {
     }
     "gateway" = {
       name    = "gateway.example.com"
-      records = ["27.255.70.17"]
+      records = ["10.0.0.17"]
       ttl     = 300
     }
   }

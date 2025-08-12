@@ -14,7 +14,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-BOOTSTRAP_IP="27.255.70.17"
+BOOTSTRAP_IP="10.0.0.17"
 SSH_USER="ipfs"
 SCRIPT_NAME="ipfs-bootstrap-monitor.sh"
 REMOTE_PATH="/home/$SSH_USER/$SCRIPT_NAME"

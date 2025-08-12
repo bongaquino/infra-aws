@@ -2,7 +2,7 @@
 
 ## Overview
 
-This monitoring solution provides **comprehensive incident response automation** for IPFS Bootstrap Node 01 (27.255.70.17) with automated Discord alerts, health checks, and recovery procedures.
+This monitoring solution provides **comprehensive incident response automation** for IPFS Bootstrap Node 01 (10.0.0.17) with automated Discord alerts, health checks, and recovery procedures.
 
 ## 🎯 Features
 
@@ -49,10 +49,10 @@ This monitoring solution provides **comprehensive incident response automation**
 
 ```bash
 # Copy script to bootstrap node
-scp bongaquino-aws/discord_notifications/ipfs-bootstrap-monitor.sh ipfs@27.255.70.17:~/
+scp bongaquino-aws/discord_notifications/ipfs-bootstrap-monitor.sh ipfs@10.0.0.17:~/
 
 # SSH to bootstrap node
-ssh ipfs@27.255.70.17
+ssh ipfs@10.0.0.17
 
 # Make executable and setup monitoring
 chmod +x ipfs-bootstrap-monitor.sh
@@ -134,7 +134,7 @@ When storage issues detected:
 🚨 CRITICAL: IPFS Daemon Down
 IPFS daemon container is not running
 
-Server: IPFS Bootstrap Node 01 (27.255.70.17)
+Server: IPFS Bootstrap Node 01 (10.0.0.17)
 Timestamp: 2024-01-15 14:30:25 UTC
 Message ID: 1705330225-4521
 Details: Status: Container not found or stopped
@@ -147,7 +147,7 @@ Details: Status: Container not found or stopped
 ✅ RESOLVED: IPFS Daemon Recovered
 IPFS daemon is running normally
 
-Server: IPFS Bootstrap Node 01 (27.255.70.17)
+Server: IPFS Bootstrap Node 01 (10.0.0.17)
 Timestamp: 2024-01-15 14:32:15 UTC
 Message ID: 1705330335-7892
 Details: Node ID: 12D3KooWRJRahRo8i..., Response time: 245ms
@@ -163,7 +163,7 @@ Details: Node ID: 12D3KooWRJRahRo8i..., Response time: 245ms
    chmod 600 ~/.ssh/id_rsa
    
    # Test manual connection
-   ssh ipfs@27.255.70.17
+   ssh ipfs@10.0.0.17
    ```
 
 2. **Discord Alerts Not Sending**
@@ -177,7 +177,7 @@ Details: Node ID: 12D3KooWRJRahRo8i..., Response time: 245ms
 3. **Service Restart Failed**
    ```bash
    # Manual service restart
-   cd /home/ipfs/bongaquino-ipfs/docker-compose/bongaquino-ipfs-kr-bootstrap-02
+   cd /home/ipfs/example-ipfs/docker-compose/example-ipfs-node-bootstrap-02
    docker-compose restart
    ```
 

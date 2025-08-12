@@ -91,7 +91,7 @@
 ### **Current Status (Both Servers)**
 | Server | IP | Health Checks | Script Errors | Discord Alerts |
 |--------|-----|---------------|---------------|----------------|
-| **Bootstrap Node 01** | 27.255.70.17 | ✅ 5/5 | ✅ Fixed | ✅ Working |
+| **Bootstrap Node 01** | 10.0.0.17 | ✅ 5/5 | ✅ Fixed | ✅ Working |
 | **Peer-02** | <PEER_02_IP> | ✅ 5/5 | ✅ None | ✅ Working |
 
 ## 📈 **Why Notifications Will Be More Reliable Now**
@@ -132,7 +132,7 @@
 - Could cause false positive alerts
 - Made notifications less reliable
 
-**Now both servers (27.255.70.17 and <PEER_02_IP>) have:**
+**Now both servers (10.0.0.17 and <PEER_02_IP>) have:**
 - Perfect 5/5 health check monitoring
 - Zero script errors
 - Reliable Discord notifications

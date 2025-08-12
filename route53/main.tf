@@ -113,7 +113,7 @@ resource "aws_route53_record" "gateway" {
   name    = "gateway.example.com"
   type    = "A"
   ttl     = 300
-  records = ["27.255.70.17"]
+  records = ["10.0.0.17"]
   lifecycle {
     prevent_destroy = true
   }
@@ -124,7 +124,7 @@ resource "aws_route53_record" "ipfs" {
   name    = "ipfs.example.com"
   type    = "A"
   ttl     = 300
-  records = ["27.255.70.17"]
+  records = ["10.0.0.17"]
   lifecycle {
     prevent_destroy = true
   }

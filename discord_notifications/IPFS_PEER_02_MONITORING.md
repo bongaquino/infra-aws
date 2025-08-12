@@ -6,7 +6,7 @@
 - **Server:** <PEER_02_IP> (IPFS Peer-02)
 - **OS:** Ubuntu 24.04 LTS
 - **SSH User:** ipfs
-- **Hostname:** bongaquino-ipfs-kr-peer-02
+- **Hostname:** example-ipfs-node-peer-02
 - **Storage:** 125TB RAID-6 (2% used)
 
 ### 🔧 **What Was Deployed**
@@ -31,7 +31,7 @@
   - 112.200.100.154 (Bong's IP)
   - 52.77.36.120 (Backend Server)
   - 18.139.136.149 (bongaquino UAT Bastion)
-  - 27.255.70.17 (Bootstrap Node)
+  - 10.0.0.17 (Bootstrap Node)
   - <PEER_01_IP> (IPFS Peer-01)
 
 #### 4. **Automated Monitoring**
@@ -91,7 +91,7 @@
 
 ### 📊 **Cluster Connectivity**
 - **Peer ID**: 12D3KooWAhAzk8hZyoFNVa3LsPmkQnGWJd7wzwH5SQeuQ7pCr811
-- **Connected to Bootstrap**: 27.255.70.17 (12D3KooWQS5kWtsQ9aU3JatgPbQxVMX32tZij6qyhKd4HZg5W7tU)
+- **Connected to Bootstrap**: 10.0.0.17 (12D3KooWQS5kWtsQ9aU3JatgPbQxVMX32tZij6qyhKd4HZg5W7tU)
 - **Total Cluster Peers**: 2 (Private isolated cluster)
 
 ### 🚨 **Incident Response**
@@ -103,7 +103,7 @@
 ### 📁 **Docker Configuration**
 - **IPFS Container**: `ipfs` (Up about an hour, healthy)
 - **Cluster Container**: `ipfs-cluster` (Up about an hour)
-- **Docker Compose Path**: `/home/ipfs/bongaquino-ipfs/docker-compose/bongaquino-ipfs-kr-peer-02`
+- **Docker Compose Path**: `/home/ipfs/example-ipfs/docker-compose/example-ipfs-node-peer-02`
 
 ---
 

@@ -90,7 +90,7 @@ EOF
 # Check all nodes (excluding Peer-03)
 echo "Checking IPFS nodes..."
 
-BOOTSTRAP_STATUS="$(get_health_summary "Bootstrap" "27.255.70.17")"
+BOOTSTRAP_STATUS="$(get_health_summary "Bootstrap" "10.0.0.17")"
 PEER01_STATUS="$(get_health_summary "Peer-01" "<PEER_01_IP>")"
 PEER02_STATUS="$(get_health_summary "Peer-02" "<PEER_02_IP>")"
 
@@ -125,7 +125,7 @@ check_state_change() {
 }
 
 # Check each node for state changes (excluding Peer-03)
-check_state_change "Bootstrap" "$BOOTSTRAP_PREV" "$BOOTSTRAP_STATUS" "27.255.70.17" "3 cluster peers"
+check_state_change "Bootstrap" "$BOOTSTRAP_PREV" "$BOOTSTRAP_STATUS" "10.0.0.17" "3 cluster peers"
 check_state_change "Peer-01" "$PEER01_PREV" "$PEER01_STATUS" "<PEER_01_IP>" "14.6TB expandable"
 check_state_change "Peer-02" "$PEER02_PREV" "$PEER02_STATUS" "<PEER_02_IP>" "125TB RAID-6"
 
@@ -154,7 +154,7 @@ if [ "$CHANGES" = "true" ]; then
 elif [ "$DAILY_SUMMARY" = "true" ]; then
   # Send daily summary regardless of state changes (excluding Peer-03)
   SUMMARY_FIELDS=""
-  SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Bootstrap Node\", \"value\": \"**Bootstrap** (27.255.70.17)\\n✅ $BOOTSTRAP_STATUS\\n3 cluster peers\", \"inline\": true},"
+  SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Bootstrap Node\", \"value\": \"**Bootstrap** (10.0.0.17)\\n✅ $BOOTSTRAP_STATUS\\n3 cluster peers\", \"inline\": true},"
   SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Peer-01\", \"value\": \"**Peer-01** (<PEER_01_IP>)\\n✅ $PEER01_STATUS\\n14.6TB expandable\", \"inline\": true},"
   SUMMARY_FIELDS="${SUMMARY_FIELDS}{\"name\": \"Peer-02\", \"value\": \"**Peer-02** (<PEER_02_IP>)\\n✅ $PEER02_STATUS\\n125TB RAID-6\", \"inline\": true}"
   
